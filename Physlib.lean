@@ -152,11 +152,14 @@ public import Physlib.Mathematics.Distribution.PowMul
 public import Physlib.Mathematics.Distribution.TemperedDistribution
 public import Physlib.Mathematics.ForMathlib.ComplexLinear
 public import Physlib.Mathematics.ForMathlib.Contraction
+public import Physlib.Mathematics.ForMathlib.CoordTensorHom
 public import Physlib.Mathematics.ForMathlib.Cutoff
 public import Physlib.Mathematics.ForMathlib.DataStructures.Matrix.LieTrace
+public import Physlib.Mathematics.ForMathlib.EquivPairs
 public import Physlib.Mathematics.ForMathlib.FDerivCurry
 public import Physlib.Mathematics.ForMathlib.Fin
 public import Physlib.Mathematics.ForMathlib.Fin.Involutions
+public import Physlib.Mathematics.ForMathlib.FiniteDimensional
 public import Physlib.Mathematics.ForMathlib.HasTemperateGrowth
 public import Physlib.Mathematics.ForMathlib.Integration.Basic
 public import Physlib.Mathematics.ForMathlib.LinearMaps
@@ -169,8 +172,11 @@ public import Physlib.Mathematics.ForMathlib.OneParameterSubgroups.Unitary
 public import Physlib.Mathematics.ForMathlib.OrthogonalMatrix
 public import Physlib.Mathematics.ForMathlib.PiTensorProduct
 public import Physlib.Mathematics.ForMathlib.Representation
+public import Physlib.Mathematics.ForMathlib.Schouten
 public import Physlib.Mathematics.ForMathlib.SchurTriangulation
+public import Physlib.Mathematics.ForMathlib.SemilinearMaps
 public import Physlib.Mathematics.ForMathlib.SesquilinearForm
+public import Physlib.Mathematics.ForMathlib.TensorProductMatrix
 public import Physlib.Mathematics.ForMathlib.Trigonometry.SinSq
 public import Physlib.Mathematics.ForMathlib.Trigonometry.Tanh
 public import Physlib.Mathematics.Groups.SO3.Basic
