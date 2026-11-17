@@ -58,7 +58,7 @@ spacetime to contravariant Lorentz vectors.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 
@@ -77,7 +77,7 @@ structure ElectromagneticPotential (d : ℕ := 3) where
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -98,7 +98,7 @@ instance {d} : CoeFun (ElectromagneticPotential d)
     (fun _ => SpaceTime d → Lorentz.Vector d) where
   coe A := A.val
 
-instance {d} : Zero (ElectromagneticPotential d) where
+noncomputable instance {d} : Zero (ElectromagneticPotential d) where
   zero := ⟨fun _ => 0⟩
 
 @[simp]
@@ -107,7 +107,7 @@ lemma zero_val {d} : (0 : ElectromagneticPotential d).val = 0 := rfl
 @[simp]
 lemma zero_apply {d} (x : SpaceTime d) : (0 : ElectromagneticPotential d) x = 0 := rfl
 
-instance {d} : Add (ElectromagneticPotential d) where
+noncomputable instance {d} : Add (ElectromagneticPotential d) where
   add A B := ⟨fun x => A x + B x⟩
 
 @[simp]
@@ -118,7 +118,7 @@ lemma add_val {d} (A B : ElectromagneticPotential d) :
 lemma add_apply {d} (A B : ElectromagneticPotential d) (x : SpaceTime d) :
     (A + B) x = A x + B x := by simp
 
-instance {d} : Neg (ElectromagneticPotential d) where
+noncomputable instance {d} : Neg (ElectromagneticPotential d) where
   neg A := ⟨fun x => - A x⟩
 
 @[simp]
@@ -129,7 +129,7 @@ lemma neg_val {d} (A : ElectromagneticPotential d) :
 lemma neg_apply {d} (A : ElectromagneticPotential d) (x : SpaceTime d) :
     (- A) x = - A x := rfl
 
-instance {d} : Sub (ElectromagneticPotential d) where
+noncomputable instance {d} : Sub (ElectromagneticPotential d) where
   sub A B := ⟨fun x => A x - B x⟩
 
 @[simp]
@@ -140,7 +140,7 @@ lemma sub_val {d} (A B : ElectromagneticPotential d) :
 lemma sub_apply {d} (A B : ElectromagneticPotential d) (x : SpaceTime d) :
     (A - B) x = A x - B x := rfl
 
-instance {d} : AddCommGroup (ElectromagneticPotential d) where
+noncomputable instance {d} : AddCommGroup (ElectromagneticPotential d) where
   add_assoc A B C := by
     ext x μ
     simp [add_assoc]
@@ -180,7 +180,7 @@ lemma smul_apply {d} (r : ℝ) (A : ElectromagneticPotential d) (x : SpaceTime d
   the vector potential is set to zero. -/
 noncomputable def ofScalarPotential {d} (c : SpeedOfLight)
     (ϕ : Time → Space d → ℝ) : ElectromagneticPotential d where
-  val x μ :=
+  val x := Lorentz.Vector.toCoord.symm fun μ =>
     match μ with
     | Sum.inl 0 => ((timeSlice c).symm ϕ x) / c
     | Sum.inr _ => 0
@@ -195,7 +195,7 @@ noncomputable def ofStaticScalarPotential {d} (c : SpeedOfLight)
 noncomputable def ofVectorPotential {d} (c : SpeedOfLight)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) :
     ElectromagneticPotential d where
-  val x μ :=
+  val x := Lorentz.Vector.toCoord.symm fun μ =>
     match μ with
     | Sum.inl 0 => 0
     | Sum.inr i => (timeSlice c).symm A x i
@@ -209,7 +209,7 @@ noncomputable def ofStaticVectorPotential {d} (c : SpeedOfLight)
 noncomputable def ofPotentials {d} (c : SpeedOfLight) (ϕ : Time → Space d → ℝ)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) :
     ElectromagneticPotential d where
-  val x μ :=
+  val x := Lorentz.Vector.toCoord.symm fun μ =>
     match μ with
     | Sum.inl 0 => ((timeSlice c).symm ϕ x) / c
     | Sum.inr i => (timeSlice c).symm A x i
@@ -371,53 +371,53 @@ lemma differentiable_deriv_deriv_apply_of_smooth {d} {A : ElectromagneticPotenti
 
 lemma differentiable_ofScalarPotential {d} (c : SpeedOfLight) (φ : Time → Space d → ℝ)
     (hϕ : Differentiable ℝ ↿φ) : Differentiable ℝ (ofScalarPotential c φ) := by
-  simp [ofScalarPotential]
   rw [← SpaceTime.differentiable_vector]
   intro μ
+  simp only [ofScalarPotential, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
 lemma contDiff_ofScalarPotential {n} {d} (c : SpeedOfLight) (φ : Time → Space d → ℝ)
     (hϕ : ContDiff ℝ n ↿φ) : ContDiff ℝ n (ofScalarPotential c φ) := by
-  simp [ofScalarPotential]
   rw [← SpaceTime.contDiff_vector]
   intro μ
+  simp only [ofScalarPotential, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
 lemma differentiable_ofVectorPotential {d} (c : SpeedOfLight)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d))
     (hA : Differentiable ℝ ↿A) : Differentiable ℝ (ofVectorPotential c A) := by
-  simp [ofVectorPotential]
   rw [← SpaceTime.differentiable_vector]
   intro μ
+  simp only [ofVectorPotential, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
 lemma contDiff_ofVectorPotential {n} {d} (c : SpeedOfLight)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d))
     (hA : ContDiff ℝ n ↿A) : ContDiff ℝ n (ofVectorPotential c A) := by
-  simp [ofVectorPotential]
   rw [← SpaceTime.contDiff_vector]
   intro μ
+  simp only [ofVectorPotential, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
 lemma differentiable_ofPotentials {d} (c : SpeedOfLight) (φ : Time → Space d → ℝ)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) (hϕ : Differentiable ℝ ↿φ)
     (hA : Differentiable ℝ ↿A) : Differentiable ℝ (ofPotentials c φ A) := by
-  simp [ofPotentials]
   rw [← SpaceTime.differentiable_vector]
   intro μ
+  simp only [ofPotentials, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
 lemma contDiff_ofPotentials {n} {d} (c : SpeedOfLight) (φ : Time → Space d → ℝ)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) (hϕ : ContDiff ℝ n ↿φ)
     (hA : ContDiff ℝ n ↿A) : ContDiff ℝ n (ofPotentials c φ A) := by
-  simp [ofPotentials]
   rw [← SpaceTime.contDiff_vector]
   intro μ
+  simp only [ofPotentials, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 | Sum.inr _ => fun_prop
 
@@ -445,12 +445,13 @@ lemma contDiff_ofElectromagneticField {n : ℕ} (c : SpeedOfLight)
       fun_prop
   rw [← SpaceTime.contDiff_vector]
   intro μ
+  simp only [ofElectromagneticField, ofPotentials, LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inr i =>
     change ContDiff ℝ n (fun x => (timeSlice c).symm A x i)
     fun_prop
   | Sum.inl 0 =>
-    simp only [ofElectromagneticField, ofPotentials, map_smul, WithLp.equiv_apply,
+    simp only [map_smul, WithLp.equiv_apply,
       WithLp.ofLp_smul, LinearMap.smul_apply, WithLp.equiv_symm_apply, WithLp.toLp_smul,
       Fin.isValue]
     apply ContDiff.div _ (by fun_prop) (by simp)
@@ -473,7 +474,7 @@ Under a Lorentz transformation `Λ`, this transforms as
 lemma spaceTime_deriv_action_eq_sum {d} {μ ν : Fin 1 ⊕ Fin d} {x : SpaceTime d}
     (Λ : LorentzGroup d) (A : ElectromagneticPotential d) (hA : Differentiable ℝ A) :
     ∂_ μ (Λ • A) x ν = ∑ κ, ∑ ρ, (Λ.1 ν κ * Λ⁻¹.1 ρ μ) * ∂_ ρ A (Λ⁻¹ • x) κ := by
-  rw [action_val, SpaceTime.deriv_equivariant A.val Λ x hA μ, Lorentz.Vector.apply_sum,
+  rw [action_val, SpaceTime.deriv_equivariant_vector A.val Λ x hA μ, Lorentz.Vector.apply_sum,
     Finset.sum_comm]
   refine Finset.sum_congr rfl (fun ρ _ => ?_)
   rw [Lorentz.Vector.apply_smul, Lorentz.Vector.smul_eq_sum, Finset.mul_sum]
@@ -585,7 +586,7 @@ as taking the derivative and then applying the Lorentz transformation to the res
 lemma deriv_equivariant {d} {x : SpaceTime d} (A : ElectromagneticPotential d)
     (Λ : LorentzGroup d)
     (hf : Differentiable ℝ A) : deriv (Λ • A) x = Λ • (deriv A (Λ⁻¹ • x)) := by
-  rw [deriv_eq_tensorDeriv, deriv_eq_tensorDeriv, action_val, tensorDeriv_equivariant]
+  rw [deriv_eq_tensorDeriv, deriv_eq_tensorDeriv, action_val, tensorDeriv_equivariant_vector]
   all_goals fun_prop
 
 /-!
@@ -597,7 +598,7 @@ are just equal to `∂_ μ A x ν`.
 
 -/
 
-open Tensorial
+open TensorSpecies.Tensorial
 /-- Evaluation of the tensor components of `∂_ μ A x ν`. -/
 lemma tensorDeriv_eval_eq {d} {A : ElectromagneticPotential d} (hA : Differentiable ℝ A)
     (x : SpaceTime d) (μ ν : Fin 1 ⊕ Fin d) :

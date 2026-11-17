@@ -75,29 +75,30 @@ lemma norm_spatialPart_sq_eq (v : Velocity d) :
 /-- The unit future four-velocity with spatial part `p` and time component
 `Real.sqrt (1 + ‖p‖ ^ 2)`. The spatial part is unrestricted. -/
 noncomputable def ofSpatialPart (p : EuclideanSpace ℝ (Fin d)) : Velocity d :=
-  ⟨fun μ => Sum.elim (fun _ => Real.sqrt (1 + ‖p‖ ^ 2)) (fun i => p i) μ, by
+  ⟨Vector.toCoord.symm (Sum.elim (fun _ => Real.sqrt (1 + ‖p‖ ^ 2)) (fun i => p i)), by
     constructor
     · rw [minkowskiProduct_self_eq_sq_sub]
-      have hsp : Vector.spatialPart (fun μ => Sum.elim (fun _ => Real.sqrt (1 + ‖p‖ ^ 2))
-          (fun i => p i) μ : Vector d) = p := by
+      have hsp : Vector.spatialPart (Vector.toCoord.symm (Sum.elim
+          (fun _ => Real.sqrt (1 + ‖p‖ ^ 2)) (fun i => p i)) : Vector d) = p := by
         ext i
-        rfl
+        simp
       rw [hsp]
-      change (Real.sqrt (1 + ‖p‖ ^ 2)) ^ 2 - ‖p‖ ^ 2 = 1
+      simp only [timeComponent, LinearEquiv.apply_symm_apply, Sum.elim_inl]
       rw [Real.sq_sqrt (by positivity)]
       ring
-    · change 0 < Real.sqrt (1 + ‖p‖ ^ 2)
+    · simp only [timeComponent, LinearEquiv.apply_symm_apply, Sum.elim_inl]
       positivity⟩
 
 @[simp]
 lemma spatialPart_ofSpatialPart (p : EuclideanSpace ℝ (Fin d)) :
     (ofSpatialPart p).1.spatialPart = p := by
   ext i
-  rfl
+  simp [ofSpatialPart]
 
 @[simp]
 lemma timeComponent_ofSpatialPart (p : EuclideanSpace ℝ (Fin d)) :
-    (ofSpatialPart p).1.timeComponent = Real.sqrt (1 + ‖p‖ ^ 2) := rfl
+    (ofSpatialPart p).1.timeComponent = Real.sqrt (1 + ‖p‖ ^ 2) := by
+  simp [ofSpatialPart, timeComponent]
 
 /-- A future unit four-velocity is determined by its spatial part. -/
 @[simp]
@@ -107,8 +108,8 @@ lemma ofSpatialPart_spatialPart (u : Velocity d) : ofSpatialPart u.1.spatialPart
   intro μ
   rcases μ with t | i
   · fin_cases t
-    change Real.sqrt (1 + ‖u.1.spatialPart‖ ^ 2) = u.1.timeComponent
-    rw [norm_spatialPart_sq_eq]
+    change (ofSpatialPart u.1.spatialPart).1.timeComponent = u.1.timeComponent
+    rw [timeComponent_ofSpatialPart, norm_spatialPart_sq_eq]
     simp only [add_sub_cancel]
     exact Real.sqrt_sq (timeComponent_nonneg u)
   · have h := congrArg (fun q : EuclideanSpace ℝ (Fin d) => q i)
@@ -122,9 +123,9 @@ lemma continuous_ofSpatialPart : Continuous (ofSpatialPart (d := d)) := by
   apply Vector.continuous_of_apply
   intro μ
   rcases μ with t | i
-  · change Continuous (fun p : EuclideanSpace ℝ (Fin d) => Real.sqrt (1 + ‖p‖ ^ 2))
+  · simp only [LinearEquiv.apply_symm_apply, Sum.elim_inl]
     fun_prop
-  · change Continuous (fun p : EuclideanSpace ℝ (Fin d) => p i)
+  · simp only [LinearEquiv.apply_symm_apply, Sum.elim_inr]
     fun_prop
 
 /-- A bound on the proper norm of a vector orthogonal to a unit future

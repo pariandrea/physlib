@@ -85,7 +85,8 @@ lemma hasDerivAt_ofSpatialPart {d : ℕ} {p : ℝ → EuclideanSpace ℝ (Fin d)
     ((Vector.ofTemporalComponent (d := d)).hasFDerivAt.comp_hasDerivAt t htime)
     ((Vector.ofSpatialComponent (d := d)).hasFDerivAt.comp_hasDerivAt t hp)
   convert h using 1
-  funext s μ
+  funext s
+  ext μ
   rcases μ with j | j
   · fin_cases j
     simp [ofSpatialPart, Vector.ofTemporalComponent, Vector.ofSpatialComponent,

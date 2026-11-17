@@ -63,12 +63,12 @@ In this implementation we set `μ₀ = 1`. It is a TODO to introduce this consta
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix

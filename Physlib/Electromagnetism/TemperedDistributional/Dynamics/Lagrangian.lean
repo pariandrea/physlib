@@ -46,7 +46,7 @@ In this implementation we set `μ₀ = 1`. It is a TODO to introduce this consta
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 /-!
 
@@ -56,7 +56,7 @@ open Tensor ContDiff
 
 namespace TempDistElectromagneticPotential
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -83,7 +83,9 @@ noncomputable def gradFreeCurrentPotential {d} :
       congr
       funext i
       ring_nf
-    cont := by fun_prop
+    cont := continuous_finsetSum _ fun μ _ =>
+      ((Lorentz.Vector.continuous_apply_comp J.continuous μ).smul
+        (continuous_const (y := Lorentz.Vector.basis μ))).const_smul (η μ μ)
   }
   map_add' J₁ J₂ := by
     ext1 ε

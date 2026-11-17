@@ -50,12 +50,12 @@ Maxwell's equations with sources, i.e. Gauss's law and Ampère's law.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -140,7 +140,7 @@ lemma isExtrema_iff_tensors {𝓕 : FreeSpace}
     have h1 : ((Tensorial.toTensor (M := Lorentz.Vector d)).symm
         (permT id (IsReindexing.auto) {((1/ 𝓕.μ₀ : ℝ) • tensorDeriv A.toFieldStrength x | κ κ ν') +
         - (J x | ν')}ᵀ)) = 0 := by
-      funext ν
+      ext ν
       have h2 : gradLagrangian 𝓕 A J x ν = 0 := by simp [h]
       rw [gradLagrangian_eq_tensor A hA J hJ] at h2
       simp only [one_div, map_smul, map_neg, map_add,
@@ -158,7 +158,7 @@ lemma isExtrema_iff_tensors {𝓕 : FreeSpace}
   · intro h
     simp only [IsExtrema]
     funext x
-    funext ν
+    ext ν
     rw [gradLagrangian_eq_tensor A hA J hJ, h]
     simp only [map_zero, Lorentz.Vector.zero_apply, mul_zero, Pi.zero_apply]
 
@@ -190,7 +190,7 @@ lemma isExtrema_lorentzGroup_apply_iff {𝓕 : FreeSpace}
     enter [x]
     rw [tensorDeriv_equivariant _ _ _ (differentiable_toFieldStrength_of_smooth hA)]
     rw [smul_comm]
-    rw [Tensorial.toTensor_smul, Tensorial.toTensor_smul]
+    rw [Tensorial.toTensor_smul, Lorentz.Vector.tensorial_toTensor_smul]
     simp only [one_div, map_smul, actionT_smul,
       contrT_equivariant, map_neg, permT_equivariant]
     rw [smul_comm, ← Tensor.actionT_neg, ← Tensor.actionT_add]

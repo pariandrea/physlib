@@ -8,6 +8,7 @@ module
 public import Physlib.Relativity.Tensors.RealTensor.Vector.Representation
 public import Physlib.Relativity.Tensors.RealTensor.CoVector.Representation
 public import Mathlib.RepresentationTheory.Intertwining
+public import Physlib.Mathematics.ForMathlib.Contraction
 /-!
 
 # Contraction of Real Lorentz Vectors and Covectors
@@ -53,8 +54,8 @@ def Vector.contract : (Vector.rep.tprod CoVector.rep).IntertwiningMap
       simp_rw [CoVector.apply_smul, smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun _ _ ↦ by ring)
   isIntertwining' Λ := by
-    ext φ ψ
-    trans (Λ.1 *ᵥ φ) ⬝ᵥ ((LorentzGroup.transpose Λ⁻¹).1 *ᵥ ψ)
+    refine TensorProduct.ext' fun φ ψ => ?_
+    trans (Λ.1 *ᵥ ⇑φ) ⬝ᵥ ((LorentzGroup.transpose Λ⁻¹).1 *ᵥ ⇑ψ)
     · simp [dotProduct, Vector.rep_apply_eq_mulVec, CoVector.rep_apply_eq_mulVec]
     · simp [dotProduct_mulVec, LorentzGroup.transpose_val,
         vecMul_transpose, mulVec_mulVec, LorentzGroup.coe_inv, inv_mul_of_invertible Λ.1]
@@ -73,8 +74,8 @@ def CoVector.contract : (CoVector.rep.tprod Vector.rep).IntertwiningMap
       simp_rw [Vector.apply_smul, smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun _ _ ↦ by ring)
   isIntertwining' Λ := by
-    ext φ ψ
-    trans ((LorentzGroup.transpose Λ⁻¹).1 *ᵥ φ) ⬝ᵥ (Λ.1 *ᵥ ψ)
+    refine TensorProduct.ext' fun φ ψ => ?_
+    trans ((LorentzGroup.transpose Λ⁻¹).1 *ᵥ ⇑φ) ⬝ᵥ (Λ.1 *ᵥ ⇑ψ)
     · simp [dotProduct, Vector.rep_apply_eq_mulVec, CoVector.rep_apply_eq_mulVec]
     · simp [dotProduct_mulVec, LorentzGroup.transpose_val,
         mulVec_transpose, vecMul_vecMul, LorentzGroup.coe_inv, inv_mul_of_invertible Λ.1]
@@ -99,14 +100,22 @@ lemma CoVector.contract_basis_left (μ : Fin 1 ⊕ Fin d) (φ : Vector d) :
     CoVector.contract (basis μ ⊗ₜ φ) = φ μ := by simp [CoVector.contract_tmul, basis_apply]
 
 lemma Vector.contract_basis_right (φ : Vector d) (μ : Fin 1 ⊕ Fin d) :
-    Vector.contract (φ ⊗ₜ basis μ) = φ μ := by simp [Vector.contract_tmul, basis_apply]
+    Vector.contract (φ ⊗ₜ CoVector.basis μ) = φ μ := by
+  simp [Vector.contract_tmul, CoVector.basis_apply]
 
 lemma CoVector.contract_basis_right (ψ : CoVector d) (μ : Fin 1 ⊕ Fin d) :
-    CoVector.contract (ψ ⊗ₜ basis μ) = ψ μ := by simp [CoVector.contract_tmul, basis_apply]
+    CoVector.contract (ψ ⊗ₜ Vector.basis μ) = ψ μ := by
+  simp [CoVector.contract_tmul, Vector.basis_apply]
 
 lemma Vector.contract_eq_coVector_contract (φ : Vector d) (ψ : CoVector d) :
     Vector.contract (φ ⊗ₜ ψ) = CoVector.contract (ψ ⊗ₜ φ) := by
   simp_rw [Vector.contract_tmul, CoVector.contract_tmul, mul_comm]
+
+/-- The contraction `φ^μ ψ_μ` is the coordinate pairing of `Vector.basis` and `CoVector.basis`. -/
+lemma Vector.coordPairing_basis_tmul (φ : Vector d) (ψ : CoVector d) :
+    Vector.basis.coordPairing CoVector.basis (φ ⊗ₜ ψ) = Vector.contract (φ ⊗ₜ ψ) := by
+  simp [Module.Basis.coordPairing_tmul, Vector.basis_repr_apply, CoVector.basis_repr_apply,
+    Vector.contract_tmul]
 
 lemma Vector.contract_rep (Λ : LorentzGroup d) (φ : Vector d) (ψ : CoVector d) :
     Vector.contract ((Vector.rep Λ φ) ⊗ₜ (CoVector.rep Λ ψ)) = Vector.contract (φ ⊗ₜ ψ) := by

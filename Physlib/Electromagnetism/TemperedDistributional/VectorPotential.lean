@@ -41,7 +41,7 @@ the vector potential is non-relativistic and is therefore a distribution of `Tim
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 
@@ -51,7 +51,7 @@ open Tensor
 
 namespace TempDistElectromagneticPotential
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix SchwartzMap

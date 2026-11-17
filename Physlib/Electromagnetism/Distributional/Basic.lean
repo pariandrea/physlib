@@ -48,7 +48,7 @@ open Distributions
 open Module realLorentzTensor
 open SpaceTime
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 

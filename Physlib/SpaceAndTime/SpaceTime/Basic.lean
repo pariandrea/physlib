@@ -217,7 +217,7 @@ def space {d : ℕ} : SpaceTime d →L[ℝ] Space d where
 -/
 
 lemma space_toCoord_symm {d : ℕ} (f : Fin 1 ⊕ Fin d → ℝ) :
-    space f = fun i => f (Sum.inr i) := by
+    space (Lorentz.Vector.toCoord.symm f) = fun i => f (Sum.inr i) := by
   funext i
   simp [space]
 
@@ -235,9 +235,10 @@ lemma space_equivariant {d : ℕ}
     space ((LorentzGroup.ofSpecialOrthogonal R : LorentzGroup d) • x) =
       EuclideanGroup.ofRotation R • space x := by
   ext i
-  rw [Lorentz.Vector.smul_eq_mulVec, EuclideanGroup.smul_apply]
+  simp only [space, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
+    Lorentz.Vector.smul_eq_mulVec, EuclideanGroup.smul_apply]
   -- The Lorentz spatial block is R; the Euclidean action has zero translation.
-  change (Matrix.fromBlocks 1 0 0 R.val *ᵥ x) (Sum.inr i) =
+  change (Matrix.fromBlocks 1 0 0 R.val *ᵥ ⇑x) (Sum.inr i) =
     (R.val *ᵥ (fun j => x (Sum.inr j) - 0)) i + 0
   simp [Matrix.fromBlocks_mulVec, Function.comp_def]
 
@@ -267,7 +268,7 @@ def time {d : ℕ} (c : SpeedOfLight := 1) : SpaceTime d →ₗ[ℝ] Time where
 
 @[simp]
 lemma time_val_toCoord_symm {d : ℕ} (c : SpeedOfLight) (f : Fin 1 ⊕ Fin d → ℝ) :
-    (time c f).val = f (Sum.inl 0) / c := by
+    (time c (Lorentz.Vector.toCoord.symm f)).val = f (Sum.inl 0) / c := by
   simp [time, Lorentz.Vector.timeComponent]
 
 /-!
@@ -281,13 +282,14 @@ lemma time_val_toCoord_symm {d : ℕ} (c : SpeedOfLight) (f : Fin 1 ⊕ Fin d �
 def toTimeAndSpace {d : ℕ} (c : SpeedOfLight := 1) : SpaceTime d ≃L[ℝ] Time × Space d :=
   LinearEquiv.toContinuousLinearEquiv {
     toFun x := (x.time c, x.space)
-    invFun tx := (fun i =>
+    invFun tx := Lorentz.Vector.toCoord.symm (fun i =>
       match i with
       | Sum.inl _ => c * tx.1.val
       | Sum.inr i => tx.2 i)
     left_inv x := by
       simp only [time, LinearMap.coe_mk, AddHom.coe_mk, space]
-      funext i
+      ext i
+      simp only [LinearEquiv.apply_symm_apply]
       match i with
       | Sum.inl 0 =>
         simp [Lorentz.Vector.timeComponent]
@@ -296,7 +298,7 @@ def toTimeAndSpace {d : ℕ} (c : SpeedOfLight := 1) : SpaceTime d ≃L[ℝ] Tim
     right_inv tx := by
       simp only [time, Lorentz.Vector.timeComponent, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk,
         ne_eq, SpeedOfLight.val_ne_zero, not_false_eq_true, mul_div_cancel_left₀, space,
-        ContinuousLinearMap.coe_mk']
+        ContinuousLinearMap.coe_mk', LinearEquiv.apply_symm_apply]
     map_add' x y := by
       simp only [Prod.mk_add_mk, Prod.mk.injEq]
       constructor
@@ -321,16 +323,18 @@ lemma space_toTimeAndSpace_symm {d : ℕ} {c : SpeedOfLight} (t : Time) (s : Spa
 @[simp]
 lemma time_toTimeAndSpace_symm {d : ℕ} {c : SpeedOfLight} (t : Time) (s : Space d) :
     ((toTimeAndSpace c).symm (t, s)).time c = t := by
-  simp [time, toTimeAndSpace]
+  simp [time, toTimeAndSpace, Lorentz.Vector.timeComponent]
 
 @[simp]
 lemma toTimeAndSpace_symm_apply_inl {d : ℕ} {c : SpeedOfLight} (t : Time) (s : Space d) :
-    (toTimeAndSpace c).symm (t, s) (Sum.inl 0) = c * t := by rfl
+    (toTimeAndSpace c).symm (t, s) (Sum.inl 0) = c * t := by
+  simp [toTimeAndSpace]
 
 @[simp]
 lemma toTimeAndSpace_symm_apply_inr {d : ℕ} {c : SpeedOfLight} (t : Time) (x : Space d)
     (i : Fin d) :
-    (toTimeAndSpace c).symm (t, x) (Sum.inr i) = x i := by rfl
+    (toTimeAndSpace c).symm (t, x) (Sum.inr i) = x i := by
+  simp [toTimeAndSpace]
 /-!
 
 #### B.3.1. Derivative of `toTimeAndSpace`
@@ -429,30 +433,33 @@ lemma timeSpaceBasis_apply_inr {d : ℕ} (c : SpeedOfLight) (i : Fin d) :
 of `(c, 0, 0, ....)` and keeping all other components the same. -/
 def timeSpaceBasisEquiv {d : ℕ} (c : SpeedOfLight) :
     SpaceTime d ≃L[ℝ] SpaceTime d where
-  toFun x := fun μ =>
+  toFun x := Lorentz.Vector.toCoord.symm fun μ =>
     match μ with
     | Sum.inl 0 => c.val * x (Sum.inl 0)
     | Sum.inr i => x (Sum.inr i)
-  invFun x := fun μ =>
+  invFun x := Lorentz.Vector.toCoord.symm fun μ =>
     match μ with
     | Sum.inl 0 => (1 / c.val) * x (Sum.inl 0)
     | Sum.inr i => x (Sum.inr i)
   left_inv x := by
-    funext μ
+    ext μ
+    simp only [LinearEquiv.apply_symm_apply]
     match μ with
     | Sum.inl 0 =>
       field_simp
     | Sum.inr i =>
       rfl
   right_inv x := by
-    funext μ
+    ext μ
+    simp only [LinearEquiv.apply_symm_apply]
     match μ with
     | Sum.inl 0 =>
       field_simp
     | Sum.inr i =>
       rfl
   map_add' x y := by
-    funext μ
+    ext μ
+    simp only [Lorentz.Vector.apply_add, LinearEquiv.apply_symm_apply]
     match μ with
     | Sum.inl 0 =>
       simp only [Fin.isValue, Lorentz.Vector.apply_add]
@@ -460,7 +467,8 @@ def timeSpaceBasisEquiv {d : ℕ} (c : SpeedOfLight) :
     | Sum.inr i =>
       simp
   map_smul' c x := by
-    funext μ
+    ext μ
+    simp only [LinearEquiv.apply_symm_apply, Lorentz.Vector.apply_smul]
     match μ with
     | Sum.inl 0 =>
       simp only [Fin.isValue, Lorentz.Vector.apply_smul, RingHom.id_apply]
@@ -471,6 +479,7 @@ def timeSpaceBasisEquiv {d : ℕ} (c : SpeedOfLight) :
     simp only [one_div, Fin.isValue]
     apply Lorentz.Vector.continuous_of_apply
     intro μ
+    simp only [LinearEquiv.apply_symm_apply]
     match μ with
     | Sum.inl 0 =>
       simp only [Fin.isValue]
@@ -481,6 +490,7 @@ def timeSpaceBasisEquiv {d : ℕ} (c : SpeedOfLight) :
   continuous_toFun := by
     apply Lorentz.Vector.continuous_of_apply
     intro μ
+    simp only [LinearEquiv.apply_symm_apply]
     match μ with
     | Sum.inl 0 =>
       simp only [Fin.isValue]
@@ -521,11 +531,11 @@ lemma timeSpaceBasis_eq_map_basis {d : ℕ} (c : SpeedOfLight) :
   match μ with
   | Sum.inl 0 =>
     simp [timeSpaceBasisEquiv]
-    funext ν
+    ext ν
     rcases ν with _ | j <;> simp [Fin.fin_one_eq_zero]
   | Sum.inr i =>
     simp [timeSpaceBasisEquiv]
-    funext ν
+    ext ν
     rcases ν with _ | j <;> simp [Fin.fin_one_eq_zero]
 
 /-!

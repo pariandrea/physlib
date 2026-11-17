@@ -43,7 +43,7 @@ In this implementation we have set `μ₀ = 1`. It is a TODO to introduce this c
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff Physlib
+open TensorSpecies.Tensor ContDiff Physlib
 
 /-!
 
@@ -150,6 +150,7 @@ lemma gradKineticTerm_sum_inr_eq {d} {𝓕 : FreeSpace}
           (A.magneticFieldMatrix 𝓕.c)) ε) (j, i))) := by
   simp [gradKineticTerm_eq_fieldStrength A ε, Lorentz.Vector.apply_sum,
     Fintype.sum_sum_type, mul_add, sub_eq_add_neg]
+  rw [add_comm]
   congr
   · conv_rhs =>
       enter [2, 2]

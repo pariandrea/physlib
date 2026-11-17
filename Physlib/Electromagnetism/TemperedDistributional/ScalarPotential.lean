@@ -40,7 +40,7 @@ the scalar potential is non-relativistic and is therefore a distribution of `Tim
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 
@@ -50,7 +50,7 @@ open Tensor
 
 namespace TempDistElectromagneticPotential
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -67,7 +67,8 @@ noncomputable def scalarPotential {d} (c : SpeedOfLight) :
     simp [distTimeSlice]
   map_smul' r A := by
     ext ε
-    simp [distTimeSlice, mul_left_comm]
+    simp [distTimeSlice]
+    ring
 
 end TempDistElectromagneticPotential
 end Electromagnetism

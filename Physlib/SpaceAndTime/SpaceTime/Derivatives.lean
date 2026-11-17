@@ -580,11 +580,24 @@ lemma tensorDeriv_equivariant (f : SpaceTime d → M) (Λ : LorentzGroup d) (x :
   rw [Finset.sum_comm]
   conv_lhs =>
     enter [2, ν]
-    rw [← sum_tmul, ← Lorentz.CoVector.smul_basis, ← Tensorial.smul_prod]
+    rw [← sum_tmul, ← Lorentz.CoVector.smul_basis, ← Lorentz.CoVector.smulAction_eq_smul,
+      ← Tensorial.smul_prod]
   change _ = (TensorSpecies.Tensorial.smulLinearMap Λ) _
   simp [TensorSpecies.Tensorial.smulLinearMap_apply, map_sum]
 
-open TensorSpecies.Tensorial Lorentz Tensor
+/-- `deriv_equivariant` for a vector-valued `f`, with the Lorentz action on vectors. -/
+lemma deriv_equivariant_vector (f : SpaceTime d → Lorentz.Vector d) (Λ : LorentzGroup d)
+    (x : SpaceTime d) (hf : Differentiable ℝ f) (μ : Fin 1 ⊕ Fin d) :
+    ∂_ μ (fun x => Λ • f (Λ⁻¹ • x)) x = ∑ ν, Λ⁻¹.1 ν μ • Λ • ∂_ ν f (Λ⁻¹ • x) := by
+  simpa only [Lorentz.Vector.smulAction_eq_smul] using deriv_equivariant f Λ x hf μ
+
+/-- `tensorDeriv_equivariant` for a vector-valued `f`, with the Lorentz action on vectors. -/
+lemma tensorDeriv_equivariant_vector (f : SpaceTime d → Lorentz.Vector d) (Λ : LorentzGroup d)
+    (x : SpaceTime d) (hf : Differentiable ℝ f) :
+    tensorDeriv (fun x => Λ • f (Λ⁻¹ • x)) x = Λ • tensorDeriv f (Λ⁻¹ • x) := by
+  simpa only [Lorentz.Vector.smulAction_eq_smul] using tensorDeriv_equivariant f Λ x hf
+
+open TensorSpecies.Tensorial Lorentz TensorSpecies.Tensor
 
 lemma tensorDeriv_toTensor_basis_repr
     {f : SpaceTime d → M}
@@ -691,7 +704,8 @@ lemma distTensorDeriv_equivariant {M : Type} [NormedAddCommGroup M]
   rw [Finset.sum_comm]
   conv_lhs =>
     enter [2, ν]
-    rw [← sum_tmul, ← Lorentz.CoVector.smul_basis, ← Tensorial.smul_prod]
+    rw [← sum_tmul, ← Lorentz.CoVector.smul_basis, ← Lorentz.CoVector.smulAction_eq_smul,
+      ← Tensorial.smul_prod]
   change _ = (TensorSpecies.Tensorial.smulLinearMap Λ) _
   simp only [Nat.succ_eq_add_one, Nat.reduceAdd, ContinuousLinearMap.coe_comp,
     ContinuousLinearMap.coe_coe, Function.comp_apply]

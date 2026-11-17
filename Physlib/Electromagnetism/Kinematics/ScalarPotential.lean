@@ -42,12 +42,12 @@ the scalar potential is non-relativistic and is therefore a function of `Time` a
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -74,7 +74,7 @@ noncomputable def scalarPotential {d} (c : SpeedOfLight := 1) (A : Electromagnet
 @[simp]
 lemma ofScalarPotential_scalarPotential {d} (c : SpeedOfLight)
     (φ : Time → Space d → ℝ) : (ofScalarPotential c φ).scalarPotential c = φ := by
-  simp only [scalarPotential, ofScalarPotential, Fin.isValue]
+  simp only [scalarPotential, ofScalarPotential, Fin.isValue, LinearEquiv.apply_symm_apply]
   field_simp
   simp
 
@@ -87,7 +87,8 @@ lemma ofStaticScalarPotential_scalarPotential {d} (c : SpeedOfLight)
 lemma ofVectorPotential_scalarPotential {d} (c : SpeedOfLight)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) :
     (ofVectorPotential c A).scalarPotential = 0 := by
-  simp only [scalarPotential, SpeedOfLight.val_one, ofVectorPotential, Fin.isValue, mul_zero]
+  simp only [scalarPotential, SpeedOfLight.val_one, ofVectorPotential, Fin.isValue, mul_zero,
+    LinearEquiv.apply_symm_apply]
   rfl
 
 @[simp]
@@ -100,7 +101,7 @@ lemma ofStaticVectorPotential_scalarPotential {d} (c : SpeedOfLight)
 lemma ofPotentials_scalarPotential {d} (c : SpeedOfLight) (φ : Time → Space d → ℝ)
     (A : Time → Space d → EuclideanSpace ℝ (Fin d)) :
     (ofPotentials c φ A).scalarPotential c = φ := by
-  simp only [scalarPotential, ofPotentials, Fin.isValue]
+  simp only [scalarPotential, ofPotentials, Fin.isValue, LinearEquiv.apply_symm_apply]
   field_simp
   simp
 

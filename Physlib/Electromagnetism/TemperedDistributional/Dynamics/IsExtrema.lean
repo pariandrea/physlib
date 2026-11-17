@@ -39,7 +39,7 @@ Maxwell's equations with sources, i.e. Gauss's law and Ampère's law.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 /-!
 
@@ -71,10 +71,10 @@ lemma isExtrema_iff_components {𝓕 : FreeSpace}
   rw [isExtrema_iff_gradLagrangian]
   refine ⟨fun h => by simp [h], fun h => ?_⟩
   ext1 ε
-  funext i
+  ext i
   match i with
-  | Sum.inl 0 => exact h.1 ε
-  | Sum.inr j => exact h.2 ε j
+  | Sum.inl 0 => simpa using h.1 ε
+  | Sum.inr j => simpa using h.2 ε j
 /-!
 
 ### A.1. IsExtrema and Gauss's law and Ampère's law
@@ -192,7 +192,7 @@ lemma isExterma_iff_tensor {𝓕 : FreeSpace}
     have h1 : ((Tensorial.toTensor (M := Lorentz.Vector d)).symm
         (permT id (IsReindexing.auto) {((1/ 𝓕.μ₀ : ℝ) •
           distTensorDeriv A.fieldStrength x | κ κ ν') + - (J x | ν')}ᵀ)) = 0 := by
-      funext ν
+      ext ν
       have h2 : gradLagrangian 𝓕 A J x ν = 0 := by simp [h]
       rw [gradLagrangian_eq_tensor A J] at h2
       simp at h2
@@ -203,7 +203,7 @@ lemma isExterma_iff_tensor {𝓕 : FreeSpace}
   · intro h
     simp only [IsExtrema]
     ext1 x
-    funext ν
+    ext ν
     rw [gradLagrangian_eq_tensor A J, h]
     simp
 

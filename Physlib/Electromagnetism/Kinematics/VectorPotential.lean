@@ -42,12 +42,12 @@ the vector potential is non-relativistic and is therefore a function of `Time` a
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -74,7 +74,7 @@ noncomputable def vectorPotential {d} (c : SpeedOfLight := 1) (A : Electromagnet
 @[simp]
 lemma ofScalarPotential_vectorPotential {d} (c : SpeedOfLight)
     (φ : Time → Space d → ℝ) : (ofScalarPotential c φ).vectorPotential c = 0 := by
-  simp only [vectorPotential, ofScalarPotential]
+  simp only [vectorPotential, ofScalarPotential, LinearEquiv.apply_symm_apply]
   rfl
 
 @[simp]

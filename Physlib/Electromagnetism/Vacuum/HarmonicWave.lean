@@ -77,7 +77,7 @@ open InnerProductSpace
   with wave number `k`. -/
 noncomputable def harmonicWaveX (𝓕 : FreeSpace) (k : ℝ) (E₀ : Fin d → ℝ)
   (φ : Fin d → ℝ) : ElectromagneticPotential d.succ where
-  val := fun x μ =>
+  val := fun x => Lorentz.Vector.toCoord.symm fun μ =>
   match μ with
   | Sum.inl 0 => 0
   | Sum.inr 0 => 0
