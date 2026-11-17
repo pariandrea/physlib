@@ -81,9 +81,9 @@ def valEquiv : DownSinglet ≃ Fermion.RightHandedWeyl ⊗[ℂ] EuclideanSpace �
   toFun := val
   invFun := fun m => ⟨m⟩
 
-instance : AddCommGroup DownSinglet := Equiv.addCommGroup valEquiv
+noncomputable instance : AddCommGroup DownSinglet := Equiv.addCommGroup valEquiv
 
-instance : Module ℂ DownSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ DownSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear identification with the underlying tensor product. -/
 def valLinEquiv : DownSinglet ≃ₗ[ℂ]

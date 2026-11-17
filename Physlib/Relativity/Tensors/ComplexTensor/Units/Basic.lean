@@ -84,28 +84,28 @@ scoped[complexLorentzTensor] notation "δR" => rightDualRightUnit
 
 -/
 
-lemma coContrUnit_eq_fromConstPair : δ' = fromConstPair Lorentz.ComplexVector.unit := by
+lemma coContrUnit_eq_fromConstPair : δ' = fromConstPair (S := complexLorentzTensor) (c1 := .down) (c2 := .up) Lorentz.ComplexVector.unit := by
   rw [Lorentz.ComplexVector.unit]
   rfl
 
-lemma contrCoUnit_eq_fromConstPair : δ = fromConstPair Lorentz.ComplexCoVector.unit := by
+lemma contrCoUnit_eq_fromConstPair : δ = fromConstPair (S := complexLorentzTensor) (c1 := .up) (c2 := .down) Lorentz.ComplexCoVector.unit := by
   rw [Lorentz.ComplexCoVector.unit]
   rfl
 
-lemma dualLeftLeftUnit_eq_fromConstPair : δL' = fromConstPair Fermion.LeftHandedWeyl.unit := by
+lemma dualLeftLeftUnit_eq_fromConstPair : δL' = fromConstPair (S := complexLorentzTensor) (c1 := .downL) (c2 := .upL) Fermion.LeftHandedWeyl.unit := by
   rw [Fermion.LeftHandedWeyl.unit]
   rfl
 
-lemma leftDualLeftUnit_eq_fromConstPair : δL = fromConstPair Fermion.DualLeftHandedWeyl.unit := by
+lemma leftDualLeftUnit_eq_fromConstPair : δL = fromConstPair (S := complexLorentzTensor) (c1 := .upL) (c2 := .downL) Fermion.DualLeftHandedWeyl.unit := by
   rw [Fermion.DualLeftHandedWeyl.unit]
   rfl
 
-lemma dualRightRightUnit_eq_fromConstPair : δR' = fromConstPair Fermion.RightHandedWeyl.unit := by
+lemma dualRightRightUnit_eq_fromConstPair : δR' = fromConstPair (S := complexLorentzTensor) (c1 := .downR) (c2 := .upR) Fermion.RightHandedWeyl.unit := by
   rw [Fermion.RightHandedWeyl.unit]
   rfl
 
 lemma rightDualRightUnit_eq_fromConstPair :
-    δR = fromConstPair Fermion.DualRightHandedWeyl.unit := by
+    δR = fromConstPair (S := complexLorentzTensor) (c1 := .upR) (c2 := .downR) Fermion.DualRightHandedWeyl.unit := by
   rw [Fermion.DualRightHandedWeyl.unit]
   rfl
 
@@ -115,32 +115,32 @@ lemma rightDualRightUnit_eq_fromConstPair :
 
 -/
 
-lemma coContrUnit_eq_fromPairT : δ' = fromPairT (Lorentz.ComplexVector.unitVal) := by
+lemma coContrUnit_eq_fromPairT : δ' = fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .up) (Lorentz.ComplexVector.unitVal) := by
   rw [coContrUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Lorentz.ComplexVector.unit_apply_one
 
-lemma contrCoUnit_eq_fromPairT : δ = fromPairT (Lorentz.ComplexCoVector.unitVal) := by
+lemma contrCoUnit_eq_fromPairT : δ = fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .down) (Lorentz.ComplexCoVector.unitVal) := by
   rw [contrCoUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Lorentz.ComplexCoVector.unit_apply_one
 
-lemma dualLeftLeftUnit_eq_fromPairT : δL' = fromPairT (Fermion.LeftHandedWeyl.unitVal) := by
+lemma dualLeftLeftUnit_eq_fromPairT : δL' = fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .upL) (Fermion.LeftHandedWeyl.unitVal) := by
   rw [dualLeftLeftUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.LeftHandedWeyl.unit_apply_one
 
-lemma leftDualLeftUnit_eq_fromPairT : δL = fromPairT (Fermion.DualLeftHandedWeyl.unitVal) := by
+lemma leftDualLeftUnit_eq_fromPairT : δL = fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .downL) (Fermion.DualLeftHandedWeyl.unitVal) := by
   rw [leftDualLeftUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.DualLeftHandedWeyl.unit_apply_one
 
-lemma dualRightRightUnit_eq_fromPairT : δR' = fromPairT (Fermion.RightHandedWeyl.unitVal) := by
+lemma dualRightRightUnit_eq_fromPairT : δR' = fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .upR) (Fermion.RightHandedWeyl.unitVal) := by
   rw [dualRightRightUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.RightHandedWeyl.unit_apply_one
 
-lemma rightDualRightUnit_eq_fromPairT : δR = fromPairT (Fermion.DualRightHandedWeyl.unitVal) := by
+lemma rightDualRightUnit_eq_fromPairT : δR = fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .downR) (Fermion.DualRightHandedWeyl.unitVal) := by
   rw [rightDualRightUnit_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.DualRightHandedWeyl.unit_apply_one
@@ -153,51 +153,51 @@ lemma rightDualRightUnit_eq_fromPairT : δR = fromPairT (Fermion.DualRightHanded
 
 open Lorentz in
 lemma coContrUnit_eq_complexCoVector_basis_complexVector_basis : δ' =
-    ∑ i, fromPairT (ComplexCoVector.basis i ⊗ₜ[ℂ] ComplexVector.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .up) (ComplexCoVector.basis i ⊗ₜ[ℂ] ComplexVector.basis i) := by
   rw [coContrUnit_eq_fromPairT, ComplexVector.unitVal_expand_tmul]
   rfl
 
 open Lorentz in
 lemma coContrUnit_eq_complexCoVector_basisFin4_complexVector_basisFin4 : δ' =
-    ∑ i, fromPairT (ComplexCoVector.basisFin4 i ⊗ₜ[ℂ] ComplexVector.basisFin4 i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .up) (ComplexCoVector.basisFin4 i ⊗ₜ[ℂ] ComplexVector.basisFin4 i) := by
   rw [coContrUnit_eq_complexCoVector_basis_complexVector_basis]
   rw [← finSumFinEquiv.symm.sum_comp]
   simp [ComplexCoVector.basisFin4, ComplexVector.basisFin4]
 
 open Lorentz in
 lemma contrCoUnit_eq_complexVector_basis_complexCoVector_basis : δ =
-    ∑ i, fromPairT (ComplexVector.basis i ⊗ₜ[ℂ] ComplexCoVector.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .down) (ComplexVector.basis i ⊗ₜ[ℂ] ComplexCoVector.basis i) := by
   rw [contrCoUnit_eq_fromPairT, ComplexCoVector.unitVal_expand_tmul]
   rfl
 
 open Lorentz in
 lemma contrCoUnit_eq_complexVector_basisFin4_complexCoVector_basisFin4 : δ =
-    ∑ i, fromPairT (ComplexVector.basisFin4 i ⊗ₜ[ℂ] ComplexCoVector.basisFin4 i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .down) (ComplexVector.basisFin4 i ⊗ₜ[ℂ] ComplexCoVector.basisFin4 i) := by
   rw [contrCoUnit_eq_complexVector_basis_complexCoVector_basis]
   rw [← finSumFinEquiv.symm.sum_comp]
   simp [ComplexVector.basisFin4, ComplexCoVector.basisFin4]
 
 open Fermion in
 lemma dualLeftLeftUnit_eq_basis : δL' =
-    ∑ i, fromPairT (DualLeftHandedWeyl.basis i ⊗ₜ[ℂ] LeftHandedWeyl.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .upL) (DualLeftHandedWeyl.basis i ⊗ₜ[ℂ] LeftHandedWeyl.basis i) := by
   rw [dualLeftLeftUnit_eq_fromPairT, LeftHandedWeyl.unitVal_expand_tmul]
   rfl
 
 open Fermion in
 lemma leftDualLeftUnit_eq_basis : δL =
-    ∑ i, fromPairT (LeftHandedWeyl.basis i ⊗ₜ[ℂ] DualLeftHandedWeyl.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .downL) (LeftHandedWeyl.basis i ⊗ₜ[ℂ] DualLeftHandedWeyl.basis i) := by
   rw [leftDualLeftUnit_eq_fromPairT, DualLeftHandedWeyl.unitVal_expand_tmul]
   rfl
 
 open Fermion in
 lemma dualRightRightUnit_eq_basis : δR' =
-    ∑ i, fromPairT (DualRightHandedWeyl.basis i ⊗ₜ[ℂ] RightHandedWeyl.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .upR) (DualRightHandedWeyl.basis i ⊗ₜ[ℂ] RightHandedWeyl.basis i) := by
   rw [dualRightRightUnit_eq_fromPairT, RightHandedWeyl.unitVal_expand_tmul]
   rfl
 
 open Fermion in
 lemma rightDualRightUnit_eq_basis : δR =
-    ∑ i, fromPairT (RightHandedWeyl.basis i ⊗ₜ[ℂ] DualRightHandedWeyl.basis i) := by
+    ∑ i, fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .downR) (RightHandedWeyl.basis i ⊗ₜ[ℂ] DualRightHandedWeyl.basis i) := by
   rw [rightDualRightUnit_eq_fromPairT, DualRightHandedWeyl.unitVal_expand_tmul]
   rfl
 

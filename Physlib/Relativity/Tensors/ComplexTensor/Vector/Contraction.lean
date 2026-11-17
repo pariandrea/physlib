@@ -81,6 +81,9 @@ def ComplexVector.contr : (ComplexVector.SL2CRep.tprod ComplexCoVector.SL2CRep).
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift ComplexVector.contrBi
   isIntertwining' M := TensorProduct.ext' fun ψ φ => by
+    change (ComplexVector.SL2CRep M ψ).toFin13ℂ ⬝ᵥ (ComplexCoVector.SL2CRep M φ).toFin13ℂ = ψ.toFin13ℂ ⬝ᵥ φ.toFin13ℂ
+    simp only [ComplexVector.toFin13ℂEquiv_apply, ComplexCoVector.toFin13ℂEquiv_apply, ComplexVector.val_SL2CRep,
+      ComplexCoVector.val_SL2CRep]
     change ((LorentzGroup.toComplex (SL2C.toLorentzGroup M)) *ᵥ ψ.toFin13ℂ) ⬝ᵥ
       ((LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ *ᵥ φ.toFin13ℂ) =
         ψ.toFin13ℂ ⬝ᵥ φ.toFin13ℂ
@@ -122,6 +125,9 @@ def ComplexCoVector.contr : (ComplexCoVector.SL2CRep.tprod ComplexVector.SL2CRep
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift ComplexCoVector.contrBi
   isIntertwining' M := TensorProduct.ext' fun φ ψ => by
+    change (ComplexCoVector.SL2CRep M φ).toFin13ℂ ⬝ᵥ (ComplexVector.SL2CRep M ψ).toFin13ℂ = φ.toFin13ℂ ⬝ᵥ ψ.toFin13ℂ
+    simp only [ComplexCoVector.toFin13ℂEquiv_apply, ComplexVector.toFin13ℂEquiv_apply, ComplexCoVector.val_SL2CRep,
+      ComplexVector.val_SL2CRep]
     change ((LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ *ᵥ φ.toFin13ℂ) ⬝ᵥ
       ((LorentzGroup.toComplex (SL2C.toLorentzGroup M)) *ᵥ ψ.toFin13ℂ) = φ.toFin13ℂ ⬝ᵥ ψ.toFin13ℂ
     rw [dotProduct_mulVec, mulVec_transpose, vecMul_vecMul]

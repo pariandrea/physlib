@@ -29,54 +29,6 @@ open CategoryTheory.MonoidalCategory
 
 /-!
 
-## A. The underlying matrix
-
--/
-
-/-- The raw `2x2` matrix corresponding to the metric for fermions. -/
-def metricRaw : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; -1, 0]
-
-/-- Multiplying an element of `SL(2, ℂ)` on the left with the metric `𝓔` is equivalent
-  to multiplying the inverse-transpose of that element on the right with the metric. -/
-lemma comm_metricRaw (M : SL(2,ℂ)) : M.1 * metricRaw = metricRaw * (M.1⁻¹)ᵀ := by
-  rw [metricRaw]
-  rw [Lorentz.SL2C.inverse_coe, eta_fin_two M.1]
-  rw [SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two,
-      Matrix.mul_fin_two, eta_fin_two !![M.1 1 1, -M.1 0 1; -M.1 1 0, M.1 0 0]ᵀ]
-  simp only [Fin.isValue, mul_zero, mul_neg, mul_one, zero_add, add_zero, transpose_apply, of_apply,
-    cons_val', cons_val_zero, empty_val', cons_val_fin_one, cons_val_one, cons_mul,
-    Nat.succ_eq_add_one, Nat.reduceAdd, vecMul_cons, head_cons, zero_smul, tail_cons, one_smul,
-    empty_vecMul, neg_smul, neg_cons, neg_neg, neg_empty, empty_mul, Equiv.symm_apply_apply]
-
-lemma metricRaw_comm (M : SL(2,ℂ)) : metricRaw * M.1 = (M.1⁻¹)ᵀ * metricRaw := by
-  rw [metricRaw]
-  rw [Lorentz.SL2C.inverse_coe, eta_fin_two M.1]
-  rw [SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two,
-      Matrix.mul_fin_two, eta_fin_two !![M.1 1 1, -M.1 0 1; -M.1 1 0, M.1 0 0]ᵀ]
-  simp only [Fin.isValue, zero_mul, one_mul, zero_add, neg_mul, add_zero, transpose_apply, of_apply,
-    cons_val', cons_val_zero, empty_val', cons_val_fin_one, cons_val_one, cons_mul,
-    Nat.succ_eq_add_one, Nat.reduceAdd, vecMul_cons, head_cons, smul_cons, smul_eq_mul, mul_zero,
-    mul_one, smul_empty, tail_cons, neg_smul, mul_neg, neg_cons, neg_neg, neg_zero, neg_empty,
-    empty_vecMul, add_cons, empty_add_empty, empty_mul, Equiv.symm_apply_apply]
-
-lemma star_comm_metricRaw (M : SL(2,ℂ)) : M.1.map star * metricRaw = metricRaw * ((M.1)⁻¹)ᴴ := by
-  rw [metricRaw]
-  rw [Lorentz.SL2C.inverse_coe, eta_fin_two M.1]
-  rw [SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two,
-      eta_fin_two !![M.1 1 1, -M.1 0 1; -M.1 1 0, M.1 0 0]ᴴ]
-  rw [eta_fin_two (!![M.1 0 0, M.1 0 1; M.1 1 0, M.1 1 1].map star)]
-  simp
-
-lemma metricRaw_comm_star (M : SL(2,ℂ)) : metricRaw * M.1.map star = ((M.1)⁻¹)ᴴ * metricRaw := by
-  rw [metricRaw]
-  rw [Lorentz.SL2C.inverse_coe, eta_fin_two M.1]
-  rw [SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two,
-      eta_fin_two !![M.1 1 1, -M.1 0 1; -M.1 1 0, M.1 0 0]ᴴ]
-  rw [eta_fin_two (!![M.1 0 0, M.1 0 1; M.1 1 0, M.1 1 1].map star)]
-  simp
-
-/-!
-
 ## B. The metric for left-handed Weyl fermions
 
 -/

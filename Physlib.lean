@@ -484,6 +484,7 @@ public import Physlib.QuantumMechanics.SpaceDQuantumSystem
 public import Physlib.Relativity.Bispinors.Basic
 public import Physlib.Relativity.Bispinors.Pauli.Basic
 public import Physlib.Relativity.Bispinors.Pauli.Relations
+public import Physlib.Relativity.Bispinors.Pauli.Tensor
 public import Physlib.Relativity.Bispinors.Pauli.ToTensor
 public import Physlib.Relativity.Causality.Basic
 public import Physlib.Relativity.Causality.CausallyFollows
@@ -536,6 +537,7 @@ public import Physlib.Relativity.Tensors.ComplexTensor.Metrics.Basic
 public import Physlib.Relativity.Tensors.ComplexTensor.Metrics.Lemmas
 public import Physlib.Relativity.Tensors.ComplexTensor.Metrics.Pre
 public import Physlib.Relativity.Tensors.ComplexTensor.OfGaussianInt
+public import Physlib.Relativity.Tensors.ComplexTensor.Species
 public import Physlib.Relativity.Tensors.ComplexTensor.Units.Basic
 public import Physlib.Relativity.Tensors.ComplexTensor.Units.Pre
 public import Physlib.Relativity.Tensors.ComplexTensor.Units.Symm
@@ -578,6 +580,7 @@ public import Physlib.Relativity.Tensors.RealTensor.Matrix.Pre
 public import Physlib.Relativity.Tensors.RealTensor.Metrics.Basic
 public import Physlib.Relativity.Tensors.RealTensor.Metrics.Pre
 public import Physlib.Relativity.Tensors.RealTensor.Representation.Contraction
+public import Physlib.Relativity.Tensors.RealTensor.Species
 public import Physlib.Relativity.Tensors.RealTensor.ToComplex
 public import Physlib.Relativity.Tensors.RealTensor.Units.Basic
 public import Physlib.Relativity.Tensors.RealTensor.Units.Pre

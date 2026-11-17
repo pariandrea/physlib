@@ -51,9 +51,9 @@ def valEquiv : UpSinglet ≃ Fermion.RightHandedWeyl ⊗[ℂ] EuclideanSpace ℂ
 The AddCommGroup and module instances are inherited from the underlying tensor product space.
 -/
 
-instance : AddCommGroup UpSinglet := Equiv.addCommGroup valEquiv
+noncomputable instance : AddCommGroup UpSinglet := Equiv.addCommGroup valEquiv
 
-instance : Module ℂ UpSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ UpSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear equivalence between `UpSinglet` and its underlying tensor product space. -/
 def valLinEquiv : UpSinglet ≃ₗ[ℂ]

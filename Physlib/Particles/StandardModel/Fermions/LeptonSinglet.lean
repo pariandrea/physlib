@@ -79,9 +79,9 @@ def valEquiv : LeptonSinglet ≃ Fermion.RightHandedWeyl where
   toFun := val
   invFun := fun m => ⟨m⟩
 
-instance : AddCommGroup LeptonSinglet := Equiv.addCommGroup valEquiv
+noncomputable instance : AddCommGroup LeptonSinglet := Equiv.addCommGroup valEquiv
 
-instance : Module ℂ LeptonSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ LeptonSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear identification with the underlying Weyl-spinor space. -/
 def valLinEquiv : LeptonSinglet ≃ₗ[ℂ] Fermion.RightHandedWeyl where
@@ -145,6 +145,7 @@ noncomputable def repGaugeGroupI : Representation ℂ GaugeGroupI LeptonSinglet 
     ext l
     simp [smul_smul, mul_comm, valLinEquiv_symm_apply]
     ring_nf
+    simp
 
 /-- The gauge group acts on a charged-lepton singlet by the hypercharge scalar alone. -/
 lemma repGaugeGroupI_apply (g : GaugeGroupI) (ψ : Fermion.RightHandedWeyl) :
