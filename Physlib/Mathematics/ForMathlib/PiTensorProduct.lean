@@ -9,6 +9,7 @@ public import Mathlib.LinearAlgebra.Matrix.ToLin
 public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 public import Mathlib.LinearAlgebra.PiTensorProduct.Basis
+public import Mathlib.LinearAlgebra.PiTensorProduct.Dual
 
 /-!
 
@@ -35,12 +36,15 @@ semiring, and the dimension needs the strong rank condition.
   its entries.
 - `Module.finrank_piTensorProduct` : the `finrank` of `⨂[R] i, M i` is `∏ i, finrank R (M i)`.
 - `PiTensorProduct.map_eq_id_of_isEmpty` : with no indices, `PiTensorProduct.map f` is the identity.
+- `PiTensorProduct.contrPairs` : the contraction of pairs of factors by a family of pairings,
+  with `PiTensorProduct.contrPairs_tprod` : its value on a pure tensor.
 
 ## iii. Table of contents
 
 - A. Matrices in the product basis
 - B. Dimension
 - C. Empty index types
+- D. Contraction of pairs of factors
 
 ## iv. References
 
@@ -119,3 +123,57 @@ lemma PiTensorProduct.map_eq_id_of_isEmpty [CommSemiring R] [∀ i, AddCommMonoi
     [∀ i, Module R (M i)] [IsEmpty ι] (f : Π i, M i →ₗ[R] M i) :
     PiTensorProduct.map f = LinearMap.id := by
   rw [Subsingleton.elim f fun _ => LinearMap.id, PiTensorProduct.map_id]
+
+/-!
+
+## D. Contraction of pairs of factors
+
+Contraction pairs some indices of a tensor, turns each pair into a scalar, and keeps the other
+indices. The index type `κ ⊕ (J ⊕ J)` says which indices are paired, with Mathlib's tags `Sum.inl`
+and `Sum.inr` for the left and the right side of `⊕`. The indices `inl x`, for `x` in `κ`, are kept.
+Each `j` in `J` is a pair, with first index `inr (inl j)` and second index `inr (inr j)`, contracted
+by the pairing `p j`. On a pure tensor, `contrPairs p` multiplies the kept vectors by the product of
+the pairings (`contrPairs_tprod`). Mathlib's `PiTensorProduct.tmulEquivDep` splits a tensor product
+over `A ⊕ B` into the tensor product over `A` times the tensor product over `B`. Splitting at the
+outer `⊕` separates the kept factors from the paired ones. Splitting at the inner `⊕` separates the
+first factor of each pair from the second, so that `p j` can contract them. `contrPairs` takes only
+this arrangement. A tensor whose indices are in another order is reordered into it first, with
+`PiTensorProduct.reindex`.
+
+For example, the Ricci tensor `R_μν = R^ρ_μρν` pairs the first and third indices and keeps the
+second and fourth. Reordering takes `u ⊗ α ⊗ β ⊗ γ` to `α ⊗ γ ⊗ u ⊗ β`, with `α ⊗ γ` at the kept
+indices and `u`, `β` the pair. The contraction then gives `(β_ρ u^ρ) α ⊗ γ`. The Ricci scalar
+`R = R^μν_μν` has two pairs and no kept index, so the result is the scalar `(α_μ u^μ) (β_ν v^ν)` on
+`u ⊗ v ⊗ α ⊗ β`.
+
+-/
+
+section
+
+open PiTensorProduct
+
+variable {R : Type*} [CommSemiring R] {κ J : Type*} [Fintype J] {P : κ ⊕ (J ⊕ J) → Type*}
+  [∀ i, AddCommMonoid (P i)] [∀ i, Module R (P i)]
+
+/-- The contraction of `⨂ i, P i` on `κ ⊕ (J ⊕ J)` that pairs the factors at `inr (inl j)` and
+`inr (inr j)` by `p j` and keeps the factors at `inl x`. -/
+noncomputable def PiTensorProduct.contrPairs
+    (p : Π j, P (.inr (.inl j)) ⊗[R] P (.inr (.inr j)) →ₗ[R] R) :
+    (⨂[R] i, P i) →ₗ[R] ⨂[R] x, P (.inl x) :=
+  -- The factors of each pair are split into two tensor products, and the second is read as a
+  -- linear form on the first through the `p j` and Mathlib's `PiTensorProduct.dualDistrib`.
+  (TensorProduct.rid R _).toLinearMap ∘ₗ
+    (TensorProduct.lift (PiTensorProduct.dualDistrib ∘ₗ
+      PiTensorProduct.map fun j => (TensorProduct.curry (p j)).flip).flip ∘ₗ
+      (tmulEquivDep R fun i => P (.inr i)).symm.toLinearMap).lTensor _ ∘ₗ
+    (tmulEquivDep R P).symm.toLinearMap
+
+/-- On a pure tensor the contraction multiplies the kept factors by the pairings of each pair. -/
+@[simp]
+lemma PiTensorProduct.contrPairs_tprod
+    (p : Π j, P (.inr (.inl j)) ⊗[R] P (.inr (.inr j)) →ₗ[R] R) (f : Π i, P i) :
+    contrPairs p (⨂ₜ[R] i, f i) =
+      (∏ j, p j (f (.inr (.inl j)) ⊗ₜ f (.inr (.inr j)))) • ⨂ₜ[R] x, f (.inl x) := by
+  simp [contrPairs, tmulEquivDep_symm_apply]
+
+end

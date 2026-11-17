@@ -198,8 +198,11 @@ public import Physlib.Mathematics.Tensors.Color
 public import Physlib.Mathematics.Tensors.ColoredSpace
 public import Physlib.Mathematics.Tensors.Examples
 public import Physlib.Mathematics.Tensors.IndexMaps
+public import Physlib.Mathematics.Tensors.Product
+public import Physlib.Mathematics.Tensors.Reindexing
 public import Physlib.Mathematics.Tensors.Species
 public import Physlib.Mathematics.Tensors.Tensor
+public import Physlib.Mathematics.Tensors.Tensorial
 public import Physlib.Mathematics.VariationalCalculus.Basic
 public import Physlib.Mathematics.VariationalCalculus.HasVarAdjDeriv
 public import Physlib.Mathematics.VariationalCalculus.HasVarAdjoint
