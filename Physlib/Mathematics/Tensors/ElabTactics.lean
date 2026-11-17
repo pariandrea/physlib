@@ -63,7 +63,7 @@ dsimproc_decl reduceCast (cast _ _) := fun e => do
 /-- `tensor_components [l₁, …]` reduces an equation of tensors to its components at a label `φ`,
 using the component lemmas `lᵢ` as well. It unfolds products, reindexings, sums, negatives, zeros,
 scalar multiples and contractions of one or two pairs. For more pairs, pass
-`Tensor.tensorBasis_repr_contr`. It evaluates the `Function.update` at a literal index that
+`Tensor.tensorBasis_repr_contr`. It evaluates the `Species.updateBasisIdx` at a literal index that
 `tensorBasis_repr_toDualAt` produces, and removes the casts on labels once their types agree. On a
 goal that is already a component the first step is skipped. -/
 syntax (name := tensorComponents) "tensor_components" " [" Lean.Parser.Tactic.simpArg,* "]" :
@@ -72,12 +72,13 @@ syntax (name := tensorComponents) "tensor_components" " [" Lean.Parser.Tactic.si
 macro_rules
   | `(tactic| tensor_components [$ls,*]) => `(tactic| focus
       try refine (Species.tensorBasis _ _).repr.injective (Finsupp.ext fun $(mkIdent `φ) => ?_)
-      -- `Function.update_of_ne` proves `j ≠ i` for literal indices by `ne_eq` and `Fin.reduceEq`.
+      -- `updateBasisIdx_ne` proves `j ≠ i` for literal indices by `ne_eq` and `Fin.reduceEq`.
       simp only [map_add, map_neg, map_zero, Finsupp.add_apply, Finsupp.neg_apply,
         Finsupp.zero_apply, Tensor.tensorBasis_repr_contr_one_pair,
         Tensor.tensorBasis_repr_contr_two_pairs, Species.tensorBasis_repr_reindex,
         Species.tensorBasis_repr_tmulEquiv, map_smul, Finsupp.smul_apply, smul_eq_mul,
-        Function.update_self, Function.update_of_ne, ne_eq, Fin.reduceEq, not_false_eq_true, $ls,*]
+        Species.updateBasisIdx_self, Species.updateBasisIdx_ne, Function.update_self,
+        Function.update_of_ne, ne_eq, Fin.reduceEq, not_false_eq_true, $ls,*]
       -- The casts of `tensorBasis_repr_reindex` agree once the reindexing and the color lists are
       -- evaluated. The option `+instances` reaches those inside instance arguments.
       try dsimp +instances only [ColorEquiv.toEquiv_symm, Equiv.symm_symm, Equiv.coe_fn_mk,
