@@ -52,6 +52,7 @@ identity.
 - `Tensor.contr_matMul` : the contraction `M^μ_ν N^ν_ρ`, the case `i = 1` of `contr_matMulAt`, and
   `Tensor.contr_matMul_eq_deltaTensor_iff` : it is the delta exactly when the linear maps
   of `M` and `N` are inverse.
+- `Species.mapIndices` and `Species.linearMapAt` : linear maps at every index and at one index.
 - `Tensor.contr_matMulAt` : contracting the index `i` with the first index of `F` applies
   `F` at `i`, and `Tensor.contr_deltaTensor` : for the delta this is
   `T^…μ… δ_μ^ν = T^…ν…`.
@@ -238,12 +239,30 @@ variable {ι₁ κ : Type} {c : ι₁ → Color K} {c' : κ → Color K}
 
 Contracting an index with a tensor `F` on two indices applies the linear map of `F` at that index.
 This map commutes with the group only when `F` is invariant, so it is the linear map
-`linearMapAt`, Mathlib's `PiTensorProduct.map` of `indexMapsAt`. For an intertwining map `f`,
+`linearMapAt`, `mapIndices` of `indexMapsAt`. For an intertwining map `f`,
 `(intertwiningMapAt i f h).toLinearMap` is `linearMapAt i f.toLinearMap h` by `rfl`.
 
 -/
 
 namespace Species
+
+variable (S) in
+/-- A linear map `f x` at every index `x`, `u ⊗ v ↦ f₀ u ⊗ f₁ v`, Mathlib's `PiTensorProduct.map`. -/
+noncomputable def mapIndices {c c' : ι₁ → Color K}
+    (f : Π x, S.colored.V (c x) →ₗ[k] S.colored.V (c' x)) : Tensor S c →ₗ[k] Tensor S c' :=
+  PiTensorProduct.map f
+
+/-- Two index-wise maps in sequence are the index-wise map of the composites. -/
+lemma mapIndices_mapIndices {c c' c'' : ι₁ → Color K}
+    (f : Π x, S.colored.V (c x) →ₗ[k] S.colored.V (c' x))
+    (g : Π x, S.colored.V (c' x) →ₗ[k] S.colored.V (c'' x)) (t : Tensor S c) :
+    S.mapIndices g (S.mapIndices f t) = S.mapIndices (fun x => g x ∘ₗ f x) t :=
+  LinearMap.congr_fun (PiTensorProduct.map_comp g f).symm t
+
+/-- The index-wise map of the identities is the identity. -/
+lemma mapIndices_id_apply {c : ι₁ → Color K} (t : Tensor S c) :
+    S.mapIndices (fun _ => LinearMap.id) t = t :=
+  LinearMap.congr_fun PiTensorProduct.map_id t
 
 variable [DecidableEq ι₁]
 
@@ -253,7 +272,7 @@ variable (S) in
 noncomputable def linearMapAt {c c' : ι₁ → Color K} (i : ι₁)
     (f : S.colored.V (c i) →ₗ[k] S.colored.V (c' i)) (h : ∀ x, x ≠ i → c x = c' x) :
     Tensor S c →ₗ[k] Tensor S c' :=
-  PiTensorProduct.map (S.indexMapsAt i f h)
+  S.mapIndices (S.indexMapsAt i f h)
 
 /-- The linear map of `intertwiningMapAt` is `linearMapAt`. -/
 lemma toLinearMap_intertwiningMapAt {c c' : ι₁ → Color K} (i : ι₁)

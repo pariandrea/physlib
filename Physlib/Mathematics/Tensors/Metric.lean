@@ -383,6 +383,14 @@ lemma toDualAt_eq_intertwiningMapAt {c c' : ι → Color K} (i : ι) (a : Color 
       (S.colored.toDual a)).trans (S.colored.cast hi.symm)).toIntertwiningMap h t :=
   congrAt_eq_intertwiningMapAt i _ h t
 
+/-- Lowering or raising at an index is the linear map `linearMapAt` of `toDual` at that index.
+Chains of lowerings and raisings compose index by index through `mapIndices_mapIndices`. -/
+lemma toDualAt_eq_linearMapAt {c c' : ι → Color K} (i : ι) (a : Color K) (ha : c i = a)
+    [S.HasForm a.kind] (hi : c' i = a.dual) (h : ∀ x, x ≠ i → c x = c' x) (t : Tensor S c) :
+    S.toDualAt i a ha hi h t = S.linearMapAt i (((S.colored.cast ha).trans
+      (S.colored.toDual a)).trans (S.colored.cast hi.symm)).toLinearMap h t :=
+  rfl
+
 /-- Lowering or raising the index `i` in components, `T^…_ν… = ∑ ρ, g_νρ T^…ρ…`. The basis index
 `updateBasisIdx i h φ ρ` is `φ` with `ρ` at the index `i`. -/
 lemma tensorBasis_repr_toDualAt [Fintype ι] {c c' : ι → Color K} (i : ι) (a : Color K)

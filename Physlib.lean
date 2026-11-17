@@ -204,6 +204,9 @@ public import Physlib.Mathematics.Tensors.Color
 public import Physlib.Mathematics.Tensors.ColoredSpace
 public import Physlib.Mathematics.Tensors.Conjugation
 public import Physlib.Mathematics.Tensors.Contraction
+public import Physlib.Mathematics.Tensors.Elab
+public import Physlib.Mathematics.Tensors.ElabExamples
+public import Physlib.Mathematics.Tensors.ElabTactics
 public import Physlib.Mathematics.Tensors.Examples
 public import Physlib.Mathematics.Tensors.HermitianForm
 public import Physlib.Mathematics.Tensors.IndexMaps
@@ -212,6 +215,7 @@ public import Physlib.Mathematics.Tensors.LinearMap
 public import Physlib.Mathematics.Tensors.Metric
 public import Physlib.Mathematics.Tensors.Product
 public import Physlib.Mathematics.Tensors.Reindexing
+public import Physlib.Mathematics.Tensors.Schouten
 public import Physlib.Mathematics.Tensors.Species
 public import Physlib.Mathematics.Tensors.Tensor
 public import Physlib.Mathematics.Tensors.Tensorial
