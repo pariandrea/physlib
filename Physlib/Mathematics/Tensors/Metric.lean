@@ -372,8 +372,9 @@ noncomputable def toDualAt {c c' : ι → Color K} (i : ι) (a : Color K) (ha : 
 lemma toDualAt_toDualAt {c c' : ι → Color K} (i : ι) (a : Color K) (ha : c i = a)
     [S.HasForm a.kind] (hi : c' i = a.dual) (h : ∀ x, x ≠ i → c x = c' x) (t : Tensor S c) :
     S.toDualAt i a.dual hi ha (fun x hx => (h x hx).symm) (S.toDualAt i a ha hi h t) = t := by
-  rw [toDualAt, toDualAt, show ((S.colored.cast hi).trans (S.colored.toDual a.dual)).trans (S.colored.cast ha.symm) =
-    (((S.colored.cast ha).trans (S.colored.toDual a)).trans (S.colored.cast hi.symm)).symm from rfl, ← congrAt_symm]
+  rw [toDualAt, toDualAt, show ((S.colored.cast hi).trans (S.colored.toDual a.dual)).trans
+    (S.colored.cast ha.symm) = (((S.colored.cast ha).trans (S.colored.toDual a)).trans
+      (S.colored.cast hi.symm)).symm from rfl, ← congrAt_symm]
   exact (S.congrAt i _ h).symm_apply_apply t
 
 /-- Lowering or raising at an index is `intertwiningMapAt` of `toDual` at that index. -/

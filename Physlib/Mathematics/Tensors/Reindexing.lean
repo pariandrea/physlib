@@ -132,13 +132,15 @@ variable {ι₁ ι₂ ι₃ : Type}
 variable (S) in
 /-- Equivalences of representations `f x` at every index `x`, `u ⊗ v ↦ f₀ u ⊗ f₁ v`, as
 `Representation.Equiv.piTprodCongr`. -/
-noncomputable def congrIndices {c' : ι₂ → Color K} {c : ι₂ → Color K} (f : Π x, (S.colored.rep (c x)).Equiv (S.colored.rep (c' x))) :
+noncomputable def congrIndices {c c' : ι₂ → Color K}
+    (f : Π x, (S.colored.rep (c x)).Equiv (S.colored.rep (c' x))) :
     (S.tensorRep c).Equiv (S.tensorRep c') :=
   Representation.Equiv.piTprodCongr f
 
 /-- On a pure tensor, `congrIndices` applies `f x` to the vector at each index `x`. -/
 @[simp]
-lemma congrIndices_pure {c' : ι₂ → Color K} {c : ι₂ → Color K} (f : Π x, (S.colored.rep (c x)).Equiv (S.colored.rep (c' x)))
+lemma congrIndices_pure {c c' : ι₂ → Color K}
+    (f : Π x, (S.colored.rep (c x)).Equiv (S.colored.rep (c' x)))
     (p : Π x, S.colored.V (c x)) :
     S.congrIndices f (S.pure p) = S.pure fun x => f x (p x) :=
   Representation.Equiv.piTprodCongr_tprod f p
@@ -170,7 +172,8 @@ along `σ.color_eq j`. -/
 @[simp]
 lemma reindex_pure {c₁ : ι₁ → Color K} {c₂ : ι₂ → Color K} (σ : ColorEquiv c₁ c₂)
     (f : Π i, S.colored.V (c₁ i)) :
-    S.reindex σ (S.pure f) = S.pure fun j => S.colored.cast (σ.color_eq j) (f (σ.toEquiv.symm j)) := by
+    S.reindex σ (S.pure f) =
+      S.pure fun j => S.colored.cast (σ.color_eq j) (f (σ.toEquiv.symm j)) := by
   rw [reindex, Representation.Equiv.trans_apply, permIndices_pure, congrIndices_pure]
 
 /-!

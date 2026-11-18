@@ -87,7 +87,8 @@ lemma toLin_inverse (g : S.V a ⊗[k] S.V b) (h : Function.Bijective (S.toLin g)
 /-- `g_μν g^νρ = δ_μ^ρ`, the contraction of `g` with its inverse on the adjacent indices. -/
 lemma contr_mul_inverse (g : S.V a ⊗[k] S.V b) (h : Function.Bijective (S.toLin g)) :
     Tensor.contr (ColorEquiv.matMul a b a.dual)
-        (S.tmulEquiv _ _ (S.twoIndexEquiv a b ((S.coloredEquiv a).tprodCongr (S.coloredEquiv b) g) ⊗ₜ
+        (S.tmulEquiv _ _
+          (S.twoIndexEquiv a b ((S.coloredEquiv a).tprodCongr (S.coloredEquiv b) g) ⊗ₜ
           S.twoIndexEquiv _ _
             ((S.coloredEquiv b.dual).tprodCongr (S.coloredEquiv a.dual) (S.inverse g)))) =
       S.deltaTensor a.dual := by

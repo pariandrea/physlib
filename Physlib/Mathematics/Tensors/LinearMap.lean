@@ -174,7 +174,8 @@ lemma colored_toLin_tprodCongr {a b : Color K} (z : S.V a ⊗[k] S.V b) :
       (S.coloredEquiv b).toLinearMap ∘ₗ S.toLin z ∘ₗ
         (S.coloredEquiv a.dual).symm.toLinearMap := by
   induction z using TensorProduct.inductionOn with
-  | add z z' hz hz' => rw [map_add, map_add, hz, hz', map_add, LinearMap.add_comp, LinearMap.comp_add]
+  | add z z' hz hz' =>
+    rw [map_add, map_add, hz, hz', map_add, LinearMap.add_comp, LinearMap.comp_add]
   | tmul x y =>
     refine LinearMap.ext fun v => ColoredSpace.toV_injective ?_
     simp only [Representation.Equiv.tprodCongr_tmul, Module.Basis.coordTensorHomEquiv_tmul,
@@ -213,7 +214,8 @@ lemma deltaTensor_invariant (c : Color K) (Λ : G) : Λ • S.deltaTensor c = S.
 basis, at the pair of labels `(μ 0, μ 1)`. -/
 lemma tensorBasis_repr_deltaTensor (c : Color K) (μ : Π j, basisIdx (![c.dual, c] j).kind) :
     (S.tensorBasis ![c.dual, c]).repr (S.deltaTensor c) μ =
-      ((S.colored.basis c.dual).tensorProduct (S.colored.basis c)).repr (S.colored.delta c) (μ 0, μ 1) :=
+      ((S.colored.basis c.dual).tensorProduct (S.colored.basis c)).repr (S.colored.delta c)
+        (μ 0, μ 1) :=
   tensorBasis_repr_twoIndexEquiv _ _ _ μ
 
 /-- The components of the delta tensor form the identity matrix, `δ_μ^ν = 1` for `μ = ν` and `0`
@@ -247,7 +249,8 @@ This map commutes with the group only when `F` is invariant, so it is the linear
 namespace Species
 
 variable (S) in
-/-- A linear map `f x` at every index `x`, `u ⊗ v ↦ f₀ u ⊗ f₁ v`, Mathlib's `PiTensorProduct.map`. -/
+/-- A linear map `f x` at every index `x`, `u ⊗ v ↦ f₀ u ⊗ f₁ v`, Mathlib's
+`PiTensorProduct.map`. -/
 noncomputable def mapIndices {c c' : ι₁ → Color K}
     (f : Π x, S.colored.V (c x) →ₗ[k] S.colored.V (c' x)) : Tensor S c →ₗ[k] Tensor S c' :=
   PiTensorProduct.map f
@@ -300,7 +303,8 @@ lemma linearMapAt_id {c : ι₁ → Color K} (i : ι₁) (h : ∀ x, x ≠ i →
 
 /-- A linear map `f` at the index `1` of the tensor of `M` in `V a ⊗ V c` is `f` on the second
 factor of `M`, `M^μν ↦ M^μρ f_ρ^ν`. -/
-lemma linearMapAt_one_twoIndexEquiv (a c b : Color K) (f : S.colored.V c →ₗ[k] S.colored.V b) (M : S.colored.V a ⊗[k] S.colored.V c)
+lemma linearMapAt_one_twoIndexEquiv (a c b : Color K) (f : S.colored.V c →ₗ[k] S.colored.V b)
+    (M : S.colored.V a ⊗[k] S.colored.V c)
     (h : ∀ x, x ≠ (1 : Fin 2) → (![a, c] : Fin 2 → Color K) x = (![a, b] : Fin 2 → Color K) x) :
     S.linearMapAt (c := ![a, c]) (c' := ![a, b]) 1 f h (S.twoIndexEquiv a c M) =
       S.twoIndexEquiv a b (f.lTensor _ M) := by
@@ -319,12 +323,14 @@ end Species
 linear map by `Species.toLin`, to the vector at `i`. The vectors `q` at the other indices are
 those of `p`, moved along `h`. -/
 lemma contr_matMulAt_pure [DecidableEq ι₁] {c c' : ι₁ → Color K} (i : ι₁) (a b : Color K)
-    (ha : c i = a) (hi : c' i = b) (h : ∀ x, x ≠ i → c x = c' x) (F : S.colored.V a.dual ⊗[k] S.colored.V b)
+    (ha : c i = a) (hi : c' i = b) (h : ∀ x, x ≠ i → c x = c' x)
+    (F : S.colored.V a.dual ⊗[k] S.colored.V b)
     (p : Π x, S.colored.V (c x)) (q : Π x, S.colored.V (c' x))
     (hq : ∀ x (hx : x ≠ i), q x = S.colored.cast (h x hx) (p x)) :
     contr (ColorEquiv.matMulAt i a b ha hi h)
         (S.tmulEquiv c ![a.dual, b] (S.pure p ⊗ₜ S.twoIndexEquiv a.dual b F)) =
-      S.pure (Function.update q i (S.colored.cast hi.symm (S.colored.toLin F (S.colored.cast ha (p i))))) := by
+      S.pure (Function.update q i
+        (S.colored.cast hi.symm (S.colored.toLin F (S.colored.cast ha (p i))))) := by
   induction F using TensorProduct.inductionOn with
   | add F F' hF hF' =>
     simp only [map_add, LinearMap.add_apply, tmul_add, hF, hF']
@@ -348,22 +354,27 @@ lemma contr_matMulAt_pure [DecidableEq ι₁] {c c' : ι₁ → Color K} (i : ι
 /-- Contracting the index `i` of `t` with the first index of a tensor `F` on two indices applies
 `F`, read as a linear map by `Species.toLin`, at `i`, as in `T^…μ… F_μ^ν`. -/
 lemma contr_matMulAt [DecidableEq ι₁] {c c' : ι₁ → Color K} (i : ι₁) (a b : Color K)
-    (ha : c i = a) (hi : c' i = b) (h : ∀ x, x ≠ i → c x = c' x) (F : S.colored.V a.dual ⊗[k] S.colored.V b)
+    (ha : c i = a) (hi : c' i = b) (h : ∀ x, x ≠ i → c x = c' x)
+    (F : S.colored.V a.dual ⊗[k] S.colored.V b)
     (t : Tensor S c) :
     contr (ColorEquiv.matMulAt i a b ha hi h)
         (S.tmulEquiv c ![a.dual, b] (t ⊗ₜ S.twoIndexEquiv a.dual b F)) =
-      S.linearMapAt i ((S.colored.cast hi.symm).toLinearMap ∘ₗ S.colored.toLin F ∘ₗ (S.colored.cast ha).toLinearMap) h t := by
+      S.linearMapAt i ((S.colored.cast hi.symm).toLinearMap ∘ₗ S.colored.toLin F ∘ₗ
+        (S.colored.cast ha).toLinearMap) h t := by
   refine LinearMap.congr_fun (f := (contr _).toLinearMap ∘ₗ (S.tmulEquiv c ![a.dual, b]).toLinearMap
     ∘ₗ (TensorProduct.mk k _ _).flip (S.twoIndexEquiv a.dual b F)) (ext_pure fun p => ?_) t
   -- The vectors of `p` moved along `h` away from `i`. The vector at `i` is replaced below.
-  let q : Π x, S.colored.V (c' x) := fun x => if hx : x = i then 0 else S.colored.cast (h x hx) (p x)
+  let q : Π x, S.colored.V (c' x) := fun x =>
+    if hx : x = i then 0 else S.colored.cast (h x hx) (p x)
   exact (contr_matMulAt_pure i a b ha hi h F p q (fun x hx => by simp [q, hx])).trans
-    (linearMapAt_pure i _ h p (Function.update q i (S.colored.cast hi.symm (S.colored.toLin F (S.colored.cast ha (p i)))))
+    (linearMapAt_pure i _ h p (Function.update q i
+      (S.colored.cast hi.symm (S.colored.toLin F (S.colored.cast ha (p i)))))
       (Function.update_self _ _ _) (fun x hx => by simp [q, hx])).symm
 
 /-- The contraction `M^μ_ν N^ν_ρ` of two tensors on two indices is `M` with its second factor mapped
 by `S.toLin N`, the linear map `v_ν ↦ v_ν N^ν_ρ`. -/
-lemma contr_matMul (a c b : Color K) (M : S.colored.V a ⊗[k] S.colored.V c) (N : S.colored.V c.dual ⊗[k] S.colored.V b) :
+lemma contr_matMul (a c b : Color K) (M : S.colored.V a ⊗[k] S.colored.V c)
+    (N : S.colored.V c.dual ⊗[k] S.colored.V b) :
     contr (ColorEquiv.matMul a c b)
         (S.tmulEquiv _ _ (S.twoIndexEquiv a c M ⊗ₜ S.twoIndexEquiv _ b N)) =
       S.twoIndexEquiv a b ((S.colored.toLin N).lTensor _ M) :=

@@ -166,7 +166,8 @@ noncomputable def contrStd [Fintype J] (c : κ → Color K) (a : J → Color K) 
   ⟨PiTensorProduct.contrPairs (P := fun i => S.colored.V (contrColors c a i))
       (fun j => (S.colored.contr (a j)).toLinearMap),
     fun g => LinearMap.ext <| (Representation.IsIntertwiningMap.contrPairs
-      (ρ := fun i => S.colored.rep (contrColors c a i)) fun j => S.colored.contr_invariant (a j)).isIntertwining g⟩
+      (ρ := fun i => S.colored.rep (contrColors c a i))
+        fun j => S.colored.contr_invariant (a j)).isIntertwining g⟩
 
 /-- On a pure tensor the contraction multiplies the remaining vectors by the contraction of the
 two vectors of each pair, as in `u ⊗ v ⊗ α ↦ (v^μ α_μ) u`. -/
@@ -201,9 +202,11 @@ standard arrangement. -/
 lemma contr_pure [Fintype J] {a : J → Color K} (σ : ColorEquiv c (contrColors c' a))
     (f : Π x, S.colored.V (c x)) :
     contr σ (S.pure f) =
-      (∏ j, S.colored.contr (a j) (S.colored.cast (σ.color_eq (.inr (.inl j))) (f (σ.toEquiv.symm (.inr (.inl j))))
+      (∏ j, S.colored.contr (a j)
+        (S.colored.cast (σ.color_eq (.inr (.inl j))) (f (σ.toEquiv.symm (.inr (.inl j))))
           ⊗ₜ S.colored.cast (σ.color_eq (.inr (.inr j))) (f (σ.toEquiv.symm (.inr (.inr j)))))) •
-        S.pure (c := c') fun x => S.colored.cast (σ.color_eq (.inl x)) (f (σ.toEquiv.symm (.inl x))) :=
+        S.pure (c := c') fun x =>
+          S.colored.cast (σ.color_eq (.inl x)) (f (σ.toEquiv.symm (.inl x))) :=
   (congrArg (contrStd c' a) (reindex_pure σ f)).trans (contrStd_pure c' a _)
 
 /-- A contraction with no pairs is the identity. -/

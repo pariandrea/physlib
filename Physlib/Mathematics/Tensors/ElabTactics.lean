@@ -721,12 +721,13 @@ private def regroupWithLowerings : TacticM Unit := do
 
 /-- `tensor_indices` proves an equation of two chains of lowerings and raisings of the same tensor,
 such as `{{T | ↓μ ↓ν}ᵀ | ↑μ ↑ν}ᵀ = T` or `{{T | ↓μ ν}ᵀ | μ ↓ν = {T | μ ↓ν}ᵀ | ↓μ ν}ᵀ`. Each chain
-is one index-wise map (`Species.toDualAt_eq_linearMapAt`, `Species.mapIndices_mapIndices`), and the two
-maps are compared index by index, where `Species.toDual_toDual` cancels a lowering with a raising. A
-side with no lowering or raising is the index-wise identity (`Species.mapIndices_id_apply`). The indices
-must be `Fin n` with a literal `n`. -/
+is one index-wise map (`Species.toDualAt_eq_linearMapAt`, `Species.mapIndices_mapIndices`), and
+the two maps are compared index by index, where `Species.toDual_toDual` cancels a lowering with a
+raising. A side with no lowering or raising is the index-wise identity
+(`Species.mapIndices_id_apply`). The indices must be `Fin n` with a literal `n`. -/
 elab "tensor_indices" : tactic => do
-  evalTactic (← `(tactic| try simp only [Tensor.Species.toDualAt_eq_linearMapAt, Tensor.Species.linearMapAt,
+  evalTactic (← `(tactic| try simp only [Tensor.Species.toDualAt_eq_linearMapAt,
+    Tensor.Species.linearMapAt,
     Tensor.Species.mapIndices_mapIndices]))
   let isMapIndices (e : Expr) := (bundledArg? ``Tensor.Species.mapIndices e).isSome
   let (_, l, r) ← goalEq "tensor_indices"

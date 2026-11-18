@@ -242,10 +242,14 @@ noncomputable instance [S.HasConjugation] : S.colored.HasConjugation where
   conj {c c'} h :=
     { toFun v := ⟨HasConjugation.conj (S := S) h v.toV⟩
       invFun v := ⟨(HasConjugation.conj (S := S) h).symm v.toV⟩
-      map_add' v w := congrArg ColoredSpace.ofV (map_add (HasConjugation.conj (S := S) h) v.toV w.toV)
-      map_smul' r v := congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).map_smulₛₗ r v.toV)
-      left_inv v := congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).symm_apply_apply v.toV)
-      right_inv v := congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).apply_symm_apply v.toV) }
+      map_add' v w :=
+        congrArg ColoredSpace.ofV (map_add (HasConjugation.conj (S := S) h) v.toV w.toV)
+      map_smul' r v :=
+        congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).map_smulₛₗ r v.toV)
+      left_inv v :=
+        congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).symm_apply_apply v.toV)
+      right_inv v :=
+        congrArg ColoredSpace.ofV ((HasConjugation.conj (S := S) h).apply_symm_apply v.toV) }
   conj_conj h h' v := congrArg ColoredSpace.ofV (HasConjugation.conj_conj (S := S) h h' v.toV)
   star_contr_conj h u α := by
     rw [colored_contr_tmul, colored_contr_tmul]
