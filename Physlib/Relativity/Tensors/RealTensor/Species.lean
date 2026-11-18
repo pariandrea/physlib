@@ -19,11 +19,10 @@ Real Lorentz tensors in `d + 1` dimensions as a species, with the Minkowski metr
 
 Real Lorentz tensors have one kind of index, the vector index `vec`. An upper index has the color
 `⟨vec, up⟩` and a lower index the color `⟨vec, down⟩`. A color is the kind and variance of an
-index. The species assigns to it a space: `V ⟨vec, up⟩ = Lorentz.Vector d`, the contravariant
-vectors `v^μ` with basis `e_μ`, and `V ⟨vec, down⟩ = Lorentz.CoVector d`, the covariant vectors
-`w_μ` with basis `e^μ`. Both are functions `Fin 1 ⊕ Fin d → ℝ` with Mathlib's analysis, so
-`V ⟨vec, up⟩ = ℝ⁴` for `d = 3`. The labels `μ` run over `Fin 1 ⊕ Fin d`, with `Sum.inl 0` the
-time direction and `Sum.inr i` the space directions. A Lorentz transformation
+index. The species assigns to both colors the components `Fin 1 ⊕ Fin d → ℝ`, with the basis
+`e_μ` (`indexBasis`). The tensors of the two colors are still different types, since they are
+built on `Species.colored`. The labels `μ` run over `Fin 1 ⊕ Fin d`, with `Sum.inl 0` the time
+direction and `Sum.inr i` the space directions. A Lorentz transformation
 `Λ : LorentzGroup d` acts on an upper index by `(Λv)^μ = Λ^μ_ν v^ν` and on a lower index by
 `(Λw)_μ = (Λ⁻¹)^ν_μ w_ν`. The two colors are named `realLorentz.up` and `realLorentz.down`, and
 `ℝT[d, up, down]` is the space of the tensors `T^μ_ν`, under `open scoped Tensor.realLorentz`.
@@ -37,9 +36,12 @@ So the general results apply. For example `η^μν η_νρ = δ^μ_ρ` is
 `Species.contr_formTensor_formTensor` at `up`, and lowering an index, `v^μ ↦ v_ν = η_νμ v^μ`, is
 `(realLorentz d).toDual up`.
 
-The Lorentz vectors and covectors, the spaces of the two colors, are tensors with one upper index
-and one lower index respectively (`Tensorial`). A vector transforms by `Λ *ᵥ v` and a covector by
-`(Λ⁻¹)ᵀ *ᵥ ω`, and both enter index notation directly, as in `{v | μ ⊗ ω | μ}ᵀ` for `v^μ ω_μ`.
+The Lorentz vectors are the tensors with one upper index,
+`Lorentz.Vector d = Tensor (realLorentz d) ![up]`, and the covectors those with one lower index,
+`Lorentz.CoVector d = Tensor (realLorentz d) ![down]`. A vector transforms by `Λ *ᵥ v` and a
+covector by `(Λ⁻¹)ᵀ *ᵥ ω`, and both enter index notation directly, as in `{v | μ ⊗ ω | μ}ᵀ` for
+`v^μ ω_μ`. Their components and contractions are in
+`Physlib.Relativity.Tensors.RealTensor.Vector.MinkowskiProduct`.
 
 ## ii. Key results
 
@@ -50,31 +52,14 @@ and one lower index respectively (`Tensorial`). A vector transforms by `Λ *ᵥ 
   `(realLorentz d).IsSymmetricForm κ` : the Minkowski metric `η`.
 - `realLorentz.tensorBasis_repr_formTensor` : the components of `η^μν` and `η_μν` are the
   Minkowski matrix.
-- `realLorentz.vectorTensorial` and `realLorentz.coVectorTensorial` : Lorentz vectors and
-  covectors as tensors, with the actions `Lorentz.Vector.rep` and `Lorentz.CoVector.rep`.
-- `realLorentz.tensorBasis_repr_toTensor_vector` and
-  `realLorentz.tensorBasis_repr_toTensor_coVector` : the components of the tensor of a vector or a
-  covector are its components, and `realLorentz.toTensor_symm_vector_apply` : the converse for a
-  vector.
-- `realLorentz.tensorBasis_repr_toTensor_vector_tmul` and
-  `realLorentz.tensorBasis_repr_toTensor_coVector_tmul` : the components of the tensor of an
-  element of `Vector d ⊗ Vector d` or `CoVector d ⊗ Vector d` are its coordinates in the product
-  basis.
-- `realLorentz.tensorBasis_repr_contr_vector_coVector` : the contraction `v^μ ω_μ` is
-  `∑ μ, v^μ ω_μ`, and `realLorentz.contr_vector_coVector_rep` : it is Lorentz invariant.
-- `realLorentz.tensorBasis_repr_formTensor_contr_vector` : the Minkowski product `⟪v, w⟫ₘ` is the
-  contraction `η_μν v^μ w^ν`.
 - `realLorentz.basis_repr_toDual` and `realLorentz.tensorBasis_repr_toDualAt` : lowering or raising
   an index multiplies its component by `η_νν`.
-- `realLorentz.tensorBasis_repr_toDualAt_contr_vector_tmul` : the contraction `F_μν G^μν` in
-  components.
 
 ## iii. Table of contents
 
 - A. The species
 - B. The Minkowski metric
 - C. Components of the metric
-- D. Lorentz vectors and covectors as tensors
 
 ## iv. References
 

@@ -34,7 +34,7 @@ two-dimensional complex vector space with a standard basis, define the represent
 ## iii. Table of contents
 
 - A. The definition of the type
-  - A.1. Underlying module structure
+  - A.1. Components
 - B. Basis
 - C. Representation
   - C.1. Irreducibility

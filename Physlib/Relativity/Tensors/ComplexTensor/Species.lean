@@ -25,10 +25,11 @@ the right-handed kind `right`, as in `ψ̄_α̇`, have the labels `Fin 2`. The v
 `ℂT[upL, downR]` is the space of the tensors `T^α_β̇`.
 
 The space of an index of color `c` is `IndexSpace c`, the components `Idx c.kind → ℂ`. The
-tensors of the six colors are six different types, since they are built on `Species.colored`. `M ∈ SL(2, ℂ)` acts on components by
-`repMatrix c M`: `M` on `upL`, its conjugate `M̄` on `upR`, the Lorentz transformation of `M` on
-`up`, and `(U M⁻¹)ᵀ` on a lower color with upper matrix `U`. An index contracts with its dual by the
-coordinate pairing, which is `SL(2, ℂ)`-invariant.
+tensors of the six colors are six different types, since they are built on `Species.colored`.
+`M ∈ SL(2, ℂ)` acts on components by `repMatrix c M`. It is `M` on `upL`, its conjugate `M̄` on
+`upR`, the Lorentz transformation of `M` on `up`, and `(U M⁻¹)ᵀ` on a lower color with upper
+matrix `U`. An index contracts with its dual by the coordinate pairing, which is
+`SL(2, ℂ)`-invariant.
 Conjugation conjugates the components, and a label of a kind is the same label of its
 conjugate (`idxBar`), a conjugation of the species (`HasConjugation.ofBasis`). The
 right-handed representation is the conjugate of the left-handed one, `M ↦ M̄`, and the vector
@@ -69,13 +70,14 @@ these tensors, so a spinor `ψ` enters index notation directly, as in `{ψ | α 
 
 ## iii. Table of contents
 
-- A. The species
-- B. The invariant forms
-- C. Conjugation
-- D. Components of the forms
-- E. Symmetry of the forms
-- F. Tensors with one index
-- G. Examples
+- A. The matrix `ε` of the Weyl forms
+- B. The species
+- C. The invariant forms
+- D. Conjugation
+- E. Components of the forms
+- F. Symmetry of the forms
+- G. Tensors with one index
+- H. Examples
 
 ## iv. References
 
@@ -93,7 +95,7 @@ open Matrix MatrixGroups
 
 /-!
 
-## The matrix `ε` of the Weyl forms
+## A. The matrix `ε` of the Weyl forms
 
 -/
 
@@ -166,7 +168,7 @@ namespace Tensor
 
 /-!
 
-## A. The species
+## B. The species
 
 -/
 
@@ -319,7 +321,7 @@ end complexLorentz
 
 /-!
 
-## B. The invariant forms
+## C. The invariant forms
 
 -/
 
@@ -456,7 +458,7 @@ end complexLorentz
 
 /-!
 
-## C. Conjugation
+## D. Conjugation
 
 -/
 
@@ -504,7 +506,7 @@ end complexLorentz
 
 /-!
 
-## D. Components of the forms
+## E. Components of the forms
 
 -/
 
@@ -546,7 +548,7 @@ end complexLorentz
 
 /-!
 
-## E. Symmetry of the forms
+## F. Symmetry of the forms
 
 -/
 
@@ -630,7 +632,7 @@ end complexLorentz
 
 /-!
 
-## F. Tensors with one index
+## G. Tensors with one index
 
 A Weyl spinor or a complex Lorentz vector is a tensor with one index, `Tensor complexLorentz ![c]`.
 Its components are `toComponents c`, and the group acts on them by the matrix `repMatrix c M`.
@@ -679,7 +681,7 @@ end complexLorentz
 
 /-!
 
-## G. Examples
+## H. Examples
 
 -/
 
