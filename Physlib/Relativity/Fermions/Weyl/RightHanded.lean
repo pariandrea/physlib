@@ -58,7 +58,8 @@ noncomputable section
 -/
 
 open Tensor Tensor.complexLorentz in
-/-- The right-handed Weyl fermions, the complex Lorentz tensors with an upper right-handed index, `ψ̄^α̇`. -/
+/-- The right-handed Weyl fermions, the complex Lorentz tensors with an upper right-handed index,
+`ψ̄^α̇`. -/
 abbrev RightHandedWeyl := Tensor complexLorentz ![upR]
 
 namespace RightHandedWeyl
@@ -117,7 +118,8 @@ instance : Nontrivial RightHandedWeyl := toFin2ℂEquiv.toEquiv.nontrivial
 def basis : Basis (Fin 2) ℂ RightHandedWeyl := oneIndexBasis upR
 
 @[simp]
-lemma basis_repr (ψ : RightHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i := oneIndexBasis_repr _ ψ i
+lemma basis_repr (ψ : RightHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i :=
+  oneIndexBasis_repr _ ψ i
 
 lemma basis_val (i : Fin 2) : (basis i).val = Pi.single i 1 := by
   rw [val, toFin2ℂEquiv, basis]
@@ -143,8 +145,8 @@ lemma finrank_eq_two : Module.finrank ℂ RightHandedWeyl = 2 := by
 
 -/
 
-/-- The representation of `SL(2, ℂ)` on right-handed Weyl fermions, the action on tensors. On components
-it is `ψ ↦ M.1.map star *ᵥ ψ` (`val_rep`). -/
+/-- The representation of `SL(2, ℂ)` on right-handed Weyl fermions, the action on tensors. On
+components it is `ψ ↦ M.1.map star *ᵥ ψ` (`val_rep`). -/
 def rep : Representation ℂ SL(2,ℂ) RightHandedWeyl := complexLorentz.tensorRep ![upR]
 
 lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix upR M = M.1.map star := rfl
@@ -153,7 +155,8 @@ lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix upR M = M.1.map star := rfl
 lemma val_rep (M : SL(2,ℂ)) (ψ : RightHandedWeyl) : (rep M ψ).val = M.1.map star *ᵥ ψ.val :=
   (toComponents_smul upR M ψ).trans (by rw [repMatrix_eq]; rfl)
 
-lemma rep_apply (M : SL(2,ℂ)) (ψ : RightHandedWeyl) : rep M ψ = toFin2ℂEquiv.symm (M.1.map star *ᵥ ψ.val) :=
+lemma rep_apply (M : SL(2,ℂ)) (ψ : RightHandedWeyl) :
+    rep M ψ = toFin2ℂEquiv.symm (M.1.map star *ᵥ ψ.val) :=
   toFin2ℂEquiv.eq_symm_apply.mpr (val_rep M ψ)
 
 lemma rep_apply_eq_sum_basis (M : SL(2,ℂ)) (ψ : RightHandedWeyl) :

@@ -298,7 +298,8 @@ lemma basis_repr_apply {d : ℕ} (p : Vector d) (μ : Fin 1 ⊕ Fin d) :
 
 lemma map_apply_eq_basis_mulVec {d : ℕ} (f : Vector d →ₗ[ℝ] Vector d) (p : Vector d) :
     ⇑(f p) = (LinearMap.toMatrix basis basis) f *ᵥ ⇑p := by
-  simpa only [funext (basis_repr_apply _)] using (LinearMap.toMatrix_mulVec_repr basis basis f p).symm
+  simpa only [funext (basis_repr_apply _)] using
+    (LinearMap.toMatrix_mulVec_repr basis basis f p).symm
 
 lemma sum_basis_eq_zero_iff {d : ℕ} (f : Fin 1 ⊕ Fin d → ℝ) :
     (∑ μ, f μ • basis μ) = 0 ↔ ∀ μ, f μ = 0 := by

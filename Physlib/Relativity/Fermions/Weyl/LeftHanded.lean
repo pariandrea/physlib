@@ -60,7 +60,8 @@ section LeftHanded
 -/
 
 open Tensor Tensor.complexLorentz in
-/-- The left-handed Weyl fermions, the complex Lorentz tensors with an upper left-handed index, `ψ^α`. -/
+/-- The left-handed Weyl fermions, the complex Lorentz tensors with an upper left-handed index,
+`ψ^α`. -/
 abbrev LeftHandedWeyl := Tensor complexLorentz ![upL]
 
 namespace LeftHandedWeyl
@@ -119,7 +120,8 @@ instance : Nontrivial LeftHandedWeyl := toFin2ℂEquiv.toEquiv.nontrivial
 def basis : Basis (Fin 2) ℂ LeftHandedWeyl := oneIndexBasis upL
 
 @[simp]
-lemma basis_repr (ψ : LeftHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i := oneIndexBasis_repr _ ψ i
+lemma basis_repr (ψ : LeftHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i :=
+  oneIndexBasis_repr _ ψ i
 
 lemma basis_val (i : Fin 2) : (basis i).val = Pi.single i 1 := by
   rw [val, toFin2ℂEquiv, basis]
@@ -145,8 +147,8 @@ lemma finrank_eq_two : Module.finrank ℂ LeftHandedWeyl = 2 := by
 
 -/
 
-/-- The representation of `SL(2, ℂ)` on left-handed Weyl fermions, the action on tensors. On components
-it is `ψ ↦ M.1 *ᵥ ψ` (`val_rep`). -/
+/-- The representation of `SL(2, ℂ)` on left-handed Weyl fermions, the action on tensors. On
+components it is `ψ ↦ M.1 *ᵥ ψ` (`val_rep`). -/
 def rep : Representation ℂ SL(2,ℂ) LeftHandedWeyl := complexLorentz.tensorRep ![upL]
 
 lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix upL M = M.1 := rfl

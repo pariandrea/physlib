@@ -42,8 +42,7 @@ def rep {d : ℕ} : Representation ℝ (LorentzGroup d) (CoVector d) :=
 -/
 
 lemma rep_apply_eq_mulVec (d : ℕ) (Λ : LorentzGroup d) (v : CoVector d) :
-    ⇑(rep Λ v) = (LorentzGroup.transpose Λ⁻¹) *ᵥ ⇑v :=
-  by
+    ⇑(rep Λ v) = (LorentzGroup.transpose Λ⁻¹) *ᵥ ⇑v := by
   rw [toCoord_apply, toCoord_apply]
   have h := Representation.IntertwiningMap.isIntertwining _ _
     ((Tensor.realLorentz d).oneIndexEquiv Tensor.realLorentz.down).symm.toIntertwiningMap Λ v

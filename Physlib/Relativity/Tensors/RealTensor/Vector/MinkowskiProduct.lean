@@ -335,7 +335,8 @@ lemma tensorBasis_repr_vector (d : ℕ) (v : Vector d) (μ : Fin 1 → Fin 1 ⊕
     ((realLorentz d).tensorBasis ![up]).repr v μ = v (μ 0) := by
   obtain ⟨x, rfl⟩ := ((realLorentz d).oneIndexEquiv up).toLinearEquiv.surjective v
   exact (Species.tensorBasis_repr_oneIndexEquiv up x μ).trans
-    ((Pi.basisFun_repr ℝ _ (Species.ColoredSpace.toV x) (μ 0)).trans (congrFun (Vector.toCoord_oneIndexEquiv x) _).symm)
+    ((Pi.basisFun_repr ℝ _ (Species.ColoredSpace.toV x) (μ 0)).trans
+      (congrFun (Vector.toCoord_oneIndexEquiv x) _).symm)
 
 /-- The components of a covector as a tensor are its components, `ω_μ`. -/
 lemma tensorBasis_repr_coVector (d : ℕ) (ω : CoVector d) (μ : Fin 1 → Fin 1 ⊕ Fin d) :

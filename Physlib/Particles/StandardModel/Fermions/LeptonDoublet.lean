@@ -84,7 +84,8 @@ def valEquiv : LeptonDoublet ≃ Fermion.LeftHandedWeyl ⊗[ℂ] EuclideanSpace 
 
 noncomputable instance : AddCommGroup LeptonDoublet := Equiv.addCommGroup valEquiv
 
-noncomputable instance : Module ℂ LeptonDoublet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ LeptonDoublet :=
+  AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear identification with the underlying tensor product. -/
 def valLinEquiv : LeptonDoublet ≃ₗ[ℂ]

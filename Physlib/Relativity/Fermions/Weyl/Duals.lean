@@ -54,9 +54,11 @@ def LeftHandedWeyl.dual : LeftHandedWeyl.rep.IntertwiningMap DualLeftHandedWeyl.
   isIntertwining' := by
     intro M
     refine LinearMap.ext (fun ψ => ?_)
-    change DualLeftHandedWeyl.toFin2ℂEquiv.symm (!![0, 1; -1, 0] *ᵥ (LeftHandedWeyl.rep M ψ).toFin2ℂ) =
+    change DualLeftHandedWeyl.toFin2ℂEquiv.symm
+        (!![0, 1; -1, 0] *ᵥ (LeftHandedWeyl.rep M ψ).toFin2ℂ) =
       DualLeftHandedWeyl.rep M (DualLeftHandedWeyl.toFin2ℂEquiv.symm (!![0, 1; -1, 0] *ᵥ ψ.toFin2ℂ))
-    rw [LeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.val_rep, DualLeftHandedWeyl.rep_apply, DualLeftHandedWeyl.val_toFin2ℂEquiv_symm]
+    rw [LeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.val_rep, DualLeftHandedWeyl.rep_apply,
+      DualLeftHandedWeyl.val_toFin2ℂEquiv_symm]
     change DualLeftHandedWeyl.toFin2ℂEquiv.symm (!![0, 1; -1, 0] *ᵥ M.1 *ᵥ ψ.val) =
       DualLeftHandedWeyl.toFin2ℂEquiv.symm ((M.1⁻¹)ᵀ *ᵥ !![0, 1; -1, 0] *ᵥ ψ.val)
     apply congrArg
@@ -88,9 +90,11 @@ def DualLeftHandedWeyl.dual : DualLeftHandedWeyl.rep.IntertwiningMap LeftHandedW
   isIntertwining' := by
     intro M
     refine LinearMap.ext (fun ψ => ?_)
-    change LeftHandedWeyl.toFin2ℂEquiv.symm (!![0, -1; 1, 0] *ᵥ (DualLeftHandedWeyl.rep M ψ).toFin2ℂ) =
+    change LeftHandedWeyl.toFin2ℂEquiv.symm
+        (!![0, -1; 1, 0] *ᵥ (DualLeftHandedWeyl.rep M ψ).toFin2ℂ) =
       LeftHandedWeyl.rep M (LeftHandedWeyl.toFin2ℂEquiv.symm (!![0, -1; 1, 0] *ᵥ ψ.toFin2ℂ))
-    rw [DualLeftHandedWeyl.toFin2ℂ_eq_val, DualLeftHandedWeyl.val_rep, LeftHandedWeyl.rep_apply, LeftHandedWeyl.val_toFin2ℂEquiv_symm]
+    rw [DualLeftHandedWeyl.toFin2ℂ_eq_val, DualLeftHandedWeyl.val_rep, LeftHandedWeyl.rep_apply,
+      LeftHandedWeyl.val_toFin2ℂEquiv_symm]
     change LeftHandedWeyl.toFin2ℂEquiv.symm (!![0, -1; 1, 0] *ᵥ (M.1⁻¹)ᵀ *ᵥ ψ.val) =
       LeftHandedWeyl.toFin2ℂEquiv.symm (M.1 *ᵥ !![0, -1; 1, 0] *ᵥ ψ.val)
     rw [EquivLike.apply_eq_iff_eq, mulVec_mulVec, mulVec_mulVec, Lorentz.SL2C.inverse_coe,

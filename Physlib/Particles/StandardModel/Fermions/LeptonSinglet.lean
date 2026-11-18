@@ -81,7 +81,8 @@ def valEquiv : LeptonSinglet ≃ Fermion.RightHandedWeyl where
 
 noncomputable instance : AddCommGroup LeptonSinglet := Equiv.addCommGroup valEquiv
 
-noncomputable instance : Module ℂ LeptonSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ LeptonSinglet :=
+  AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear identification with the underlying Weyl-spinor space. -/
 def valLinEquiv : LeptonSinglet ≃ₗ[ℂ] Fermion.RightHandedWeyl where

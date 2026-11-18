@@ -53,7 +53,8 @@ The AddCommGroup and module instances are inherited from the underlying tensor p
 
 noncomputable instance : AddCommGroup UpSinglet := Equiv.addCommGroup valEquiv
 
-noncomputable instance : Module ℂ UpSinglet := AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
+noncomputable instance : Module ℂ UpSinglet :=
+  AddEquiv.module ℂ { valEquiv with map_add' _ _ := rfl }
 
 /-- The linear equivalence between `UpSinglet` and its underlying tensor product space. -/
 def valLinEquiv : UpSinglet ≃ₗ[ℂ]

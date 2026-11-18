@@ -48,7 +48,8 @@ def val (ψ : ComplexVector) : Fin 1 ⊕ Fin 3 → ℂ := toFin13ℂEquiv ψ
 lemma toFin13ℂEquiv_apply (ψ : ComplexVector) : toFin13ℂEquiv ψ = ψ.val := rfl
 
 @[simp]
-lemma val_toFin13ℂEquiv_symm (f : Fin 1 ⊕ Fin 3 → ℂ) : (toFin13ℂEquiv.symm f : ComplexVector).val = f :=
+lemma val_toFin13ℂEquiv_symm (f : Fin 1 ⊕ Fin 3 → ℂ) :
+    (toFin13ℂEquiv.symm f : ComplexVector).val = f :=
   toFin13ℂEquiv.apply_symm_apply f
 
 @[ext]
@@ -77,8 +78,8 @@ def lorentzGroupRep : Representation ℂ (LorentzGroup 3) ComplexVector where
     ext i
     simp []
 
-/-- The representation of `SL(2, ℂ)` on `ComplexVector`, the action on tensors. It is the representation
-of the Lorentz group through `SL2C.toLorentzGroup` (`val_SL2CRep`). -/
+/-- The representation of `SL(2, ℂ)` on `ComplexVector`, the action on tensors. It is the
+representation of the Lorentz group through `SL2C.toLorentzGroup` (`val_SL2CRep`). -/
 def SL2CRep : Representation ℂ SL(2, ℂ) ComplexVector := complexLorentz.tensorRep ![up]
 
 @[simp]
@@ -111,7 +112,8 @@ def val (ψ : ComplexCoVector) : Fin 1 ⊕ Fin 3 → ℂ := toFin13ℂEquiv ψ
 lemma toFin13ℂEquiv_apply (ψ : ComplexCoVector) : toFin13ℂEquiv ψ = ψ.val := rfl
 
 @[simp]
-lemma val_toFin13ℂEquiv_symm (f : Fin 1 ⊕ Fin 3 → ℂ) : (toFin13ℂEquiv.symm f : ComplexCoVector).val = f :=
+lemma val_toFin13ℂEquiv_symm (f : Fin 1 ⊕ Fin 3 → ℂ) :
+    (toFin13ℂEquiv.symm f : ComplexCoVector).val = f :=
   toFin13ℂEquiv.apply_symm_apply f
 
 @[ext]
@@ -123,7 +125,8 @@ lemma val_add (ψ ψ' : ComplexCoVector) : (ψ + ψ').val = ψ.val + ψ'.val := 
 @[simp]
 lemma val_smul (r : ℂ) (ψ : ComplexCoVector) : (r • ψ).val = r • ψ.val := map_smul toFin13ℂEquiv r ψ
 
-/-- The representation of the Lorentz group on `ComplexCoVector`, `v ↦ (Λ⁻¹)ᵀ *ᵥ v` on components. -/
+/-- The representation of the Lorentz group on `ComplexCoVector`, `v ↦ (Λ⁻¹)ᵀ *ᵥ v` on
+components. -/
 def lorentzGroupRep : Representation ℂ (LorentzGroup 3) ComplexCoVector where
   toFun M := {
       toFun := fun v => toFin13ℂEquiv.symm ((LorentzGroup.toComplex M)⁻¹ᵀ *ᵥ v.toFin13ℂ),
@@ -140,8 +143,8 @@ def lorentzGroupRep : Representation ℂ (LorentzGroup 3) ComplexCoVector where
     ext i
     simp [Matrix.mul_inv_rev, transpose_mul]
 
-/-- The representation of `SL(2, ℂ)` on `ComplexCoVector`, the action on tensors. It is the representation
-of the Lorentz group through `SL2C.toLorentzGroup` (`val_SL2CRep`). -/
+/-- The representation of `SL(2, ℂ)` on `ComplexCoVector`, the action on tensors. It is the
+representation of the Lorentz group through `SL2C.toLorentzGroup` (`val_SL2CRep`). -/
 def SL2CRep : Representation ℂ SL(2, ℂ) ComplexCoVector := complexLorentz.tensorRep ![down]
 
 @[simp]

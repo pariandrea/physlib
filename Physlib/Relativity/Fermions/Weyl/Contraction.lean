@@ -114,8 +114,10 @@ def LeftHandedWeyl.contr : (LeftHandedWeyl.rep.tprod DualLeftHandedWeyl.rep).Int
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift LeftHandedWeyl.contrBi
   isIntertwining' M := TensorProduct.ext' fun ψ φ => by
-    change (LeftHandedWeyl.rep M ψ).toFin2ℂ ⬝ᵥ (DualLeftHandedWeyl.rep M φ).toFin2ℂ = ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
-    rw [LeftHandedWeyl.toFin2ℂ_eq_val, DualLeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.val_rep, DualLeftHandedWeyl.val_rep]
+    change (LeftHandedWeyl.rep M ψ).toFin2ℂ ⬝ᵥ (DualLeftHandedWeyl.rep M φ).toFin2ℂ =
+      ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
+    rw [LeftHandedWeyl.toFin2ℂ_eq_val, DualLeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.val_rep,
+      DualLeftHandedWeyl.val_rep]
     change (M.1 *ᵥ ψ.toFin2ℂ) ⬝ᵥ (M.1⁻¹ᵀ *ᵥ φ.toFin2ℂ) = ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
     rw [dotProduct_mulVec, vecMul_transpose, mulVec_mulVec]
     simp
@@ -183,8 +185,10 @@ def DualLeftHandedWeyl.contr : (DualLeftHandedWeyl.rep.tprod LeftHandedWeyl.rep)
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift DualLeftHandedWeyl.contrBi
   isIntertwining' M := TensorProduct.ext' fun φ ψ => by
-    change (DualLeftHandedWeyl.rep M φ).toFin2ℂ ⬝ᵥ (LeftHandedWeyl.rep M ψ).toFin2ℂ = φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
-    rw [DualLeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.toFin2ℂ_eq_val, DualLeftHandedWeyl.val_rep, LeftHandedWeyl.val_rep]
+    change (DualLeftHandedWeyl.rep M φ).toFin2ℂ ⬝ᵥ (LeftHandedWeyl.rep M ψ).toFin2ℂ =
+      φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
+    rw [DualLeftHandedWeyl.toFin2ℂ_eq_val, LeftHandedWeyl.toFin2ℂ_eq_val,
+      DualLeftHandedWeyl.val_rep, LeftHandedWeyl.val_rep]
     change (M.1⁻¹ᵀ *ᵥ φ.toFin2ℂ) ⬝ᵥ (M.1 *ᵥ ψ.toFin2ℂ) = φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
     rw [dotProduct_mulVec, mulVec_transpose, vecMul_vecMul]
     simp
@@ -357,8 +361,10 @@ def RightHandedWeyl.contr : (RightHandedWeyl.rep.tprod DualRightHandedWeyl.rep).
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift RightHandedWeyl.contrBi
   isIntertwining' M := TensorProduct.ext' fun ψ φ => by
-    change (RightHandedWeyl.rep M ψ).toFin2ℂ ⬝ᵥ (DualRightHandedWeyl.rep M φ).toFin2ℂ = ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
-    rw [RightHandedWeyl.toFin2ℂ_eq_val, DualRightHandedWeyl.toFin2ℂ_eq_val, RightHandedWeyl.val_rep, DualRightHandedWeyl.val_rep]
+    change (RightHandedWeyl.rep M ψ).toFin2ℂ ⬝ᵥ (DualRightHandedWeyl.rep M φ).toFin2ℂ =
+      ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
+    rw [RightHandedWeyl.toFin2ℂ_eq_val, DualRightHandedWeyl.toFin2ℂ_eq_val, RightHandedWeyl.val_rep,
+      DualRightHandedWeyl.val_rep]
     change (M.1.map star *ᵥ ψ.toFin2ℂ) ⬝ᵥ (M.1⁻¹.conjTranspose *ᵥ φ.toFin2ℂ) =
       ψ.toFin2ℂ ⬝ᵥ φ.toFin2ℂ
     have h1 : (M.1)⁻¹ᴴ = ((M.1)⁻¹.map star)ᵀ := by rfl
@@ -438,8 +444,10 @@ def DualRightHandedWeyl.contr : (DualRightHandedWeyl.rep.tprod RightHandedWeyl.r
     (Representation.trivial ℂ SL(2,ℂ) ℂ) where
   toLinearMap := TensorProduct.lift DualRightHandedWeyl.contrBi
   isIntertwining' M := TensorProduct.ext' fun φ ψ => by
-    change (DualRightHandedWeyl.rep M φ).toFin2ℂ ⬝ᵥ (RightHandedWeyl.rep M ψ).toFin2ℂ = φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
-    rw [DualRightHandedWeyl.toFin2ℂ_eq_val, RightHandedWeyl.toFin2ℂ_eq_val, DualRightHandedWeyl.val_rep, RightHandedWeyl.val_rep]
+    change (DualRightHandedWeyl.rep M φ).toFin2ℂ ⬝ᵥ (RightHandedWeyl.rep M ψ).toFin2ℂ =
+      φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
+    rw [DualRightHandedWeyl.toFin2ℂ_eq_val, RightHandedWeyl.toFin2ℂ_eq_val,
+      DualRightHandedWeyl.val_rep, RightHandedWeyl.val_rep]
     change (M.1⁻¹.conjTranspose *ᵥ φ.toFin2ℂ) ⬝ᵥ (M.1.map star *ᵥ ψ.toFin2ℂ) =
       φ.toFin2ℂ ⬝ᵥ ψ.toFin2ℂ
     have h1 : (M.1)⁻¹ᴴ = ((M.1)⁻¹.map star)ᵀ := by rfl

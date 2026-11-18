@@ -94,14 +94,21 @@ lemma contrMetric_eq_fromConstPair : η = fromConstPair (S := complexLorentzTens
   rw [Lorentz.ComplexVector.metric]
   rfl
 
-lemma leftMetric_eq_fromConstPair : εL = fromConstPair (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL) Fermion.LeftHandedWeyl.metric := rfl
+lemma leftMetric_eq_fromConstPair :
+    εL = fromConstPair (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL)
+      Fermion.LeftHandedWeyl.metric := rfl
 
-lemma rightMetric_eq_fromConstPair : εR = fromConstPair (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR) Fermion.RightHandedWeyl.metric := rfl
+lemma rightMetric_eq_fromConstPair :
+    εR = fromConstPair (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR)
+      Fermion.RightHandedWeyl.metric := rfl
 
-lemma dualLeftMetric_eq_fromConstPair : εL' = fromConstPair (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL) Fermion.DualLeftHandedWeyl.metric := rfl
+lemma dualLeftMetric_eq_fromConstPair :
+    εL' = fromConstPair (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL)
+      Fermion.DualLeftHandedWeyl.metric := rfl
 
 lemma dualRightMetric_eq_fromConstPair :
-    εR' = fromConstPair (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR) Fermion.DualRightHandedWeyl.metric := rfl
+    εR' = fromConstPair (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR)
+      Fermion.DualRightHandedWeyl.metric := rfl
 
 /-!
 
@@ -109,32 +116,41 @@ lemma dualRightMetric_eq_fromConstPair :
 
 -/
 
-lemma coMetric_eq_fromPairT : η' = fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (Lorentz.ComplexCoVector.metricVal) := by
+lemma coMetric_eq_fromPairT : η' = fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+  (Lorentz.ComplexCoVector.metricVal) := by
   rw [coMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Lorentz.ComplexCoVector.metric_apply_one
 
-lemma contrMetric_eq_fromPairT : η = fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (Lorentz.ComplexVector.metricVal) := by
+lemma contrMetric_eq_fromPairT : η = fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+  (Lorentz.ComplexVector.metricVal) := by
   rw [contrMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Lorentz.ComplexVector.metric_apply_one
 
-lemma leftMetric_eq_fromPairT : εL = fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL) (Fermion.LeftHandedWeyl.metricVal) := by
+lemma leftMetric_eq_fromPairT : εL = fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL)
+  (Fermion.LeftHandedWeyl.metricVal) := by
   rw [leftMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.LeftHandedWeyl.metric_apply_one
 
-lemma rightMetric_eq_fromPairT : εR = fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR) (Fermion.RightHandedWeyl.metricVal) := by
+lemma rightMetric_eq_fromPairT :
+    εR = fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR)
+      (Fermion.RightHandedWeyl.metricVal) := by
   rw [rightMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.RightHandedWeyl.metric_apply_one
 
-lemma dualLeftMetric_eq_fromPairT : εL' = fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL) (Fermion.DualLeftHandedWeyl.metricVal) := by
+lemma dualLeftMetric_eq_fromPairT :
+    εL' = fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL)
+      (Fermion.DualLeftHandedWeyl.metricVal) := by
   rw [dualLeftMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.DualLeftHandedWeyl.metric_apply_one
 
-lemma dualRightMetric_eq_fromPairT : εR' = fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR) (Fermion.DualRightHandedWeyl.metricVal) := by
+lemma dualRightMetric_eq_fromPairT :
+    εR' = fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR)
+      (Fermion.DualRightHandedWeyl.metricVal) := by
   rw [dualRightMetric_eq_fromConstPair, fromConstPair]
   congr 1
   exact Fermion.DualRightHandedWeyl.metric_apply_one
@@ -147,67 +163,91 @@ lemma dualRightMetric_eq_fromPairT : εR' = fromPairT (S := complexLorentzTensor
 
 open Lorentz in
 lemma coMetric_eq_complexCoVector_basis : η' =
-    fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basis (Sum.inl 0) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inl 0))
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basis (Sum.inr 0) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 0))
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basis (Sum.inr 1) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 1))
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basis (Sum.inr 2) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 2)) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basis (Sum.inl 0) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inl 0))
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basis (Sum.inr 0) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 0))
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basis (Sum.inr 1) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 1))
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basis (Sum.inr 2) ⊗ₜ[ℂ] ComplexCoVector.basis (Sum.inr 2)) := by
   rw [coMetric_eq_fromPairT, ComplexCoVector.metricVal_expand_tmul]
   simp
 
 open Lorentz in
 lemma coMetric_eq_complexCoVector_basisFin4 : η' =
-    fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basisFin4 0 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 0)
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basisFin4 1 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 1)
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basisFin4 2 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 2)
-    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down) (ComplexCoVector.basisFin4 3 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 3) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basisFin4 0 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 0)
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basisFin4 1 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 1)
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basisFin4 2 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 2)
+    - fromPairT (S := complexLorentzTensor) (c1 := .down) (c2 := .down)
+      (ComplexCoVector.basisFin4 3 ⊗ₜ[ℂ] ComplexCoVector.basisFin4 3) := by
   rw [coMetric_eq_complexCoVector_basis]
   simp [ComplexCoVector.basisFin4]
   rfl
 
 open Lorentz in
 lemma contrMetric_eq_complexVector_basis : η =
-    fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basis (Sum.inl 0) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inl 0))
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basis (Sum.inr 0) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 0))
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basis (Sum.inr 1) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 1))
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basis (Sum.inr 2) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 2)) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basis (Sum.inl 0) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inl 0))
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basis (Sum.inr 0) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 0))
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basis (Sum.inr 1) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 1))
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basis (Sum.inr 2) ⊗ₜ[ℂ] ComplexVector.basis (Sum.inr 2)) := by
   rw [contrMetric_eq_fromPairT, ComplexVector.metricVal_expand_tmul]
   simp
 
 open Lorentz in
 lemma contrMetric_eq_complexVector_basisFin4 : η =
-    fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basisFin4 0 ⊗ₜ[ℂ] ComplexVector.basisFin4 0)
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basisFin4 1 ⊗ₜ[ℂ] ComplexVector.basisFin4 1)
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basisFin4 2 ⊗ₜ[ℂ] ComplexVector.basisFin4 2)
-    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up) (ComplexVector.basisFin4 3 ⊗ₜ[ℂ] ComplexVector.basisFin4 3) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basisFin4 0 ⊗ₜ[ℂ] ComplexVector.basisFin4 0)
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basisFin4 1 ⊗ₜ[ℂ] ComplexVector.basisFin4 1)
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basisFin4 2 ⊗ₜ[ℂ] ComplexVector.basisFin4 2)
+    - fromPairT (S := complexLorentzTensor) (c1 := .up) (c2 := .up)
+      (ComplexVector.basisFin4 3 ⊗ₜ[ℂ] ComplexVector.basisFin4 3) := by
   rw [contrMetric_eq_complexVector_basis]
   simp [ComplexVector.basisFin4]
   rfl
 
 open Fermion in
 lemma leftMetric_eq_leftHandedWeyl_basis : εL =
-    - fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL) (LeftHandedWeyl.basis 0 ⊗ₜ[ℂ] LeftHandedWeyl.basis 1)
-    + fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL) (LeftHandedWeyl.basis 1 ⊗ₜ[ℂ] LeftHandedWeyl.basis 0) := by
+    - fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL)
+      (LeftHandedWeyl.basis 0 ⊗ₜ[ℂ] LeftHandedWeyl.basis 1)
+    + fromPairT (S := complexLorentzTensor) (c1 := .upL) (c2 := .upL)
+      (LeftHandedWeyl.basis 1 ⊗ₜ[ℂ] LeftHandedWeyl.basis 0) := by
   rw [leftMetric_eq_fromPairT, LeftHandedWeyl.metricVal_expand_tmul]
   simp
 
 open Fermion in
 lemma dualLeftMetric_eq_dualLeftHandedWeyl_basis : εL' =
-    fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL) (DualLeftHandedWeyl.basis 0 ⊗ₜ[ℂ] DualLeftHandedWeyl.basis 1)
-    - fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL) (DualLeftHandedWeyl.basis 1 ⊗ₜ[ℂ] DualLeftHandedWeyl.basis 0) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL)
+      (DualLeftHandedWeyl.basis 0 ⊗ₜ[ℂ] DualLeftHandedWeyl.basis 1)
+    - fromPairT (S := complexLorentzTensor) (c1 := .downL) (c2 := .downL)
+      (DualLeftHandedWeyl.basis 1 ⊗ₜ[ℂ] DualLeftHandedWeyl.basis 0) := by
   rw [dualLeftMetric_eq_fromPairT, DualLeftHandedWeyl.metricVal_expand_tmul]
   simp
 
 open Fermion in
 lemma rightMetric_eq_rightHandedWeyl_basis : εR =
-    - fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR) (RightHandedWeyl.basis 0 ⊗ₜ[ℂ] RightHandedWeyl.basis 1)
-    + fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR) (RightHandedWeyl.basis 1 ⊗ₜ[ℂ] RightHandedWeyl.basis 0) := by
+    - fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR)
+      (RightHandedWeyl.basis 0 ⊗ₜ[ℂ] RightHandedWeyl.basis 1)
+    + fromPairT (S := complexLorentzTensor) (c1 := .upR) (c2 := .upR)
+      (RightHandedWeyl.basis 1 ⊗ₜ[ℂ] RightHandedWeyl.basis 0) := by
   rw [rightMetric_eq_fromPairT, RightHandedWeyl.metricVal_expand_tmul]
   simp
 
 open Fermion in
 lemma dualRightMetric_eq_dualRightHandedWeyl_basis : εR' =
-    fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR) (DualRightHandedWeyl.basis 0 ⊗ₜ[ℂ] DualRightHandedWeyl.basis 1)
-    - fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR) (DualRightHandedWeyl.basis 1 ⊗ₜ[ℂ] DualRightHandedWeyl.basis 0) := by
+    fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR)
+      (DualRightHandedWeyl.basis 0 ⊗ₜ[ℂ] DualRightHandedWeyl.basis 1)
+    - fromPairT (S := complexLorentzTensor) (c1 := .downR) (c2 := .downR)
+      (DualRightHandedWeyl.basis 1 ⊗ₜ[ℂ] DualRightHandedWeyl.basis 0) := by
   rw [dualRightMetric_eq_fromPairT, DualRightHandedWeyl.metricVal_expand_tmul]
   simp
 

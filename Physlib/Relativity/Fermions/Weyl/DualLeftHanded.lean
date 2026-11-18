@@ -59,7 +59,8 @@ noncomputable section
 -/
 
 open Tensor Tensor.complexLorentz in
-/-- The dual left-handed Weyl fermions, the complex Lorentz tensors with a lower left-handed index, `ψ_α`. -/
+/-- The dual left-handed Weyl fermions, the complex Lorentz tensors with a lower left-handed index,
+`ψ_α`. -/
 abbrev DualLeftHandedWeyl := Tensor complexLorentz ![downL]
 
 namespace DualLeftHandedWeyl
@@ -98,10 +99,12 @@ lemma val_toFin2ℂEquiv_symm (f : Fin 2 → ℂ) : (toFin2ℂEquiv.symm f : Dua
 lemma ext {ψ ψ' : DualLeftHandedWeyl} (h : ψ.val = ψ'.val) : ψ = ψ' := toFin2ℂEquiv.injective h
 
 @[simp]
-lemma val_add (ψ ψ' : DualLeftHandedWeyl) : (ψ + ψ').val = ψ.val + ψ'.val := map_add toFin2ℂEquiv ψ ψ'
+lemma val_add (ψ ψ' : DualLeftHandedWeyl) : (ψ + ψ').val = ψ.val + ψ'.val :=
+  map_add toFin2ℂEquiv ψ ψ'
 
 @[simp]
-lemma val_smul (r : ℂ) (ψ : DualLeftHandedWeyl) : (r • ψ).val = r • ψ.val := map_smul toFin2ℂEquiv r ψ
+lemma val_smul (r : ℂ) (ψ : DualLeftHandedWeyl) : (r • ψ).val = r • ψ.val :=
+  map_smul toFin2ℂEquiv r ψ
 
 @[simp]
 lemma val_zero : (0 : DualLeftHandedWeyl).val = 0 := map_zero toFin2ℂEquiv
@@ -118,7 +121,8 @@ instance : Nontrivial DualLeftHandedWeyl := toFin2ℂEquiv.toEquiv.nontrivial
 def basis : Basis (Fin 2) ℂ DualLeftHandedWeyl := oneIndexBasis downL
 
 @[simp]
-lemma basis_repr (ψ : DualLeftHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i := oneIndexBasis_repr _ ψ i
+lemma basis_repr (ψ : DualLeftHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i :=
+  oneIndexBasis_repr _ ψ i
 
 lemma basis_val (i : Fin 2) : (basis i).val = Pi.single i 1 := by
   rw [val, toFin2ℂEquiv, basis]
@@ -144,17 +148,19 @@ lemma finrank_eq_two : Module.finrank ℂ DualLeftHandedWeyl = 2 := by
 
 -/
 
-/-- The representation of `SL(2, ℂ)` on dual left-handed Weyl fermions, the action on tensors. On components
-it is `ψ ↦ (M.1⁻¹)ᵀ *ᵥ ψ` (`val_rep`). -/
+/-- The representation of `SL(2, ℂ)` on dual left-handed Weyl fermions, the action on tensors. On
+components it is `ψ ↦ (M.1⁻¹)ᵀ *ᵥ ψ` (`val_rep`). -/
 def rep : Representation ℂ SL(2,ℂ) DualLeftHandedWeyl := complexLorentz.tensorRep ![downL]
 
-lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix downL M = (M.1⁻¹)ᵀ := by rw [Lorentz.SL2C.inverse_coe]; rfl
+lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix downL M = (M.1⁻¹)ᵀ := by
+  rw [Lorentz.SL2C.inverse_coe]; rfl
 
 @[simp]
 lemma val_rep (M : SL(2,ℂ)) (ψ : DualLeftHandedWeyl) : (rep M ψ).val = (M.1⁻¹)ᵀ *ᵥ ψ.val :=
   (toComponents_smul downL M ψ).trans (by rw [repMatrix_eq]; rfl)
 
-lemma rep_apply (M : SL(2,ℂ)) (ψ : DualLeftHandedWeyl) : rep M ψ = toFin2ℂEquiv.symm ((M.1⁻¹)ᵀ *ᵥ ψ.val) :=
+lemma rep_apply (M : SL(2,ℂ)) (ψ : DualLeftHandedWeyl) :
+    rep M ψ = toFin2ℂEquiv.symm ((M.1⁻¹)ᵀ *ᵥ ψ.val) :=
   toFin2ℂEquiv.eq_symm_apply.mpr (val_rep M ψ)
 
 lemma rep_apply_eq_sum_basis (M : SL(2,ℂ)) (ψ : DualLeftHandedWeyl) :

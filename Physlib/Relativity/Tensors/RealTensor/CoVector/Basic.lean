@@ -50,7 +50,8 @@ lemma toCoord_oneIndexEquiv {d : ℕ} (x : (realLorentz d).colored.V realLorentz
 
 /-- The components of `v` are the components of its vector of the index space. -/
 lemma toCoord_apply {d : ℕ} (v : CoVector d) :
-    toCoord v = Species.ColoredSpace.toV (((realLorentz d).oneIndexEquiv realLorentz.down).symm v) :=
+    toCoord v =
+      Species.ColoredSpace.toV (((realLorentz d).oneIndexEquiv realLorentz.down).symm v) :=
   rfl
 
 -- `toCoord` goes through `PiTensorProduct`. Unfolding it in `whnf` is expensive (it made a
@@ -157,7 +158,8 @@ lemma basis_repr_apply {d : ℕ} (p : CoVector d) (μ : Fin 1 ⊕ Fin d) :
 
 lemma map_apply_eq_basis_mulVec {d : ℕ} (f : CoVector d →ₗ[ℝ] CoVector d) (p : CoVector d) :
     ⇑(f p) = (LinearMap.toMatrix basis basis) f *ᵥ ⇑p := by
-  simpa only [funext (basis_repr_apply _)] using (LinearMap.toMatrix_mulVec_repr basis basis f p).symm
+  simpa only [funext (basis_repr_apply _)] using
+    (LinearMap.toMatrix_mulVec_repr basis basis f p).symm
 
 end CoVector
 
