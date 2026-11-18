@@ -59,10 +59,10 @@ left-handed Weyl fermion to a right-handed one. [TODO]
 
 1. Physlib/Relativity/Fermions/Weyl/LeftHanded.lean — `LeftHandedWeyl`,
    `AddCommMonoid LeftHandedWeyl`, `AddCommGroup LeftHandedWeyl`, `Module ℂ LeftHandedWeyl`,
-   `toFin2ℂFun`, `toFin2ℂEquiv`, `toFin2ℂ`
+   `toFin2ℂEquiv`, `toFin2ℂ`, `val`
 2. Physlib/Relativity/Fermions/Weyl/RightHanded.lean — `RightHandedWeyl`,
    `AddCommMonoid RightHandedWeyl`, `AddCommGroup RightHandedWeyl`, `Module ℂ RightHandedWeyl`,
-   `toFin2ℂFun`, `toFin2ℂEquiv`, `toFin2ℂ`
+   `toFin2ℂEquiv`, `toFin2ℂ`, `val`
 3. Physlib/Relativity/Fermions/Weyl/DualLeftHanded.lean — `DualLeftHandedWeyl`,
    `AddCommGroup DualLeftHandedWeyl`, `Module ℂ DualLeftHandedWeyl`, `toFin2ℂEquiv`
 4. Physlib/Relativity/Fermions/Weyl/DualRightHanded.lean — `DualRightHandedWeyl`,
