@@ -30,7 +30,6 @@ namespace Lorentz
 def ComplexVector.basis : Basis (Fin 1 ⊕ Fin 3) ℂ ComplexVector :=
   Basis.ofEquivFun ComplexVector.toFin13ℂEquiv
 
-@[simp]
 lemma ComplexVector.basis_toFin13ℂ (i :Fin 1 ⊕ Fin 3) :
     (ComplexVector.basis i).toFin13ℂ = Pi.single i 1 := by
   simp [ComplexVector.basis]
@@ -94,7 +93,6 @@ lemma ComplexVector.basisFin4_apply_succ (i : Fin 3) :
 def ComplexCoVector.basis : Basis (Fin 1 ⊕ Fin 3) ℂ ComplexCoVector :=
   Basis.ofEquivFun ComplexCoVector.toFin13ℂEquiv
 
-@[simp]
 lemma ComplexCoVector.basis_toFin13ℂ (i :Fin 1 ⊕ Fin 3) :
     (ComplexCoVector.basis i).toFin13ℂ = Pi.single i 1 := by
   simp [ComplexCoVector.basis]
