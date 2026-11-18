@@ -451,9 +451,6 @@ lemma contDiff_ofElectromagneticField {n : ℕ} (c : SpeedOfLight)
     change ContDiff ℝ n (fun x => (timeSlice c).symm A x i)
     fun_prop
   | Sum.inl 0 =>
-    simp only [map_smul, WithLp.equiv_apply,
-      WithLp.ofLp_smul, LinearMap.smul_apply, WithLp.equiv_symm_apply, WithLp.toLp_smul,
-      Fin.isValue]
     apply ContDiff.div _ (by fun_prop) (by simp)
     apply timeSlice_symm_contDiff
     apply ContDiff.neg

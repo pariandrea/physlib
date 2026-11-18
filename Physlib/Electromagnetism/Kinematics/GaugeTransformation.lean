@@ -123,7 +123,6 @@ lemma ofGradient_add {d} {χ₁ χ₂ : SpaceTime d → ℝ}
     ofGradient (χ₁ + χ₂) = ofGradient χ₁ + ofGradient χ₂ := by
   apply eq_of_val_eq; funext x; ext μ
   simp only [add_val, Pi.add_apply, Lorentz.Vector.apply_add]
-  change ofGradient (χ₁ + χ₂) x μ = ofGradient χ₁ x μ + ofGradient χ₂ x μ
   simp only [ofGradient_apply, SpaceTime.deriv_eq,
     fderiv_add hχ₁.differentiableAt hχ₂.differentiableAt, _root_.add_apply,
     mul_add]
