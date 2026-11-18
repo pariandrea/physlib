@@ -206,6 +206,7 @@ public import Physlib.Mathematics.Tensors.Contraction
 public import Physlib.Mathematics.Tensors.Examples
 public import Physlib.Mathematics.Tensors.IndexMaps
 public import Physlib.Mathematics.Tensors.LinearMap
+public import Physlib.Mathematics.Tensors.Metric
 public import Physlib.Mathematics.Tensors.Product
 public import Physlib.Mathematics.Tensors.Reindexing
 public import Physlib.Mathematics.Tensors.Species
