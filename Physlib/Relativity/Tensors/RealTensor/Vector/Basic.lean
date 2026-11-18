@@ -91,23 +91,8 @@ lemma abs_component_le_norm {d : ℕ} (v : Vector d) (i : Fin 1 ⊕ Fin d) :
   · simp
   refine Finset.sum_le_univ_sum_of_nonneg (fun i => by positivity)
 
-instance isNormedAddCommGroup (d : ℕ) : NormedAddCommGroup (Vector d) where
-  dist_self x := by simp [norm_eq_equivEuclid]
-  -- `change` restates the default `dist` with the instances of `Tensor`, which `simp` matches.
-  dist_comm x y := by
-    change ‖equivEuclid d (-x + y)‖ = ‖equivEuclid d (-y + x)‖
-    simpa [norm_eq_equivEuclid, dist_eq_norm_neg_add] using dist_comm ((equivEuclid d) x) _
-  dist_triangle x y z := by
-    change ‖equivEuclid d (-x + z)‖ ≤ ‖equivEuclid d (-x + y)‖ + ‖equivEuclid d (-y + z)‖
-    simpa [norm_eq_equivEuclid, dist_eq_norm_neg_add] using dist_triangle
-      ((equivEuclid d) x) ((equivEuclid d) y) ((equivEuclid d) z)
-  eq_of_dist_eq_zero {x y} := by
-    change ‖equivEuclid d (-x + y)‖ = 0 → x = y
-    simp only [map_add]
-    intro h
-    apply (equivEuclid d).injective
-    simp at h
-    rw [← neg_add_eq_zero, h]
+instance isNormedAddCommGroup (d : ℕ) : NormedAddCommGroup (Vector d) :=
+  NormedAddCommGroup.induced _ _ (equivEuclid d) (equivEuclid d).injective
 
 instance isNormedSpace (d : ℕ) : NormedSpace ℝ (Vector d) where
   norm_smul_le c v := by

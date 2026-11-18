@@ -78,24 +78,8 @@ instance (d : ℕ) : Norm (CoVector d) where
 lemma norm_eq_equivEuclid (d : ℕ) (v : CoVector d) :
     ‖v‖ = ‖equivEuclid d v‖ := rfl
 
-instance isNormedAddCommGroup (d : ℕ) : NormedAddCommGroup (CoVector d) where
-  dist_self x := by simp [norm_eq_equivEuclid]
-  -- `change` restates the default `dist` with the instances of `Tensor`, which `simp` matches.
-  dist_comm x y := by
-    change ‖equivEuclid d (-x + y)‖ = ‖equivEuclid d (-y + x)‖
-    simpa [norm_eq_equivEuclid, ← dist_eq_norm_neg_add] using
-      dist_comm (equivEuclid d x) (equivEuclid d y)
-  dist_triangle x y z := by
-    change ‖equivEuclid d (-x + z)‖ ≤ ‖equivEuclid d (-x + y)‖ + ‖equivEuclid d (-y + z)‖
-    simpa [norm_eq_equivEuclid, ← dist_eq_norm_neg_add] using dist_triangle
-      ((equivEuclid d) x) ((equivEuclid d) y) ((equivEuclid d) z)
-  eq_of_dist_eq_zero {x y} := by
-    change ‖equivEuclid d (-x + y)‖ = 0 → x = y
-    simp only [map_add]
-    intro h
-    apply (equivEuclid d).injective
-    simp at h
-    rw [← neg_add_eq_zero, h]
+instance isNormedAddCommGroup (d : ℕ) : NormedAddCommGroup (CoVector d) :=
+  NormedAddCommGroup.induced _ _ (equivEuclid d) (equivEuclid d).injective
 
 instance isNormedSpace (d : ℕ) : NormedSpace ℝ (CoVector d) where
   norm_smul_le c v := by
