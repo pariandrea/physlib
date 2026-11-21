@@ -223,7 +223,9 @@ lemma bispinorToVector_vectorToBispinor (p : ℂT[up, upL, upR]) :
 lemma vectorToBispinor_bispinorToVector (X : ℂT[upL, upR, upL, upR]) :
     vectorToBispinor (bispinorToVector X) = (2 : ℂ) • X :=
   LinearMap.comp_apply_eq_smul_of_comp_apply_eq_smul_of_finrank_eq
-    (by simp only [Species.finrank_tensor, Module.finrank_eq_card_basis (complexLorentz.basis _)]; rfl)
+    (by
+      simp only [Species.finrank_tensor, Module.finrank_eq_card_basis (complexLorentz.basis _)]
+      rfl)
     two_ne_zero
     bispinorToVector_vectorToBispinor X
 
