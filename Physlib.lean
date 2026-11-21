@@ -160,6 +160,7 @@ public import Physlib.Mathematics.ForMathlib.ComplexLinear
 public import Physlib.Mathematics.ForMathlib.Cutoff
 public import Physlib.Mathematics.ForMathlib.DataStructures.Matrix.LieTrace
 public import Physlib.Mathematics.ForMathlib.Distribution
+public import Physlib.Mathematics.ForMathlib.EquivPairs
 public import Physlib.Mathematics.ForMathlib.FDerivCurry
 public import Physlib.Mathematics.ForMathlib.Fin
 public import Physlib.Mathematics.ForMathlib.Fin.Involutions
@@ -174,6 +175,7 @@ public import Physlib.Mathematics.ForMathlib.OneParameterSubgroups.Basic
 public import Physlib.Mathematics.ForMathlib.OneParameterSubgroups.Unitary
 public import Physlib.Mathematics.ForMathlib.OrthogonalMatrix
 public import Physlib.Mathematics.ForMathlib.PiTensorProduct
+public import Physlib.Mathematics.ForMathlib.PiTensorProduct.ContrPairs
 public import Physlib.Mathematics.ForMathlib.Representation
 public import Physlib.Mathematics.ForMathlib.Representation.Maps
 public import Physlib.Mathematics.ForMathlib.SchurTriangulation
@@ -203,6 +205,7 @@ public import Physlib.Mathematics.Modules.CrossProductMatrix
 public import Physlib.Mathematics.SpecialFunctions.EllipticIntegral
 public import Physlib.Mathematics.SpecialFunctions.PhysHermite
 public import Physlib.Mathematics.Tensors.Color
+public import Physlib.Mathematics.Tensors.Contraction
 public import Physlib.Mathematics.Tensors.Examples
 public import Physlib.Mathematics.Tensors.IndexMaps
 public import Physlib.Mathematics.Tensors.Product
