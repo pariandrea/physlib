@@ -8,6 +8,7 @@ module
 public import Physlib.Mathematics.Modules.ConjModule
 public import Mathlib.LinearAlgebra.Complex.Module
 public import Mathlib.RepresentationTheory.Basic
+public import Mathlib.Algebra.Ring.TransferInstance
 /-!
 # Algebras, duals and representations on a conjugate module
 
@@ -72,16 +73,13 @@ namespace ConjModule
 
 variable {A : Type*} [Ring A]
 
-instance : Ring (ConjModule A) :=
-  let i1 : AddCommGroup (ConjModule A) := inferInstanceAs (AddCommGroup (ConjModule A))
-  let i2 : Ring A := inferInstanceAs (Ring A)
-  { i1, i2 with }
+instance : Ring (ConjModule A) := (equiv A).ring
 
 /-- The conjugate module of a `k`-algebra is a `k`-algebra: the same ring, with scalars
 acting through `star`. -/
 instance instAlgebra [Algebra k A] : Algebra k (ConjModule A) :=
-  Algebra.ofModule (fun r x y => smul_mul_assoc (β := A) (star r) x y)
-    (fun r x y => mul_smul_comm (β := A) (star r) x y)
+  Algebra.ofModule (fun r x y => congrArg toConj (smul_mul_assoc (star r) x.ofConj y.ofConj))
+    (fun r x y => congrArg toConj (mul_smul_comm (star r) x.ofConj y.ofConj))
 
 end ConjModule
 
@@ -122,23 +120,6 @@ variable {ι : Type*}
 -/
 
 
-/-- The conjugate of a representation `ρ` of `G` on `M`: the same maps `ρ g`, acting on
-`ConjModule M` through `conjEquiv`. -/
-def _root_.Representation.conj {G} [Group G] (ρ : Representation k G M) :
-    Representation k G (ConjModule M) where
-  toFun g := {
-    toFun := conjEquiv (k := k) (M := M) ∘ ρ g ∘ (conjEquiv (k := k) (M := M)).symm
-    map_add' x y := (ρ g).map_add x y
-    map_smul' a m := (ρ g).map_smul (star a) m }
-  map_one' := LinearMap.ext fun _ =>
-    congrArg (conjEquiv (k := k)) (LinearMap.congr_fun (map_one ρ) _)
-  map_mul' g h := LinearMap.ext fun _ =>
-    congrArg (conjEquiv (k := k)) (LinearMap.congr_fun (map_mul ρ g h) _)
-
-lemma _root_.Representation.conj_apply {G} [Group G] (ρ : Representation k G M) (g : G)
-    (m : ConjModule M) :
-    ρ.conj g m = conjEquiv (k := k) (M := M) (ρ g ((conjEquiv (k := k) (M := M)).symm m)) := rfl
-
 /-- The conjugate of the trivial representation acts trivially. -/
 @[simp] lemma _root_.Representation.conj_trivial_apply {G : Type*} [Group G] (g : G)
     (m : ConjModule M) : (Representation.trivial k G M).conj g m = m := by
@@ -172,12 +153,12 @@ variable {N : Type*} [AddCommGroup N] [Module k N]
 /-- Functoriality of conjugation: a `k`-linear map induces a `k`-linear map of the
 conjugate modules, given by the same underlying function. -/
 def map (f : M →ₗ[k] N) : ConjModule M →ₗ[k] ConjModule N where
-  toFun := f
-  map_add' := f.map_add
-  map_smul' c x := f.map_smul (star c) x
+  toFun x := toConj (f x.ofConj)
+  map_add' x y := congrArg toConj (f.map_add x.ofConj y.ofConj)
+  map_smul' c x := congrArg toConj (f.map_smul (star c) x.ofConj)
 
 @[simp]
-lemma map_apply (f : M →ₗ[k] N) (x : ConjModule M) : map f x = f x := rfl
+lemma map_apply (f : M →ₗ[k] N) (x : ConjModule M) : map f x = toConj (f x.ofConj) := rfl
 
 /-- **Conjugation commutes with finite products.** The conjugate of a product is the product
 of the conjugates, by the identity underlying function: the twisted scalar action is applied
@@ -186,7 +167,7 @@ def prodEquiv : ConjModule (M × N) ≃ₗ[k] ConjModule M × ConjModule N where
   toFun x := (map (LinearMap.fst k M N) x, map (LinearMap.snd k M N) x)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
-  invFun x := (x.1, x.2)
+  invFun x := toConj (x.1.ofConj, x.2.ofConj)
   left_inv _ := rfl
   right_inv _ := rfl
 
@@ -203,10 +184,10 @@ family of modules is the product of their conjugates, by the identity underlying
 function: the twisted scalar action is applied componentwise, so no finiteness of the
 index type is needed. -/
 def piEquiv : ConjModule (∀ i, P i) ≃ₗ[k] ∀ i, ConjModule (P i) where
-  toFun x i := x i
+  toFun x i := toConj (x.ofConj i)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
-  invFun x i := x i
+  invFun x := toConj fun i => (x i).ofConj
   left_inv _ := rfl
   right_inv _ := rfl
 
@@ -302,7 +283,7 @@ noncomputable def tensorEquiv :
         | add x y hx hy => rw [map_add, map_add, hx, hy]
       exact Function.LeftInverse.injective h,
      by
-      intro z
+      rintro ⟨z⟩
       induction z using TensorProduct.inductionOn with
       | tmul m n =>
           exact ⟨conjEquiv (k := k) (M := M) m ⊗ₜ[k] conjEquiv (k := k) (M := N) n, rfl⟩
@@ -346,8 +327,8 @@ def endConj {k : Type*} [CommRing k] [StarRing k] {M : Type*}
     [AddCommGroup M] [Module k M] (f : M →ₗ[k] M) :
     ConjModule M →ₗ[k] ConjModule M where
   toFun v := conjEquiv (k := k) (M := M) (f ((conjEquiv (k := k) (M := M)).symm v))
-  map_add' v w := f.map_add v w
-  map_smul' a v := f.map_smul (star a) v
+  map_add' v w := congrArg toConj (f.map_add v.ofConj w.ofConj)
+  map_smul' a v := congrArg toConj (f.map_smul (star a) v.ofConj)
 
 @[simp]
 lemma endConj_apply {k : Type*} [CommRing k] [StarRing k] {M : Type*}
@@ -386,8 +367,8 @@ lemma endConj_real_smul {M : Type*} [AddCommGroup M] [Module ℂ M]
     (r : ℝ) (f : M →ₗ[ℂ] M) :
     ConjModule.endConj (r • f) = r • ConjModule.endConj f := by
   refine LinearMap.ext fun v => ?_
-  show (algebraMap ℝ ℂ r) • (f ((conjEquiv (k := ℂ) (M := M)).symm v))
-      = (starRingEnd ℂ) (algebraMap ℝ ℂ r) • (f ((conjEquiv (k := ℂ) (M := M)).symm v))
+  show toConj ((algebraMap ℝ ℂ r) • (f ((conjEquiv (k := ℂ) (M := M)).symm v)))
+      = toConj ((starRingEnd ℂ) (algebraMap ℝ ℂ r) • (f ((conjEquiv (k := ℂ) (M := M)).symm v)))
   rw [show (starRingEnd ℂ) (algebraMap ℝ ℂ r) = algebraMap ℝ ℂ r from
     Complex.conj_ofReal r]
 

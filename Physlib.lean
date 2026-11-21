@@ -181,6 +181,7 @@ public import Physlib.Mathematics.ForMathlib.Representation
 public import Physlib.Mathematics.ForMathlib.Representation.Maps
 public import Physlib.Mathematics.ForMathlib.Schouten
 public import Physlib.Mathematics.ForMathlib.SchurTriangulation
+public import Physlib.Mathematics.ForMathlib.SemilinearMaps
 public import Physlib.Mathematics.ForMathlib.SesquilinearForm
 public import Physlib.Mathematics.ForMathlib.TensorProductMatrix
 public import Physlib.Mathematics.ForMathlib.TestFunction
@@ -208,8 +209,10 @@ public import Physlib.Mathematics.Modules.CrossProductMatrix
 public import Physlib.Mathematics.SpecialFunctions.EllipticIntegral
 public import Physlib.Mathematics.SpecialFunctions.PhysHermite
 public import Physlib.Mathematics.Tensors.Color
+public import Physlib.Mathematics.Tensors.Conjugation
 public import Physlib.Mathematics.Tensors.Contraction
 public import Physlib.Mathematics.Tensors.Examples
+public import Physlib.Mathematics.Tensors.HermitianForm
 public import Physlib.Mathematics.Tensors.IndexMaps
 public import Physlib.Mathematics.Tensors.Inverse
 public import Physlib.Mathematics.Tensors.LinearMap
