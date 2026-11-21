@@ -129,8 +129,8 @@ lemma exists_toVector_toLorentzGroup_eq (u : Velocity 3) :
   let M : SL(2, ℂ) := ⟨!![(x : ℂ), 0; ⟨-u.1 (Sum.inr 0) / x, -u.1 (Sum.inr 1) / x⟩, (x : ℂ)⁻¹],
     by rw [det_fin_two_of]; field_simp; simp [hx0.ne']⟩
   refine ⟨M, ?_⟩
+  ext μ
   rw [LorentzGroup.toVector_eq_fun]
-  funext μ
   refine (congrFun (toLorentzGroup_fst_col M) μ).trans ?_
   rcases μ with μ | μ <;> fin_cases μ <;>
     simp [M, Complex.sq_norm, normSq_mk] <;> field_simp <;> nlinarith

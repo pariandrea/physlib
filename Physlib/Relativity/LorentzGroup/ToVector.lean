@@ -38,18 +38,14 @@ lemma toVector_apply {d : ℕ} (Λ : LorentzGroup d)
   simp [toVector, smul_eq_sum]
 
 lemma toVector_eq_fun {d : ℕ} (Λ : LorentzGroup d) :
-    toVector Λ = (fun i => Λ.1 i (Sum.inl 0)) := by
+    ⇑(toVector Λ) = (fun i => Λ.1 i (Sum.inl 0)) := by
   funext i
   simp
 
 @[fun_prop]
 lemma toVector_continuous {d : ℕ} : Continuous (toVector (d := d)) := by
-  change Continuous (fun Λ => toVector (d := d) Λ)
-  conv =>
-    enter [1, Λ]
-    rw [toVector_eq_fun]
-  refine Vector.continuous_of_apply _ ?_
-  intro i
+  refine Vector.continuous_of_apply _ fun i => ?_
+  simp only [toVector_apply]
   refine Continuous.matrix_elem ?_ i (Sum.inl 0)
   fun_prop
 
@@ -74,7 +70,7 @@ lemma toVector_eq_basis_iff_timeComponent_eq_one {d : ℕ} (Λ : LorentzGroup d)
     rw [← toVector_timeComponent Λ, h]
     simp
   · intro h
-    funext i
+    ext i
     have h1 := toVector_minkowskiProduct_self Λ
     rw [minkowskiProduct_self_eq_timeComponent_spatialPart] at h1
     simp [h] at h1

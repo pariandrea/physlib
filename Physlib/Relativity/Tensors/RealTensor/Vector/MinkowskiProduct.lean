@@ -7,6 +7,7 @@ module
 
 public import Physlib.Relativity.Tensors.RealTensor.Vector.Tensorial
 public import Physlib.Relativity.Tensors.RealTensor.Metrics.Basic
+public import Physlib.Relativity.Tensors.RealTensor.CoVector.Representation
 /-!
 
 # Minkowski product on Lorentz vectors
@@ -147,7 +148,7 @@ lemma minkowskiProduct_toCoord_minkowskiMatrix {d : ℕ} (p q : Vector d) :
 lemma minkowskiProduct_invariant {d : ℕ} (p q : Vector d) (Λ : LorentzGroup d) :
     ⟪Λ • p, Λ • q⟫ₘ = ⟪p, q⟫ₘ := by
   rw [minkowskiProduct_apply, minkowskiProductMap, ← actionT_coMetric Λ]
-  simp only [Tensorial.toTensor_smul]
+  simp only [tensorial_toTensor_smul]
   rw [prodT_equivariant, contrT_equivariant, prodT_equivariant, contrT_equivariant,
     toScalar_equivariant]
   rfl
@@ -211,7 +212,7 @@ lemma minkowskiProduct_eq_zero_forall_iff {d : ℕ} (p : Vector d) :
     (∀ q : Vector d, ⟪p, q⟫ₘ = 0) ↔ p = 0 := by
   constructor
   · intro h
-    funext μ
+    refine eq_of_apply_eq fun μ => ?_
     rw [← minkowskiMatrix.mul_η_diag_eq_iff (μ := μ), ← minkowskiProduct_basis_right, h (basis μ)]
     simp
   · intro h
@@ -228,7 +229,7 @@ lemma map_minkowskiProduct_eq_self_forall_iff {d : ℕ} (f : Vector d →ₗ[ℝ
     (∀ p q : Vector d, ⟪f p, q⟫ₘ = ⟪p, q⟫ₘ) ↔ f = LinearMap.id := by
   constructor
   · intro h
-    ext1 p
+    refine LinearMap.ext fun p => ?_
     have h1 := h p
     have h2 : ∀ q, ⟪f p - p, q⟫ₘ = 0 := by
       intro q
@@ -315,3 +316,86 @@ lemma isLorentz_iff_toMatrix_mem_lorentzGroup {d : ℕ} (f : Vector d →ₗ[ℝ
 end Vector
 
 end Lorentz
+
+/-!
+
+## Lorentz vectors and covectors as real Lorentz tensors
+
+`Vector d` and `CoVector d` are the tensors `Tensor (realLorentz d) ![up]` and `![down]`, so they
+enter index notation directly, as in `{v | μ ⊗ ω | μ}ᵀ` for `v^μ ω_μ`.
+
+-/
+
+namespace Tensor.realLorentz
+
+open Lorentz TensorProduct
+
+/-- The components of a vector as a tensor are its components, `v^μ`. -/
+lemma tensorBasis_repr_vector (d : ℕ) (v : Vector d) (μ : Fin 1 → Fin 1 ⊕ Fin d) :
+    ((realLorentz d).tensorBasis ![up]).repr v μ = v (μ 0) := by
+  obtain ⟨x, rfl⟩ := ((realLorentz d).oneIndexEquiv up).toLinearEquiv.surjective v
+  refine (Species.tensorBasis_repr_oneIndexEquiv up x μ).trans ?_
+  rw [Vector.toCoord_eq_equivFun, Module.Basis.equivFun_apply]
+  congr 2
+  exact (((realLorentz d).oneIndexEquiv up).toLinearEquiv.symm_apply_apply x).symm
+
+/-- The components of a covector as a tensor are its components, `ω_μ`. -/
+lemma tensorBasis_repr_coVector (d : ℕ) (ω : CoVector d) (μ : Fin 1 → Fin 1 ⊕ Fin d) :
+    ((realLorentz d).tensorBasis ![down]).repr ω μ = ω (μ 0) := by
+  obtain ⟨x, rfl⟩ := ((realLorentz d).oneIndexEquiv down).toLinearEquiv.surjective ω
+  refine (Species.tensorBasis_repr_oneIndexEquiv down x μ).trans ?_
+  rw [CoVector.toCoord_eq_equivFun, Module.Basis.equivFun_apply]
+  congr 2
+  exact (((realLorentz d).oneIndexEquiv down).toLinearEquiv.symm_apply_apply x).symm
+
+/-- The components `F^μν` of `F` in `Vector d ⊗ Vector d` as a tensor are its coordinates in
+Mathlib's product basis `Basis.tensorProduct`. -/
+lemma tensorBasis_repr_toTensor_vector_tmul (d : ℕ) (F : Vector d ⊗[ℝ] Vector d)
+    (μ : Fin 1 ⊕ Fin 1 → Fin 1 ⊕ Fin d) :
+    ((realLorentz d).tensorBasis (prodColors ![up] ![up])).repr (Tensorial.toTensor F) μ =
+      (Vector.basis.tensorProduct Vector.basis).repr F (μ (.inl 0), μ (.inr 0)) := by
+  have h (x : Vector d) (ν : Fin 1 → Fin 1 ⊕ Fin d) :
+      ((realLorentz d).tensorBasis ![up]).repr (Tensorial.toTensor x) ν =
+        Vector.basis.repr x (ν 0) :=
+    (tensorBasis_repr_vector d x ν).trans (Vector.basis_repr_apply x _).symm
+  -- The labels are given: they are found from the species only after the explicit arguments.
+  exact Tensorial.tensorBasis_repr_toTensor_prod (basisIdx := fun _ => Fin 1 ⊕ Fin d)
+    (M := Vector d) (N := Vector d) Vector.basis Vector.basis (fun ν => ν 0) (fun ν => ν 0) h h F μ
+
+/-- The contraction `v^μ ω_μ` of a vector with a covector, a tensor with no indices whose one
+component is `∑ μ, v^μ ω_μ`. -/
+lemma tensorBasis_repr_contr_vector_coVector (d : ℕ) (v : Vector d) (ω : CoVector d) :
+    ((realLorentz d).tensorBasis ![]).repr {v | μ ⊗ ω | μ}ᵀ (fun i => i.elim0) =
+      ∑ μ, v μ * ω μ := by
+  simp [Tensor.tensorBasis_repr_contr_one_pair, Species.tensorBasis_repr_reindex,
+    Species.tensorBasis_repr_tmulEquiv, tensorBasis_repr_vector, tensorBasis_repr_coVector]
+
+open scoped Lorentz.Vector in
+/-- The Minkowski product is the contraction `η_μν v^μ w^ν`, a tensor with no indices whose one
+component is `⟪v, w⟫ₘ`. -/
+lemma tensorBasis_repr_formTensor_contr_vector (d : ℕ) (v w : Vector d) :
+    ((realLorentz d).tensorBasis ![]).repr
+      {(realLorentz d).formTensor down | μ ν ⊗ v | μ ⊗ w | ν}ᵀ (fun i => i.elim0) = ⟪v, w⟫ₘ := by
+  tensor_components [tensorBasis_repr_formTensor, tensorBasis_repr_vector]
+  rw [Vector.minkowskiProduct_toCoord_minkowskiMatrix]
+  refine Finset.sum_congr rfl fun μ _ => ?_
+  rw [Finset.sum_eq_single μ (fun ν _ h => by simp [minkowskiMatrix.off_diag_zero (Ne.symm h)])
+    (by simp)]
+
+/-- The contraction `F_μν G^μν` of `F` and `G` in `Vector d ⊗ Vector d`, with both indices of `F`
+lowered, is `∑ η_μμ η_νν F^μν G^μν` in components. -/
+lemma tensorBasis_repr_toDualAt_contr_vector_tmul (d : ℕ) (F G : Vector d ⊗[ℝ] Vector d) :
+    ((realLorentz d).tensorBasis ![]).repr {F | ↓μ ↓ν ⊗ G | μ ν}ᵀ (fun i => i.elim0) =
+      ∑ μ, ∑ ν, minkowskiMatrix μ μ * minkowskiMatrix ν ν *
+        (Vector.basis.tensorProduct Vector.basis).repr F (μ, ν) *
+          (Vector.basis.tensorProduct Vector.basis).repr G (μ, ν) := by
+  tensor_components [tensorBasis_repr_toDualAt, tensorBasis_repr_toTensor_vector_tmul]
+  exact Finset.sum_congr rfl fun μ _ => Finset.sum_congr rfl fun ν _ => by ring
+
+open scoped Tensor in
+/-- The pairing `v^μ ω_μ` of a vector with a covector is Lorentz invariant. -/
+lemma contr_vector_coVector_smul (d : ℕ) (Λ : LorentzGroup d) (v : Vector d) (ω : CoVector d) :
+    {Λ • v | μ ⊗ Λ • ω | μ}ᵀ = {v | μ ⊗ ω | μ}ᵀ := by
+  rw [Species.tmulEquiv_smul, Species.intertwiningMap_smul, Species.smul_eq_self_of_isEmpty]
+
+end Tensor.realLorentz

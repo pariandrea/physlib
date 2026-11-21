@@ -217,6 +217,8 @@ def generalizedBoost (u v : Velocity d) : LorentzGroup d :=
 
 lemma generalizedBoost_apply (u v : Velocity d) (x : Vector d) :
     generalizedBoost u v • x = x + genBoostAux₁ u v x + genBoostAux₂ u v x:= by
+  refine toCoord.injective ?_
+  change ⇑(generalizedBoost u v • x) = _
   rw [smul_eq_mulVec]
   simp [generalizedBoost]
   rw [Matrix.add_mulVec, Matrix.add_mulVec]

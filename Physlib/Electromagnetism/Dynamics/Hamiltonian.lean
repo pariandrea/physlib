@@ -47,12 +47,12 @@ in the case of three spatial dimensions.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -128,7 +128,7 @@ lemma canonicalMomentum_eq_gradient_kineticTerm {d}
 
 lemma canonicalMomentum_eq {d} {𝓕 : FreeSpace} (A : ElectromagneticPotential d)
     (hA : ContDiff ℝ 2 A) (J : LorentzCurrentDensity d) :
-    A.canonicalMomentum 𝓕 J = fun x => fun μ =>
+    A.canonicalMomentum 𝓕 J = fun x => Lorentz.Vector.toCoord.symm fun μ =>
       (1/𝓕.μ₀) * η μ μ • toScalar {A.toFieldStrength x | [μ] [Sum.inl 0]}ᵀ := by
   rw [canonicalMomentum_eq_gradient_kineticTerm A hA J]
   funext x
@@ -158,12 +158,14 @@ lemma canonicalMomentum_eq {d} {𝓕 : FreeSpace} (A : ElectromagneticPotential 
 
 lemma canonicalMomentum_eq_electricField {d} {𝓕 : FreeSpace} (A : ElectromagneticPotential d)
     (hA : ContDiff ℝ 2 A) (J : LorentzCurrentDensity d) :
-    A.canonicalMomentum 𝓕 J = fun x => fun μ =>
+    A.canonicalMomentum 𝓕 J = fun x => Lorentz.Vector.toCoord.symm fun μ =>
       match μ with
       | Sum.inl 0 => 0
       | Sum.inr i => - (1/(𝓕.μ₀ * 𝓕.c)) * A.electricField 𝓕.c (x.time 𝓕.c) x.space i := by
   rw [canonicalMomentum_eq A hA J]
-  funext x μ
+  funext x
+  ext μ
+  simp only [LinearEquiv.apply_symm_apply]
   match μ with
   | Sum.inl 0 => simp [toFieldStrength_eval_diag_eq_zero]
   | Sum.inr i =>

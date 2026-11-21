@@ -129,7 +129,7 @@ lemma isCompact_causalPast_inter {K : Set (SpaceTime d)} (hK : IsCompact K) :
   intro i
   change |x i| ≤ 2 * A
   have hright := (causallyFollows_iff_norm x l).mp hxl
-  change ‖(l - x).spatialPart‖ ≤ l (Sum.inl 0) - x (Sum.inl 0) at hright
+  simp only [Lorentz.Vector.timeComponent, Lorentz.Vector.apply_sub] at hright
   have hx0' : 0 ≤ x (Sum.inl 0) := hx0
   have hl0 := (abs_component_le_norm l (Sum.inl 0)).trans (hKA l hl)
   have hthi : x (Sum.inl 0) ≤ l (Sum.inl 0) := by
@@ -165,7 +165,7 @@ lemma isCompact_causalFuture_inter {K : Set (SpaceTime d)} (hK : IsCompact K) :
   intro i
   change |x i| ≤ 2 * A + 1
   have hleft := (causallyFollows_iff_norm k x).mp hkx
-  change ‖(x - k).spatialPart‖ ≤ x (Sum.inl 0) - k (Sum.inl 0) at hleft
+  simp only [Lorentz.Vector.timeComponent, Lorentz.Vector.apply_sub] at hleft
   have hx1' : x (Sum.inl 0) ≤ 1 := hx1
   have hk0 := (abs_component_le_norm k (Sum.inl 0)).trans (hKA k hk)
   have htlo : k (Sum.inl 0) ≤ x (Sum.inl 0) := by

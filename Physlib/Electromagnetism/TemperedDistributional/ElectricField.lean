@@ -37,7 +37,7 @@ In this module we define the electric field, and prove lemmas about it.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 
@@ -47,7 +47,7 @@ open Tensor
 
 namespace TempDistElectromagneticPotential
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix SchwartzMap Lorentz

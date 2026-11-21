@@ -43,12 +43,12 @@ In this module we define the electric field, and prove lemmas about it.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -127,7 +127,8 @@ lemma ofElectromagneticField_electricField {c : SpeedOfLight}
     · fun_prop
     · fun_prop
     · simp only [Time.deriv]
-      fun_prop
+      exact fderiv_uncurry_differentiable_fst_comp_snd_apply _ t 1
+        (contDiff_vectorPotential_ofElectromagneticField c E B B_contDiff)
 
 /-!
 

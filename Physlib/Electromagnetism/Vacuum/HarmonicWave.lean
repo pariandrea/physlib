@@ -77,7 +77,7 @@ open InnerProductSpace
   with wave number `k`. -/
 noncomputable def harmonicWaveX (𝓕 : FreeSpace) (k : ℝ) (E₀ : Fin d → ℝ)
   (φ : Fin d → ℝ) : ElectromagneticPotential d.succ where
-  val := fun x μ =>
+  val := fun x => Lorentz.Vector.toCoord.symm fun μ =>
   match μ with
   | Sum.inl 0 => 0
   | Sum.inr 0 => 0
@@ -112,7 +112,7 @@ lemma harmonicWaveX_differentiable {d} (𝓕 : FreeSpace) (k : ℝ)
   | Sum.inl 0 => simp
   | Sum.inr ⟨0, h⟩ => simp
   | Sum.inr ⟨Nat.succ i, h⟩ =>
-    simp [harmonicWaveX]
+    simp [harmonicWaveX, SpaceTime.time]
     fun_prop
 
 /-!
@@ -128,11 +128,9 @@ lemma harmonicWaveX_contDiff {d} (n : WithTop ℕ∞) (𝓕 : FreeSpace) (k : �
   intro μ
   match μ with
   | Sum.inl 0 => simp [harmonicWaveX]; fun_prop
-  | Sum.inr ⟨0, h⟩ =>
-    change ContDiff ℝ n (fun _ : SpaceTime d.succ => (0 : ℝ))
-    exact contDiff_const
+  | Sum.inr ⟨0, h⟩ => simpa using contDiff_const
   | Sum.inr ⟨Nat.succ i, h⟩ =>
-    simp [harmonicWaveX]
+    simp [harmonicWaveX, SpaceTime.time]
     fun_prop
 
 /-!

@@ -50,7 +50,7 @@ We show that boosting in the `x`-direction takes `(t, x, y, z)` to
 -/
 
 lemma boost_x_smul (β : ℝ) (hβ : |β| < 1) (x : SpaceTime) :
-    LorentzGroup.boost (d := 3) 0 β hβ • x =
+    ⇑(LorentzGroup.boost (d := 3) 0 β hβ • x) =
       fun | Sum.inl 0 => γ β * (x (Sum.inl 0) - β * x (Sum.inr 0))
           | Sum.inr 0 => γ β * (x (Sum.inr 0) - β * x (Sum.inl 0))
           | Sum.inr 1=> x (Sum.inr 1)
@@ -69,7 +69,7 @@ lemma boost_zero_apply_time_space {d : ℕ} {β : ℝ} (hβ : |β| < 1) (c : Spe
     ⟨fun
       | (0 : Fin d.succ) => γ β * (x 0 + c * β * t.val)
       | ⟨Nat.succ n, ih⟩ => x ⟨Nat.succ n, ih⟩⟩) := by
-  funext μ
+  ext μ
   rw [boost_inverse, Lorentz.Vector.smul_eq_sum]
   simp only [Nat.succ_eq_add_one, Fintype.sum_sum_type, Finset.univ_unique, Fin.default_eq_zero,
     Fin.isValue, Finset.sum_singleton, Fin.sum_univ_succ, toTimeAndSpace_symm_apply_inl,

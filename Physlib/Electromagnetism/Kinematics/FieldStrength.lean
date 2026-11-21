@@ -46,15 +46,15 @@ through index evaluation, `toScalar {A.toFieldStrength x | [μ] [ν]}ᵀ`.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
-open minkowskiMatrix Tensorial
+open minkowskiMatrix TensorSpecies.Tensorial
 open Lorentz
 
 attribute [-simp] Fintype.sum_sum_type
@@ -366,7 +366,7 @@ lemma toFieldStrength_eval_equivariant {d} (A : ElectromagneticPotential d)
   generalize A.toFieldStrength (Λ⁻¹ • x) = F
   induction F using TensorProduct.inductionOn with
   | tmul v w =>
-    rw [Tensorial.smul_prod]
+    rw [Tensorial.smul_prod, Vector.smulAction_eq_smul, Vector.smulAction_eq_smul]
     simp only [Basis.tensorProduct_repr_tmul_apply, Lorentz.Vector.basis_repr_apply, smul_eq_mul]
     rw [Lorentz.Vector.smul_eq_sum, Finset.sum_mul, Finset.sum_comm]
     refine Finset.sum_congr rfl fun κ _ => ?_

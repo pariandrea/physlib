@@ -43,7 +43,7 @@ spacetime to contravariant Lorentz vectors.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 /-!
 
@@ -57,7 +57,7 @@ noncomputable abbrev TempDistElectromagneticPotential (d : ℕ := 3) :=
 
 namespace TempDistElectromagneticPotential
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix SchwartzMap

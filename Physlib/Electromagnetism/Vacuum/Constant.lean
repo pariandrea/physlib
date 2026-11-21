@@ -42,12 +42,12 @@ electromagnetic action.
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff
+open TensorSpecies.Tensor ContDiff
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -70,7 +70,7 @@ set_option linter.unusedVariables false
 noncomputable def constantEB {d : ℕ} (c : SpeedOfLight)
     (E₀ : EuclideanSpace ℝ (Fin d)) (B₀ : Fin d × Fin d → ℝ)
     (B₀_antisymm : ∀ i j, B₀ (i, j) = - B₀ (j, i)) : ElectromagneticPotential d where
-  val := fun x μ =>
+  val := fun x => Lorentz.Vector.toCoord.symm fun μ =>
   match μ with
   | Sum.inl _ => - (1/c) * ⟪E₀, Space.basis.repr x.space⟫_ℝ
   | Sum.inr i => (1/2) * ∑ j, B₀ (i, j) * x.space j

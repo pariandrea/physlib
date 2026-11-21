@@ -63,12 +63,12 @@ the field strength of a bare-gradient potential. The invariance theorem
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix Tensorial
@@ -93,11 +93,12 @@ attribute [-simp] Nat.succ_eq_add_one
   the diagonal form (which equals `η μ μ * ∂_ μ χ` since `η` is diagonal) is derived in
   `ofGradient_apply`. -/
 noncomputable def ofGradient {d} (χ : SpaceTime d → ℝ) : ElectromagneticPotential d where
-  val x μ := ∑ κ, η μ κ * ∂_ κ χ x
+  val x := Lorentz.Vector.toCoord.symm fun μ => ∑ κ, η μ κ * ∂_ κ χ x
 
 /-- Unfolding of the summed definition of `ofGradient`. -/
 lemma ofGradient_apply_sum {d} (χ : SpaceTime d → ℝ) (x : SpaceTime d) (μ : Fin 1 ⊕ Fin d) :
-    ofGradient χ x μ = ∑ κ, η μ κ * ∂_ κ χ x := rfl
+    ofGradient χ x μ = ∑ κ, η μ κ * ∂_ κ χ x := by
+  simp [ofGradient]
 
 /-- Evaluation of `ofGradient` in the diagonal form; the off-diagonal entries of `η` vanish so
   only the `κ = μ` term survives. -/
@@ -120,8 +121,8 @@ lemma ofGradient_zero {d} (x : SpaceTime d) (μ : Fin 1 ⊕ Fin d) :
 lemma ofGradient_add {d} {χ₁ χ₂ : SpaceTime d → ℝ}
     (hχ₁ : Differentiable ℝ χ₁) (hχ₂ : Differentiable ℝ χ₂) :
     ofGradient (χ₁ + χ₂) = ofGradient χ₁ + ofGradient χ₂ := by
-  apply eq_of_val_eq; funext x μ
-  show ofGradient (χ₁ + χ₂) x μ = ofGradient χ₁ x μ + ofGradient χ₂ x μ
+  apply eq_of_val_eq; funext x; ext μ
+  simp only [add_val, Pi.add_apply, Lorentz.Vector.apply_add]
   simp only [ofGradient_apply, SpaceTime.deriv_eq,
     fderiv_add hχ₁.differentiableAt hχ₂.differentiableAt, _root_.add_apply,
     mul_add]
@@ -201,7 +202,7 @@ lemma ofGradient_equivariant {d} (χ : SpaceTime d → ℝ) (hχ : Differentiabl
     have h := congr_fun₂ (LorentzGroup.comm_minkowskiMatrix (Λ := Λ)) μ κ
     simp only [Matrix.mul_apply, LorentzGroup.transpose_val, Matrix.transpose_apply] at h
     exact h
-  apply eq_of_val_eq; funext x μ
+  apply eq_of_val_eq; funext x; ext μ
   -- Let a κ = ∂_ κ χ (Λ⁻¹ • x). Both sides equal ∑ κ, (∑ ν, Λ.1 μ ν * η ν κ) * a κ.
   set a : Fin 1 ⊕ Fin d → ℝ := fun κ => ∂_ κ χ (Λ⁻¹ • x)
   -- Expand LHS: action_val → smul_eq_sum → ofGradient_apply_sum → reassociate + factor
@@ -287,7 +288,7 @@ The `ofGradient` lemmas used here — `ofGradient_zero` and `ofGradient_add` —
 /-- Shifting by the zero gauge function is the identity. -/
 lemma gaugeTransform_zero {d} (A : ElectromagneticPotential d) :
     gaugeTransform (0 : SpaceTime d → ℝ) A = A := by
-  apply eq_of_val_eq; funext x μ
+  apply eq_of_val_eq; funext x; ext μ
   show gaugeTransform (0 : SpaceTime d → ℝ) A x μ = A x μ
   simp [gaugeTransform, add_apply, ofGradient_zero]
 
@@ -296,7 +297,7 @@ lemma gaugeTransform_zero {d} (A : ElectromagneticPotential d) :
 lemma gaugeTransform_gaugeTransform {d} (A : ElectromagneticPotential d)
     (χ₁ χ₂ : SpaceTime d → ℝ) (hχ₁ : Differentiable ℝ χ₁) (hχ₂ : Differentiable ℝ χ₂) :
     gaugeTransform χ₁ (gaugeTransform χ₂ A) = gaugeTransform (χ₁ + χ₂) A := by
-  apply eq_of_val_eq; funext x μ
+  apply eq_of_val_eq; funext x; ext μ
   simp only [gaugeTransform, add_apply]
   rw [ofGradient_add hχ₁ hχ₂]
   simp [add_apply, add_comm, add_left_comm]
@@ -321,7 +322,7 @@ lemma gaugeTransform_equivariant {d} (A : ElectromagneticPotential d)
   simp only [gaugeTransform]
   rw [← ofGradient_equivariant χ hχ Λ]
   -- Goal: Λ • (A + ofGradient χ) = Λ • A + Λ • ofGradient χ
-  apply eq_of_val_eq; funext x μ
+  apply eq_of_val_eq; funext x; ext μ
   simp only [ElectromagneticPotential.action_val, add_val, Pi.add_apply,
     Lorentz.Vector.smul_add]
 
@@ -342,7 +343,7 @@ contraction in `ofGradient` is required for gauge invariance.
 lemma toFieldStrength_eval_bareGradient_inl_inr {d : ℕ} (i : Fin d)
     (x : SpaceTime d) :
     let χ : SpaceTime d → ℝ := fun y => y (Sum.inl 0) * y (Sum.inr i)
-    let B : ElectromagneticPotential d := ⟨fun y μ => ∂_ μ χ y⟩
+    let B : ElectromagneticPotential d := ⟨fun y => Lorentz.Vector.toCoord.symm fun μ => ∂_ μ χ y⟩
     toScalar {B.toFieldStrength x | [Sum.inl 0] [Sum.inr i]}ᵀ = 2 := by
   intro χ B
   have hχ : ContDiff ℝ 2 χ := by
@@ -350,7 +351,7 @@ lemma toFieldStrength_eval_bareGradient_inl_inr {d : ℕ} (i : Fin d)
     fun_prop
   have hB : Differentiable ℝ B := by
     rw [← SpaceTime.differentiable_vector]; intro μ
-    exact SpaceTime.differentiable_deriv μ χ hχ
+    simpa [B] using SpaceTime.differentiable_deriv μ χ hχ
   -- F^{μν} = η μ μ * ∂_ μ B x ν − η ν ν * ∂_ ν B x μ
   rw [toFieldStrength_eval_apply_eq_single]
   -- Expand ∂_ μ B x ν as ∂_ μ (fun y => ∂_ ν χ y) x = ∂_ μ (∂_ ν χ) x
@@ -374,7 +375,7 @@ lemma toFieldStrength_eval_bareGradient_inl_inr {d : ℕ} (i : Fin d)
       --               + y (Sum.inl 0) • coordCLM (Sum.inr i)
       rw [hmul, add_comm]
     exact h
-  simp only [SpaceTime.deriv_eq, B]
+  simp only [SpaceTime.deriv_eq, B, LinearEquiv.apply_symm_apply]
   simp_rw [hfderiv]
   simp only [_root_.add_apply, FunLike.coe_smul,
     Pi.smul_apply, Lorentz.Vector.coordCLM_apply, smul_eq_mul, Lorentz.Vector.basis_apply]
@@ -390,7 +391,7 @@ lemma toFieldStrength_eval_bareGradient_inl_inr {d : ℕ} (i : Fin d)
 lemma toFieldStrength_bareGradient_ne_zero {d : ℕ} (i : Fin d)
     (x : SpaceTime d) :
     let χ : SpaceTime d → ℝ := fun y => y (Sum.inl 0) * y (Sum.inr i)
-    let B : ElectromagneticPotential d := ⟨fun y μ => ∂_ μ χ y⟩
+    let B : ElectromagneticPotential d := ⟨fun y => Lorentz.Vector.toCoord.symm fun μ => ∂_ μ χ y⟩
     B.toFieldStrength x ≠ 0 := by
   intro χ B h
   have h2 := toFieldStrength_eval_bareGradient_inl_inr i x

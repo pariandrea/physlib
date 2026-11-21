@@ -61,12 +61,12 @@ In this implementation we have set `μ₀ = 1`. It is a TODO to introduce this c
 namespace Electromagnetism
 open Module realLorentzTensor
 open TensorSpecies
-open Tensor ContDiff Physlib
+open TensorSpecies.Tensor ContDiff Physlib
 
 namespace ElectromagneticPotential
 
 open TensorSpecies
-open Tensor
+open TensorSpecies.Tensor
 open SpaceTime
 open TensorProduct
 open minkowskiMatrix
@@ -330,13 +330,13 @@ lemma kineticTerm_add_time_mul_const {d} {𝓕 : FreeSpace} (A : Electromagnetic
         2 * c ν * (∂_ ν A x (Sum.inl 0)))) + 1/(2 * 𝓕.μ₀) * c (Sum.inl 0) ^2) := by
   have diff_a : ∂_ (Sum.inl 0) (fun x => A x + x (Sum.inl 0) • c) =
       ∂_ (Sum.inl 0) A + (fun x => c) := by
-    funext x ν
+    funext x; ext ν
     rw [SpaceTime.deriv_eq, fderiv_fun_add ha.differentiableAt (by fun_prop),
       fderiv_smul_const (by fun_prop)]
     simp [Lorentz.Vector.coordCLM, SpaceTime.deriv_eq]
   have diff_b (i : Fin d) : ∂_ (Sum.inr i) (fun x => A x + x (Sum.inl 0) • c) =
       ∂_ (Sum.inr i) A := by
-    funext x ν
+    funext x; ext ν
     rw [SpaceTime.deriv_eq, fderiv_fun_add ha.differentiableAt (by fun_prop),
       fderiv_smul_const (by fun_prop)]
     simp [Lorentz.Vector.coordCLM, SpaceTime.deriv_eq]
@@ -438,6 +438,14 @@ We rewrite the variational gradient as a simple double sum over
 second derivatives of the potential.
 
 -/
+/-- A component `∂_ μ A x ν` of a derivative of a smooth potential is differentiable in `x`. An
+explicit proof: `fun_prop` reaches into `Vector.toCoord` and times out here. -/
+lemma differentiable_deriv_apply {d} (A : ElectromagneticPotential d) (ha : ContDiff ℝ ∞ A)
+    (μ ν : Fin 1 ⊕ Fin d) (x : SpaceTime d) :
+    DifferentiableAt ℝ (fun x' => ∂_ μ A x' ν) x :=
+  Lorentz.Vector.differentiable_apply_comp
+    (SpaceTime.differentiable_deriv μ A (ha.of_le ENat.LEInfty.out)) ν x
+
 lemma gradKineticTerm_eq_sum_sum {d} {𝓕 : FreeSpace}
     (A : ElectromagneticPotential d) (x : SpaceTime d) (ha : ContDiff ℝ ∞ A) :
     A.gradKineticTerm 𝓕 x = ∑ (ν : (Fin 1 ⊕ Fin d)), ∑ (μ : (Fin 1 ⊕ Fin d)),
@@ -486,7 +494,8 @@ lemma gradKineticTerm_eq_sum_sum {d} {𝓕 : FreeSpace}
         ∂_ μ (fun x' => ∂_ ν A x' μ) x)) • Lorentz.Vector.basis ν := by
         rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun ν _ => Finset.sum_congr rfl fun μ _ => ?_
-        rw [fderiv_const_mul (by fun_prop), fderiv_const_mul (by fun_prop)]
+        rw [fderiv_const_mul (differentiable_deriv_apply A ha μ ν x),
+          fderiv_const_mul (differentiable_deriv_apply A ha ν μ x)]
         simp [SpaceTime.deriv_eq]
         ring_nf
 
@@ -524,8 +533,11 @@ lemma gradKineticTerm_eq_fieldStrength {d} {𝓕 : FreeSpace} (A : Electromagnet
         congr 2
         conv_rhs =>
           simp only [toFieldStrength_eval_apply_eq_single]
-          rw [SpaceTime.deriv_eq, fderiv_fun_sub (by fun_prop) (by fun_prop),
-            fderiv_const_mul (by fun_prop), fderiv_const_mul (by fun_prop)]
+          rw [SpaceTime.deriv_eq,
+            fderiv_fun_sub ((differentiable_deriv_apply A ha μ ν x).const_mul _)
+              ((differentiable_deriv_apply A ha ν μ x).const_mul _),
+            fderiv_const_mul (differentiable_deriv_apply A ha μ ν x),
+            fderiv_const_mul (differentiable_deriv_apply A ha ν μ x)]
         simp [SpaceTime.deriv_eq]
     _ = ∑ (ν : (Fin 1 ⊕ Fin d)), (1/𝓕.μ₀ * η ν ν) •
         (∑ (μ : (Fin 1 ⊕ Fin d)), (∂_ μ (fun x => toScalar {A.toFieldStrength x | [μ] [ν]}ᵀ) x))

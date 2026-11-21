@@ -96,8 +96,8 @@ def causalRelation (d : ℕ) : CausalRelation (SpaceTime d) where
   refl p := by
     apply (causallyFollows_iff_norm p p).mpr
     rw [sub_self]
-    change ‖(0 : EuclideanSpace ℝ (Fin d))‖ ≤ (0 : ℝ)
-    simp
+    simp [Lorentz.Vector.spatialPart, Lorentz.Vector.timeComponent]
+    rfl
   trans := by
     intro p q r hpq hqr
     apply (causallyFollows_iff_displacement p r).mpr
@@ -119,12 +119,12 @@ lemma precedes_iff_time_space (c : SpeedOfLight) (p q : SpaceTime d) :
       (p.time c).val ≤ (q.time c).val ∧
         ‖q.space - p.space‖ ≤ (c : ℝ) * ((q.time c).val - (p.time c).val) := by
   have ht : (c : ℝ) * ((q.time c).val - (p.time c).val) = (q - p).timeComponent := by
-    change (c : ℝ) * (q (Sum.inl 0) / c - p (Sum.inl 0) / c) =
-      q (Sum.inl 0) - p (Sum.inl 0)
+    simp only [SpaceTime.time, LinearMap.coe_mk, AddHom.coe_mk, Lorentz.Vector.timeComponent,
+      Lorentz.Vector.apply_sub]
     field_simp
   have htle : (p.time c).val ≤ (q.time c).val ↔ 0 ≤ (q - p).timeComponent := by
-    change p (Sum.inl 0) / c ≤ q (Sum.inl 0) / c ↔
-      0 ≤ q (Sum.inl 0) - p (Sum.inl 0)
+    simp only [SpaceTime.time, LinearMap.coe_mk, AddHom.coe_mk, Lorentz.Vector.timeComponent,
+      Lorentz.Vector.apply_sub]
     rw [div_le_div_iff_of_pos_right c.val_pos, sub_nonneg]
   have hs : ‖q.space - p.space‖ = ‖(q - p).spatialPart‖ := by
     rw [← map_sub, norm_space_eq_spatialPart]
@@ -204,10 +204,10 @@ lemma component_bound_of_causalDiamond {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
   have hk0 := (abs_component_le_norm k (Sum.inl 0)).trans hk
   have hl0 := (abs_component_le_norm l (Sum.inl 0)).trans hl
   have htlo : k (Sum.inl 0) ≤ x (Sum.inl 0) := by
-    change ‖(x - k).spatialPart‖ ≤ x (Sum.inl 0) - k (Sum.inl 0) at hleft
+    simp only [Lorentz.Vector.timeComponent, Lorentz.Vector.apply_sub] at hleft
     linarith [norm_nonneg (x - k).spatialPart]
   have hthi : x (Sum.inl 0) ≤ l (Sum.inl 0) := by
-    change ‖(l - x).spatialPart‖ ≤ l (Sum.inl 0) - x (Sum.inl 0) at hright
+    simp only [Lorentz.Vector.timeComponent, Lorentz.Vector.apply_sub] at hright
     linarith [norm_nonneg (l - x).spatialPart]
   cases i with
   | inl i =>
@@ -220,7 +220,7 @@ lemma component_bound_of_causalDiamond {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
         simpa only [Real.norm_eq_abs, Lorentz.Vector.apply_sub] using PiLp.norm_apply_le (x -
           k).spatialPart i
       have hki := (abs_component_le_norm k (Sum.inr i)).trans hk
-      change ‖(x - k).spatialPart‖ ≤ x (Sum.inl 0) - k (Sum.inl 0) at hleft
+      simp only [Lorentz.Vector.timeComponent, Lorentz.Vector.apply_sub] at hleft
       calc
         |x (Sum.inr i)| = |(x (Sum.inr i) - k (Sum.inr i)) + k (Sum.inr i)| := by
           rw [sub_add_cancel]

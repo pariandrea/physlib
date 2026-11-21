@@ -384,12 +384,11 @@ lemma complexJetDeriv_mul (ν : Fin 1 ⊕ Fin 3) (x y : ℂ ⊗[ℝ] (LocalGauge
   | tmul z₁ a₁ =>
     induction y using TensorProduct.inductionOn with
     | add y₁ y₂ h₁ h₂ =>
-      rw [mul_add, map_add, map_add, h₁, h₂, mul_add, mul_add]
+      simp only [mul_add, map_add, h₁, h₂]
       abel
     | tmul z₂ a₂ =>
-      rw [Algebra.TensorProduct.tmul_mul_tmul, complexJetDeriv_tmul, complexJetDeriv_tmul,
-        complexJetDeriv_tmul, jetDeriv_mul, TensorProduct.tmul_add,
-        Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul]
+      simp only [Algebra.TensorProduct.tmul_mul_tmul, complexJetDeriv_tmul, jetDeriv_mul,
+        TensorProduct.tmul_add]
 
 omit [Module.Finite ℝ 𝔤] in
 /-- The complexified total derivatives commute. -/

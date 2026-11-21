@@ -144,10 +144,10 @@ lemma ageGap_nonneg : 0 ≤ T.ageGap := by
   `[7.5, 6, 0, 0]` and then at (different) constant speed to `[15, 0, 0, 0]`. -/
 def example1 : InstantaneousTwinParadox where
   startPoint := 0
-  endPoint := (fun
+  endPoint := Lorentz.Vector.toCoord.symm (fun
     | Sum.inl 0 => 15
     | Sum.inr i => 0)
-  twinBMid := (fun
+  twinBMid := Lorentz.Vector.toCoord.symm (fun
     | Sum.inl 0 => 7.5
     | Sum.inr 0 => 6
     | Sum.inr i => 0)
@@ -155,7 +155,7 @@ def example1 : InstantaneousTwinParadox where
     simp [causallyFollows]
     left
     simp only [interiorFutureLightCone, sub_zero, Fin.isValue, Set.mem_ofPred_eq, Nat.ofNat_pos,
-      and_true]
+      and_true, LinearEquiv.apply_symm_apply]
     refine (timeLike_iff_norm_sq_pos _).mpr ?_
     rw [minkowskiProduct_toCoord]
     simp

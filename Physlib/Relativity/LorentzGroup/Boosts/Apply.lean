@@ -48,7 +48,7 @@ lemma boost_inr_other_eq (i j : Fin d) (hji : j ≠ i) (β : ℝ) (hβ : |β| < 
   simp [boost_inr_other_inl_0 hβ hji, boost_inr_other_inr hβ hji]
 
 lemma boost_toCoord_eq (i : Fin d) (β : ℝ) (hβ : |β| < 1) (p : Vector d) :
-    (boost i β hβ • p) = fun j =>
+    ⇑(boost i β hβ • p) = fun j =>
       match j with
       | Sum.inl 0 => γ β * (p (Sum.inl 0) - β * p (Sum.inr i))
       | Sum.inr j =>
