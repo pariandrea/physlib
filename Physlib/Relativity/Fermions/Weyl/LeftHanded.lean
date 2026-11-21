@@ -6,6 +6,7 @@ Authors: Joseph Tooby-Smith
 module
 
 public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Physlib.Relativity.Tensors.ComplexTensor.Species
 public import Mathlib.RepresentationTheory.Irreducible
 /-!
 
@@ -33,7 +34,7 @@ two-dimensional complex vector space with a standard basis, define the represent
 ## iii. Table of contents
 
 - A. The definition of the type
-  - A.1. Underlying module structure
+  - A.1. Components
 - B. Basis
 - C. Representation
   - C.1. Irreducibility
@@ -58,61 +59,54 @@ section LeftHanded
 
 -/
 
-/-- The module in which left handed fermions live. This is equivalent to `Fin 2 → ℂ`. -/
-structure LeftHandedWeyl where
-  /-- The underlying value in `Fin 2 → ℂ`. -/
-  val : Fin 2 → ℂ
+open Tensor Tensor.complexLorentz in
+/-- The left-handed Weyl fermions, the complex Lorentz tensors with an upper left-handed index,
+`ψ^α`. -/
+abbrev LeftHandedWeyl := Tensor complexLorentz ![upL]
 
 namespace LeftHandedWeyl
 open Module Matrix
 open MatrixGroups
 open Complex
 open TensorProduct
+open Tensor Tensor.complexLorentz
 
 /-!
 
-### A.1. Underlying module structure
+### A.1. Components
 
 -/
 
-/-- The equivalence between `LeftHandedWeyl` and `Fin 2 → ℂ`. -/
-def toFin2ℂFun : LeftHandedWeyl ≃ (Fin 2 → ℂ) where
-  toFun v := v.val
-  invFun f := ⟨f⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
-
-/-- The instance of `AddCommMonoid` on `LeftHandedWeyl` defined via its equivalence
-  with `Fin 2 → ℂ`. -/
-instance : AddCommMonoid LeftHandedWeyl := Equiv.addCommMonoid toFin2ℂFun
-
-/-- The instance of `AddCommGroup` on `LeftHandedWeyl` defined via its equivalence
-  with `Fin 2 → ℂ`. -/
-instance : AddCommGroup LeftHandedWeyl := Equiv.addCommGroup toFin2ℂFun
-
-/-- The additive equivalence between `LeftHandedWeyl` and `Fin 2 → ℂ`. -/
-def toFin2ℂAddEquiv : LeftHandedWeyl ≃+ (Fin 2 → ℂ) :=
-  { toFin2ℂFun with map_add' _ _ := rfl }
-
-/-- The instance of `Module` on `LeftHandedWeyl` defined via its equivalence
-  with `Fin 2 → ℂ`. -/
-instance : Module ℂ LeftHandedWeyl := AddEquiv.module ℂ toFin2ℂAddEquiv
-
-/-- The linear equivalence between `LeftHandedWeyl` and `(Fin 2 → ℂ)`. -/
-@[simps!]
-def toFin2ℂEquiv : LeftHandedWeyl ≃ₗ[ℂ] (Fin 2 → ℂ) where
-  toFun := toFin2ℂFun
-  map_add' := fun _ _ => rfl
-  map_smul' := fun _ _ => rfl
-  invFun := toFin2ℂFun.symm
-  left_inv := fun _ => rfl
-  right_inv := fun _ => rfl
+/-- The components of a left-handed Weyl fermion, in `Fin 2 → ℂ`. -/
+def toFin2ℂEquiv : LeftHandedWeyl ≃ₗ[ℂ] (Fin 2 → ℂ) := toComponents upL
 
 /-- The underlying element of `Fin 2 → ℂ` of a element in `LeftHandedWeyl` defined
   through the linear equivalence `toFin2ℂEquiv`. -/
 abbrev toFin2ℂ (ψ : LeftHandedWeyl) := toFin2ℂEquiv ψ
 
+/-- The components of a left-handed Weyl fermion. -/
+def val (ψ : LeftHandedWeyl) : Fin 2 → ℂ := toFin2ℂEquiv ψ
+
 lemma toFin2ℂ_eq_val (ψ : LeftHandedWeyl) : ψ.toFin2ℂ = ψ.val := rfl
+
+@[simp]
+lemma toFin2ℂEquiv_apply (ψ : LeftHandedWeyl) : toFin2ℂEquiv ψ = ψ.val := rfl
+
+@[simp]
+lemma val_toFin2ℂEquiv_symm (f : Fin 2 → ℂ) : (toFin2ℂEquiv.symm f : LeftHandedWeyl).val = f :=
+  toFin2ℂEquiv.apply_symm_apply f
+
+@[ext]
+lemma ext {ψ ψ' : LeftHandedWeyl} (h : ψ.val = ψ'.val) : ψ = ψ' := toFin2ℂEquiv.injective h
+
+@[simp]
+lemma val_add (ψ ψ' : LeftHandedWeyl) : (ψ + ψ').val = ψ.val + ψ'.val := map_add toFin2ℂEquiv ψ ψ'
+
+@[simp]
+lemma val_smul (r : ℂ) (ψ : LeftHandedWeyl) : (r • ψ).val = r • ψ.val := map_smul toFin2ℂEquiv r ψ
+
+@[simp]
+lemma val_zero : (0 : LeftHandedWeyl).val = 0 := map_zero toFin2ℂEquiv
 
 instance : Nontrivial LeftHandedWeyl := toFin2ℂEquiv.toEquiv.nontrivial
 
@@ -123,23 +117,22 @@ instance : Nontrivial LeftHandedWeyl := toFin2ℂEquiv.toEquiv.nontrivial
 -/
 
 /-- The standard basis on left-handed Weyl fermions. -/
-def basis : Basis (Fin 2) ℂ LeftHandedWeyl := Basis.ofEquivFun
-  (AddEquiv.linearEquiv ℂ LeftHandedWeyl.toFin2ℂAddEquiv)
+def basis : Basis (Fin 2) ℂ LeftHandedWeyl := oneIndexBasis upL
 
-lemma basis_apply (i j : Fin 2) : (basis i).1 j = if j = i then 1 else 0 := by
-  simp only [basis, AddEquiv.linearEquiv, AddEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe,
-    EquivLike.coe_coe, Equiv.invFun_as_coe, AddEquiv.coe_toEquiv_symm, Basis.coe_ofEquivFun,
-    LinearEquiv.symm_mk, LinearMap.coe_mk, AddHom.coe_mk, LinearEquiv.coe_mk]
-  change Pi.single i 1 j = _
-  simp [Pi.single_apply]
-
-lemma eq_sum_basis (ψ : LeftHandedWeyl) : ψ = ∑ i, ψ.1 i • basis i := by
-  conv_lhs => rw [← basis.sum_repr ψ]
-  rfl
+@[simp]
+lemma basis_repr (ψ : LeftHandedWeyl) (i : Fin 2) : basis.repr ψ i = ψ.val i :=
+  oneIndexBasis_repr _ ψ i
 
 lemma basis_val (i : Fin 2) : (basis i).val = Pi.single i 1 := by
-  ext j
-  simp [basis_apply, Pi.single_apply]
+  rw [val, toFin2ℂEquiv, basis]
+  exact toComponents_oneIndexBasis upL i
+
+lemma basis_apply (i j : Fin 2) : (basis i).val j = if j = i then 1 else 0 := by
+  simp [basis_val, Pi.single_apply]
+
+lemma eq_sum_basis (ψ : LeftHandedWeyl) : ψ = ∑ i, ψ.val i • basis i := by
+  conv_lhs => rw [← basis.sum_repr ψ]
+  simp
 
 instance : FiniteDimensional ℂ LeftHandedWeyl := Module.Finite.of_basis basis
 
@@ -154,32 +147,22 @@ lemma finrank_eq_two : Module.finrank ℂ LeftHandedWeyl = 2 := by
 
 -/
 
-/-- The vector space ℂ^2 carrying the fundamental representation of SL(2,C).
-  In index notation corresponds to a Weyl fermion with indices ψ^a. -/
-def rep : Representation ℂ SL(2,ℂ) LeftHandedWeyl where
-  toFun := fun M => {
-    toFun := fun (ψ : LeftHandedWeyl) =>
-      LeftHandedWeyl.toFin2ℂEquiv.symm (M.1 *ᵥ ψ.toFin2ℂ),
-    map_add' := by
-      intro ψ ψ'
-      simp [mulVec_add]
-    map_smul' := by
-      intro r ψ
-      simp [mulVec_smul]}
-  map_one' := by
-    ext i
-    simp
-  map_mul' := fun M N => by
-    simp only [SpecialLinearGroup.coe_mul]
-    ext1 x
-    simp only [LinearMap.coe_mk, AddHom.coe_mk, mul_apply_eq_comp, LinearEquiv.apply_symm_apply,
-      mulVec_mulVec]
+/-- The representation of `SL(2, ℂ)` on left-handed Weyl fermions, the action on tensors. On
+components it is `ψ ↦ M.1 *ᵥ ψ` (`val_rep`). -/
+def rep : Representation ℂ SL(2,ℂ) LeftHandedWeyl := complexLorentz.tensorRep ![upL]
 
-lemma rep_apply (M : SL(2,ℂ)) (ψ : LeftHandedWeyl) : rep M ψ = ⟨M.1 *ᵥ ψ.1⟩ := rfl
+lemma repMatrix_eq (M : SL(2,ℂ)) : repMatrix upL M = M.1 := rfl
+
+@[simp]
+lemma val_rep (M : SL(2,ℂ)) (ψ : LeftHandedWeyl) : (rep M ψ).val = M.1 *ᵥ ψ.val :=
+  (toComponents_smul upL M ψ).trans (by rw [repMatrix_eq]; rfl)
+
+lemma rep_apply (M : SL(2,ℂ)) (ψ : LeftHandedWeyl) : rep M ψ = toFin2ℂEquiv.symm (M.1 *ᵥ ψ.val) :=
+  toFin2ℂEquiv.eq_symm_apply.mpr (val_rep M ψ)
 
 lemma rep_apply_eq_sum_basis (M : SL(2,ℂ)) (ψ : LeftHandedWeyl) :
-    rep M ψ = ∑ i, (∑ j, M.1 i j * ψ.1 j) • basis i := by
-  rw [eq_sum_basis (rep M ψ)]
+    rep M ψ = ∑ i, (∑ j, M.1 i j * ψ.val j) • basis i := by
+  rw [eq_sum_basis (rep M ψ), val_rep]
   rfl
 
 lemma rep_apply_basis (M : SL(2,ℂ)) (i : Fin 2) :
@@ -191,9 +174,7 @@ lemma rep_apply_basis (M : SL(2,ℂ)) (i : Fin 2) :
 
 lemma rep_toMatrix (M : SL(2,ℂ)) : (LinearMap.toMatrix basis basis) (rep M) = M.1 := by
   ext i j
-  rw [LinearMap.toMatrix_apply]
-  simp only [basis, Basis.coe_ofEquivFun, Basis.ofEquivFun_repr_apply]
-  change (M.1 *ᵥ (Pi.single j 1)) i = _
+  rw [LinearMap.toMatrix_apply, basis_repr, val_rep, basis_val]
   simp
 
 lemma rep_apply_basis_repr (M : SL(2,ℂ)) (i j : Fin 2) :
@@ -209,11 +190,10 @@ lemma rep_apply_basis_repr (M : SL(2,ℂ)) (i j : Fin 2) :
 /-- The representation `rep` has no common eigenvector. -/
 lemma eq_zero_of_rep_eq_smul (ψ : LeftHandedWeyl)
     (h : ∀ M : SL(2,ℂ), ∃ c : ℂ, rep M ψ = c • ψ) : ψ = 0 := by
-  have h : ∀ M : SL(2,ℂ), ∃ c : ℂ, ∀ i, (M.1 *ᵥ ψ.1) i = c * ψ.1 i := by
+  have h : ∀ M : SL(2,ℂ), ∃ c : ℂ, ∀ i, (M.1 *ᵥ ψ.val) i = c * ψ.val i := by
     intro M
     obtain ⟨c, hc⟩ := h M
-    rw [rep_apply] at hc
-    exact ⟨c, fun i => congrFun (congrArg LeftHandedWeyl.val hc) i⟩
+    exact ⟨c, fun i => by simpa using congrFun (congrArg LeftHandedWeyl.val hc) i⟩
   obtain ⟨c₁, hc₁⟩ := h ⟨!![1, 1; 0, 1], by simp [Matrix.det_fin_two_of]⟩
   obtain ⟨c₂, hc₂⟩ := h ⟨!![1, 0; 1, 1], by simp [Matrix.det_fin_two_of]⟩
   have h₁₀ := hc₁ 0

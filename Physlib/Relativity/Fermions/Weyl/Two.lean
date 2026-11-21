@@ -498,12 +498,10 @@ lemma dualRightDualRightToMatrix_ρ (v : (DualRightHandedWeyl ⊗[ℂ] DualRight
     rw [h1]
   rw [TensorProduct.toMatrix_map]
   funext i j
-  change ∑ k, ((kroneckerMap (fun x1 x2 => x1 * x2)
-        ((LinearMap.toMatrix DualRightHandedWeyl.basis DualRightHandedWeyl.basis)
-          (DualRightHandedWeyl.rep M))
-        ((LinearMap.toMatrix DualRightHandedWeyl.basis DualRightHandedWeyl.basis)
-          (DualRightHandedWeyl.rep M)) (i, j) k)
-        * dualRightDualRightToMatrix v k.1 k.2) = _
+  have hv (x : Fin 2 × Fin 2) : (Finsupp.linearEquivFunOnFinite ℂ ℂ (Fin 2 × Fin 2))
+      ((DualRightHandedWeyl.basis.tensorProduct DualRightHandedWeyl.basis).repr v) x =
+      dualRightDualRightToMatrix v x.1 x.2 := rfl
+  simp only [LinearEquiv.coe_curry, Function.curry_apply, Matrix.mulVec, dotProduct, hv]
   rw [Fintype.sum_prod_type]
   simp_rw [kroneckerMap_apply, Matrix.mul_apply, Matrix.transpose_apply]
   have h1 : ∑ x : Fin 2, (∑ x1 : Fin 2, (↑M)⁻¹ᴴ i x1 * dualRightDualRightToMatrix v x1 x) *
@@ -545,12 +543,10 @@ lemma rightDualRightToMatrix_ρ (v : (RightHandedWeyl ⊗[ℂ] DualRightHandedWe
     rw [h1]
   rw [TensorProduct.toMatrix_map]
   funext i j
-  change ∑ k, ((kroneckerMap (fun x1 x2 => x1 * x2)
-        ((LinearMap.toMatrix RightHandedWeyl.basis RightHandedWeyl.basis)
-          (RightHandedWeyl.rep M))
-        ((LinearMap.toMatrix DualRightHandedWeyl.basis DualRightHandedWeyl.basis)
-          (DualRightHandedWeyl.rep M)) (i, j) k)
-        * rightDualRightToMatrix v k.1 k.2) = _
+  have hv (x : Fin 2 × Fin 2) : (Finsupp.linearEquivFunOnFinite ℂ ℂ (Fin 2 × Fin 2))
+      ((RightHandedWeyl.basis.tensorProduct DualRightHandedWeyl.basis).repr v) x =
+      rightDualRightToMatrix v x.1 x.2 := rfl
+  simp only [LinearEquiv.coe_curry, Function.curry_apply, Matrix.mulVec, dotProduct, hv]
   rw [Fintype.sum_prod_type]
   simp_rw [kroneckerMap_apply, Matrix.mul_apply, Matrix.transpose_apply]
   have h1 : ∑ x : Fin 2, (∑ x1 : Fin 2, (M.1.map star) i x1 * rightDualRightToMatrix v x1 x)
@@ -592,12 +588,10 @@ lemma dualRightRightToMatrix_ρ (v : (DualRightHandedWeyl ⊗[ℂ] RightHandedWe
     rw [h1]
   rw [TensorProduct.toMatrix_map]
   funext i j
-  change ∑ k, ((kroneckerMap (fun x1 x2 => x1 * x2)
-        ((LinearMap.toMatrix DualRightHandedWeyl.basis DualRightHandedWeyl.basis)
-          (DualRightHandedWeyl.rep M))
-        ((LinearMap.toMatrix RightHandedWeyl.basis RightHandedWeyl.basis)
-          (RightHandedWeyl.rep M)) (i, j) k)
-        * dualRightRightToMatrix v k.1 k.2) = _
+  have hv (x : Fin 2 × Fin 2) : (Finsupp.linearEquivFunOnFinite ℂ ℂ (Fin 2 × Fin 2))
+      ((DualRightHandedWeyl.basis.tensorProduct RightHandedWeyl.basis).repr v) x =
+      dualRightRightToMatrix v x.1 x.2 := rfl
+  simp only [LinearEquiv.coe_curry, Function.curry_apply, Matrix.mulVec, dotProduct, hv]
   rw [Fintype.sum_prod_type]
   simp_rw [kroneckerMap_apply, Matrix.mul_apply, Matrix.transpose_apply]
   have h1 : ∑ x : Fin 2, (∑ x1 : Fin 2,
@@ -639,12 +633,10 @@ lemma dualLeftDualRightToMatrix_ρ (v : (DualLeftHandedWeyl ⊗[ℂ] DualRightHa
     rw [h1]
   rw [TensorProduct.toMatrix_map]
   funext i j
-  change ∑ k, ((kroneckerMap (fun x1 x2 => x1 * x2)
-        ((LinearMap.toMatrix DualLeftHandedWeyl.basis DualLeftHandedWeyl.basis)
-          (DualLeftHandedWeyl.rep M))
-        ((LinearMap.toMatrix DualRightHandedWeyl.basis DualRightHandedWeyl.basis)
-          (DualRightHandedWeyl.rep M)) (i, j) k)
-        * dualLeftDualRightToMatrix v k.1 k.2) = _
+  have hv (x : Fin 2 × Fin 2) : (Finsupp.linearEquivFunOnFinite ℂ ℂ (Fin 2 × Fin 2))
+      ((DualLeftHandedWeyl.basis.tensorProduct DualRightHandedWeyl.basis).repr v) x =
+      dualLeftDualRightToMatrix v x.1 x.2 := rfl
+  simp only [LinearEquiv.coe_curry, Function.curry_apply, Matrix.mulVec, dotProduct, hv]
   rw [Fintype.sum_prod_type]
   simp_rw [kroneckerMap_apply, Matrix.mul_apply, Matrix.transpose_apply]
   have h1 : ∑ x : Fin 2, (∑ x1 : Fin 2, (M.1)⁻¹ x1 i * dualLeftDualRightToMatrix v x1 x) *

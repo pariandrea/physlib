@@ -128,8 +128,10 @@ lemma toTensor_eq_pauli :
     σ^^^ = fromConstTriple (S := complexLorentzTensor)
       (c1 := Color.up) (c2 := Color.upL) (c3 := Color.upR) ComplexVector.pauli := by
   symm
-  trans fromTripleT ComplexVector.pauliVal
-  · rw [fromConstTriple, congrArg fromTripleT ComplexVector.pauli_apply_one]
+  trans fromTripleT (S := complexLorentzTensor) (c1 := .up) (c2 := .upL) (c3 := .upR)
+    ComplexVector.pauliVal
+  · rw [fromConstTriple, congrArg (fromTripleT (S := complexLorentzTensor) (c1 := .up)
+      (c2 := .upL) (c3 := .upR)) ComplexVector.pauli_apply_one]
   rw [ComplexVector.pauliVal_expand_tmul, toTensor_basis_expand]
   simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, map_sub,
     map_add, _root_.map_smul]

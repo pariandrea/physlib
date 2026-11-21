@@ -71,7 +71,7 @@ lemma pauliVal_expand_tmul : ComplexVector.pauliVal =
     - ComplexVector.basis (Sum.inr 2) ⊗ₜ (LeftHandedWeyl.basis 1 ⊗ₜ RightHandedWeyl.basis 1) := by
   rw [ComplexVector.pauliVal_expand_basis]
   simp [leftRightToMatrix_symm_expand_tmul, pauliBasis, pauliSelfAdjoint, pauliMatrix,
-    Fin.sum_univ_two, tmul_add, tmul_smul]
+    Fin.sum_univ_two, tmul_add, tmul_smul, tmul_neg]
   module
 
 /-- The Pauli tensor is invariant under the `SL(2, ℂ)` action. -/

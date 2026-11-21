@@ -108,10 +108,8 @@ makes it measure the parity of the number of spinor indices.
   the identity Lorentz transformation. -/
 lemma complexCoVector_SL2CRep_fermionicParity :
     Lorentz.ComplexCoVector.SL2CRep fermionicParity = LinearMap.id := by
-  ext v
-  rw [Lorentz.ComplexCoVector.SL2CRep_val]
-  show ((LorentzGroup.toComplex (Lorentz.SL2C.toLorentzGroup fermionicParity))⁻¹ᵀ *ᵥ v.val) _ = _
-  rw [toLorentzGroup_fermionicParity]
+  refine LinearMap.ext fun v => Lorentz.ComplexCoVector.ext _ _ ?_
+  rw [Lorentz.ComplexCoVector.val_SL2CRep, toLorentzGroup_fermionicParity]
   simp
 
 /-- Fermionic parity acts by `-1` on right-handed Weyl spinors. -/

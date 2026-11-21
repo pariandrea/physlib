@@ -5,6 +5,7 @@ Authors: Nikolai Kashcheev, Joseph Tooby-Smith
 -/
 module
 
+public import Physlib.Mathematics.ForMathlib.Contraction
 public import Physlib.Relativity.Tensors.ComplexTensor.Vector.Modules
 /-!
 
@@ -29,25 +30,21 @@ namespace Lorentz
 def ComplexVector.basis : Basis (Fin 1 ⊕ Fin 3) ℂ ComplexVector :=
   Basis.ofEquivFun ComplexVector.toFin13ℂEquiv
 
-@[simp]
 lemma ComplexVector.basis_toFin13ℂ (i :Fin 1 ⊕ Fin 3) :
     (ComplexVector.basis i).toFin13ℂ = Pi.single i 1 := by
-  simp only [ComplexVector.basis, Basis.coe_ofEquivFun]
-  rfl
+  simp [ComplexVector.basis]
 
 @[simp]
 lemma ComplexVector.basis_ρ_apply (M : SL(2,ℂ)) (i j : Fin 1 ⊕ Fin 3) :
     (LinearMap.toMatrix ComplexVector.basis ComplexVector.basis) (ComplexVector.SL2CRep M) i j =
     (LorentzGroup.toComplex (SL2C.toLorentzGroup M)) i j := by
   rw [LinearMap.toMatrix_apply]
-  simp only [ComplexVector.basis, Basis.coe_ofEquivFun, Basis.ofEquivFun_repr_apply]
-  change (((LorentzGroup.toComplex (SL2C.toLorentzGroup M))) *ᵥ (Pi.single j 1)) i = _
-  simp
+  simp [ComplexVector.basis]
 
 lemma ComplexVector.basis_ρ_val (M : SL(2,ℂ)) (v : ComplexVector) :
     ((ComplexVector.SL2CRep M) v).val =
-    LorentzGroup.toComplex (SL2C.toLorentzGroup M) *ᵥ v.val := by
-  rfl
+    LorentzGroup.toComplex (SL2C.toLorentzGroup M) *ᵥ v.val :=
+  ComplexVector.val_SL2CRep M v
 
 /-- The standard basis of complex contravariant Lorentz vectors indexed by `Fin 4`. -/
 def ComplexVector.basisFin4 : Basis (Fin 4) ℂ ComplexVector :=
@@ -96,11 +93,9 @@ lemma ComplexVector.basisFin4_apply_succ (i : Fin 3) :
 def ComplexCoVector.basis : Basis (Fin 1 ⊕ Fin 3) ℂ ComplexCoVector :=
   Basis.ofEquivFun ComplexCoVector.toFin13ℂEquiv
 
-@[simp]
 lemma ComplexCoVector.basis_toFin13ℂ (i :Fin 1 ⊕ Fin 3) :
     (ComplexCoVector.basis i).toFin13ℂ = Pi.single i 1 := by
-  simp only [ComplexCoVector.basis, Basis.coe_ofEquivFun]
-  rfl
+  simp [ComplexCoVector.basis]
 
 @[simp]
 lemma ComplexCoVector.basis_ρ_apply (M : SL(2,ℂ)) (i j : Fin 1 ⊕ Fin 3) :
@@ -108,15 +103,12 @@ lemma ComplexCoVector.basis_ρ_apply (M : SL(2,ℂ)) (i j : Fin 1 ⊕ Fin 3) :
       (ComplexCoVector.SL2CRep M) i j =
     (LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ i j := by
   rw [LinearMap.toMatrix_apply]
-  simp only [ComplexCoVector.basis, Basis.coe_ofEquivFun, Basis.ofEquivFun_repr_apply,
-    transpose_apply]
-  change ((LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ *ᵥ (Pi.single j 1)) i = _
-  simp
+  simp [ComplexCoVector.basis]
 
 lemma ComplexCoVector.SL2CRep_val (M : SL(2,ℂ)) (v : ComplexCoVector) :
     ((ComplexCoVector.SL2CRep M) v).val =
-    (LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ *ᵥ v.val := by
-  rfl
+    (LorentzGroup.toComplex (SL2C.toLorentzGroup M))⁻¹ᵀ *ᵥ v.val :=
+  ComplexCoVector.val_SL2CRep M v
 
 /-- The standard basis of complex covariant Lorentz vectors indexed by `Fin 4`. -/
 def ComplexCoVector.basisFin4 : Basis (Fin 4) ℂ ComplexCoVector :=
@@ -163,31 +155,28 @@ lemma ComplexCoVector.basisFin4_apply_three :
 /-- The semilinear map including real Lorentz vectors into complex contravariant
   lorentz vectors. -/
 def inclCongrRealLorentz : ContrMod 3 →ₛₗ[Complex.ofRealHom] ComplexVector where
-  toFun v := {val := ofReal ∘ v.toFin1dℝ}
+  toFun v := ComplexVector.toFin13ℂEquiv.symm (ofReal ∘ v.toFin1dℝ)
   map_add' x y := by
     apply Lorentz.ComplexVector.ext
-    rw [Lorentz.ComplexVector.val_add]
     funext i
-    simp only [Function.comp_apply, Pi.add_apply, map_add]
-    simp only [ofReal_add]
+    simp
   map_smul' c x := by
     apply Lorentz.ComplexVector.ext
     rw [Lorentz.ComplexVector.val_smul]
     funext i
-    simp only [Function.comp_apply, ofRealHom_eq_coe, Pi.smul_apply, _root_.map_smul]
-    simp only [smul_eq_mul, ofReal_mul]
+    simp
 
 lemma inclCongrRealLorentz_val (v : ContrMod 3) :
-    (inclCongrRealLorentz v).val = ofRealHom ∘ v.toFin1dℝ := rfl
+    (inclCongrRealLorentz v).val = ofRealHom ∘ v.toFin1dℝ :=
+  ComplexVector.val_toFin13ℂEquiv_symm _
 
 lemma ComplexVector.basis_of_real (i : Fin 1 ⊕ Fin 3) :
     (ComplexVector.basis i) = inclCongrRealLorentz (ContrMod.stdBasis i) := by
   apply Lorentz.ComplexVector.ext
-  simp only [ComplexVector.basis, Basis.coe_ofEquivFun, inclCongrRealLorentz,
-    LinearMap.coe_mk, AddHom.coe_mk]
+  rw [inclCongrRealLorentz_val, ← ComplexVector.toFin13ℂEquiv_apply,
+    ← ComplexVector.toFin13ℂ, ComplexVector.basis_toFin13ℂ]
   ext j
   simp only [Function.comp_apply]
-  change (Pi.single i 1) j = _
   by_cases h : i = j
   · subst h
     rw [ContrMod.toFin1dℝ, ContrMod.stdBasis_toFin1dℝEquiv_apply_same]
@@ -217,29 +206,26 @@ lemma SL2CRep_ρ_basis (M : SL(2, ℂ)) (i : Fin 1 ⊕ Fin 3) :
 /-- The semilinear map including real Lorentz co-vectors into complex covariant
   Lorentz vectors. -/
 def inclCoRealLorentz : CoMod 3 →ₛₗ[Complex.ofRealHom] ComplexCoVector where
-  toFun v := { val := ofReal ∘ v.toFin1dℝ }
+  toFun v := ComplexCoVector.toFin13ℂEquiv.symm (ofReal ∘ v.toFin1dℝ)
   map_add' x y := by
     ext i
-    rw [ComplexCoVector.val_add]
-    simp only [Function.comp_apply, Pi.add_apply, map_add]
-    simp only [ofReal_add]
+    simp
   map_smul' c x := by
     ext i
     rw [ComplexCoVector.val_smul]
-    simp only [Function.comp_apply, ofRealHom_eq_coe, Pi.smul_apply, _root_.map_smul]
-    simp only [smul_eq_mul, ofReal_mul]
+    simp
 
 lemma inclCoRealLorentz_val (v : CoMod 3) :
-    (inclCoRealLorentz v).val = ofRealHom ∘ v.toFin1dℝ := rfl
+    (inclCoRealLorentz v).val = ofRealHom ∘ v.toFin1dℝ :=
+  ComplexCoVector.val_toFin13ℂEquiv_symm _
 
 lemma ComplexCoVector.basis_of_real (i : Fin 1 ⊕ Fin 3) :
     (ComplexCoVector.basis i) = inclCoRealLorentz (CoMod.stdBasis i) := by
   apply ComplexCoVector.ext
-  simp only [ComplexCoVector.basis, Basis.coe_ofEquivFun, inclCoRealLorentz,
-    LinearMap.coe_mk, AddHom.coe_mk]
+  rw [inclCoRealLorentz_val, ← ComplexCoVector.toFin13ℂEquiv_apply,
+    ← ComplexCoVector.toFin13ℂ, ComplexCoVector.basis_toFin13ℂ]
   ext j
   simp only [Function.comp_apply]
-  change (Pi.single i 1) j = _
   by_cases h : i = j
   · subst h
     rw [CoMod.toFin1dℝ, CoMod.stdBasis_toFin1dℝEquiv_apply_same]
@@ -262,6 +248,23 @@ lemma inclCoRealLorentz_ρ (M : SL(2, ℂ)) (v : CoMod 3) :
     (ofRealHom ∘ ((LorentzGroup.transpose (SL2C.toLorentzGroup M)⁻¹).1 *ᵥ
       v.toFin1dℝ)) i
   rw [LorentzGroup.toComplex_mulVec_ofReal]
+
+/-- The coordinate pairing of `ComplexVector.basis` and `ComplexCoVector.basis` is
+`ψⁱ φᵢ = ψ ⬝ᵥ φ`. -/
+lemma coordPairing_complexVector_coVector (ψ : ComplexVector) (φ : ComplexCoVector) :
+    ComplexVector.basis.coordPairing ComplexCoVector.basis (ψ ⊗ₜ φ) =
+      ψ.toFin13ℂ ⬝ᵥ φ.toFin13ℂ := by
+  rw [Module.Basis.coordPairing_tmul]
+  simp [ComplexVector.basis, ComplexCoVector.basis, dotProduct]
+
+/-- The pairing `ψⁱ φᵢ` of a vector and a covector is invariant under `SL(2, ℂ)`. -/
+lemma dotProduct_SL2CRep (M : SL(2, ℂ)) (ψ : ComplexVector) (φ : ComplexCoVector) :
+    (ComplexVector.SL2CRep M ψ).toFin13ℂ ⬝ᵥ (ComplexCoVector.SL2CRep M φ).toFin13ℂ =
+      ψ.toFin13ℂ ⬝ᵥ φ.toFin13ℂ := by
+  simp only [ComplexVector.toFin13ℂEquiv_apply, ComplexCoVector.toFin13ℂEquiv_apply,
+    ComplexVector.val_SL2CRep, ComplexCoVector.val_SL2CRep]
+  rw [dotProduct_mulVec, vecMul_transpose, mulVec_mulVec,
+    inv_mul_of_invertible (LorentzGroup.toComplex (SL2C.toLorentzGroup M)), one_mulVec]
 
 end Lorentz
 end

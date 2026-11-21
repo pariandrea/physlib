@@ -125,7 +125,7 @@ abbrev modules : Color → Type
   | Color.up => Lorentz.ComplexVector
   | Color.down => Lorentz.ComplexCoVector
 
-instance modulesAddCommGroup : ∀ c, AddCommGroup (modules c)
+noncomputable instance modulesAddCommGroup : ∀ c, AddCommGroup (modules c)
   | Color.upL => inferInstance
   | Color.downL => inferInstance
   | Color.upR => inferInstance

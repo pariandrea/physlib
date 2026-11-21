@@ -92,7 +92,7 @@ lemma ComplexVector.unitVal_expand_tmul : ComplexVector.unitVal =
     Finset.sum_singleton, Fin.sum_univ_three, ne_eq, reduceCtorEq, not_false_eq_true, one_apply_ne,
     zero_smul, add_zero, one_apply_eq, one_smul, zero_add, Sum.inr.injEq, zero_ne_one, Fin.reduceEq,
     one_ne_zero]
-  rfl
+  simp only [add_assoc]
 
 lemma ComplexVector.unitVal_eq_sum_tmul : ComplexVector.unitVal =
     ∑ i, ComplexCoVector.basis i ⊗ₜ[ℂ] ComplexVector.basis i := by
