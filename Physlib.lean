@@ -179,6 +179,7 @@ public import Physlib.Mathematics.ForMathlib.PiTensorProduct
 public import Physlib.Mathematics.ForMathlib.PiTensorProduct.ContrPairs
 public import Physlib.Mathematics.ForMathlib.Representation
 public import Physlib.Mathematics.ForMathlib.Representation.Maps
+public import Physlib.Mathematics.ForMathlib.Schouten
 public import Physlib.Mathematics.ForMathlib.SchurTriangulation
 public import Physlib.Mathematics.ForMathlib.SesquilinearForm
 public import Physlib.Mathematics.ForMathlib.TensorProductMatrix
@@ -211,6 +212,7 @@ public import Physlib.Mathematics.Tensors.Contraction
 public import Physlib.Mathematics.Tensors.Examples
 public import Physlib.Mathematics.Tensors.IndexMaps
 public import Physlib.Mathematics.Tensors.LinearMap
+public import Physlib.Mathematics.Tensors.Metric
 public import Physlib.Mathematics.Tensors.Product
 public import Physlib.Mathematics.Tensors.Reindexing
 public import Physlib.Mathematics.Tensors.Species
