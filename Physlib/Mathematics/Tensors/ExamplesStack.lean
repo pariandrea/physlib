@@ -223,7 +223,7 @@ example : S.instModuleV ⟨κ, .down⟩ =
 -- A general-color lemma on tensors, `smul_pure`, at a written-out color by `simp`.
 example (g : G) (f : Π i : Fin 1, S.V ((fun _ => ⟨κ, .up⟩) i)) :
     g • S.pure (c := fun _ => ⟨κ, .up⟩) f = S.pure fun i => S.repW κ g (f i) := by
-  simp
+  simp [rep_up]
 
 -- Lemmas on maps between spaces `S.V c`, whose coercion types are `no_index`, fire by `simp` at a
 -- written-out color and at a variable one.
