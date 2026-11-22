@@ -103,10 +103,6 @@ variable {ι : Type*} {M N : ι → Type*} [∀ i, AddCommMonoid (M i)] [∀ i, 
 
 namespace Representation
 
-/-- `piTprod ρ g` is Mathlib's `PiTensorProduct.map` of the `ρ i g`. -/
-lemma piTprod_apply (ρ : Π i, Representation k G (M i)) (g : G) :
-    piTprod ρ g = PiTensorProduct.map fun i => ρ i g := rfl
-
 namespace IntertwiningMap
 
 /-- The tensor product of a family of intertwining maps, `⨂ i, v i ↦ ⨂ i, f i (v i)`, Mathlib's

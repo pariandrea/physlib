@@ -192,7 +192,8 @@ lemma reindex_trans {c₁ : ι₁ → Color K} {c₂ : ι₂ → Color K} {c₃ 
     (σ₁ : ColorEquiv c₁ c₂) (σ₂ : ColorEquiv c₂ c₃) :
     S.reindex (σ₁.trans σ₂) = (S.reindex σ₁).trans (S.reindex σ₂) :=
   equiv_ext_pure fun f => by
-    simp only [Representation.Equiv.trans_apply, reindex_pure, cast_apply, cast_cast]
+    simp only [Representation.Equiv.trans_apply, reindex_pure, Representation.Equiv.cast_apply,
+      cast_cast]
     rfl
 
 /-- Reindexing by `σ₁` and then by `σ₂` is reindexing by `σ₁.trans σ₂`, on a tensor. -/

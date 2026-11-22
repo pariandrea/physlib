@@ -332,37 +332,11 @@ lemma mapIndices_id_apply {c : ι₁ → Color K} (t : Tensor S c) :
 
 variable [DecidableEq ι₁]
 
-variable (S) in
-/-- The linear map `f` at the index `i` and `S.cast (h x _)` at every other index `x`,
-`u ⊗ v ⊗ w ↦ u ⊗ f v ⊗ w`. -/
-noncomputable def linearMapAt {c c' : ι₁ → Color K} (i : ι₁)
+/-- `linearMapAt` is the index-wise map of `indexMapsAt`. -/
+lemma linearMapAt_eq_mapIndices {c c' : ι₁ → Color K} (i : ι₁)
     (f : S.V (c i) →ₗ[k] S.V (c' i)) (h : ∀ x, x ≠ i → c x = c' x) :
-    Tensor S c →ₗ[k] Tensor S c' :=
-  S.mapIndices (S.indexMapsAt i f h)
-
-/-- The linear map of `intertwiningMapAt` is `linearMapAt`. -/
-lemma toLinearMap_intertwiningMapAt {c c' : ι₁ → Color K} (i : ι₁)
-    (f : (S.rep (c i)).IntertwiningMap (S.rep (c' i)))
-    (h : ∀ x, x ≠ i → c x = c' x) :
-    (S.intertwiningMapAt i f h).toLinearMap = S.linearMapAt i f.toLinearMap h := rfl
-
-/-- On a pure tensor, `linearMapAt` applies `f` to the vector at `i` and keeps the others. -/
-lemma linearMapAt_pure {c c' : ι₁ → Color K} (i : ι₁)
-    (f : S.V (c i) →ₗ[k] S.V (c' i)) (h : ∀ x, x ≠ i → c x = c' x)
-    (p : Π x, S.V (c x)) (q : Π x, S.V (c' x)) (hqi : q i = f (p i))
-    (hq : ∀ x (hx : x ≠ i), q x = S.cast (h x hx) (p x)) :
-    S.linearMapAt i f h (S.pure p) = S.pure q := by
-  refine (map_pure (S.indexMapsAt i f h) p).trans (congrArg S.pure (funext fun x => ?_))
-  by_cases hx : x = i
-  · subst hx
-    rw [indexMapsAt_apply_self, hqi]
-  · rw [indexMapsAt_apply_ne _ _ _ hx, hq x hx]
-    rfl
-
-/-- `linearMapAt` of the identity is the identity. -/
-lemma linearMapAt_id {c : ι₁ → Color K} (i : ι₁) (h : ∀ x, x ≠ i → c x = c x) :
-    S.linearMapAt i LinearMap.id h = LinearMap.id :=
-  ext_pure fun p => linearMapAt_pure i _ h p p rfl fun _ _ => rfl
+    S.linearMapAt i f h = S.mapIndices (S.indexMapsAt i f h) :=
+  rfl
 
 /-- A linear map `f` at the index `1` of the tensor of `M` in `V a ⊗ V c` is `f` on the second
 factor of `M`, `M^μν ↦ M^μρ f_ρ^ν`. -/

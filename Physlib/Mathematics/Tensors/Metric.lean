@@ -618,7 +618,7 @@ lemma tensorBasis_repr_toDualAt [Fintype ι] {c c' : ι → Color K} (i : ι) (a
         (cast (congrArg (basisIdx ∘ Color.kind) ha) ρ : basisIdx a.kind) *
         (S.tensorBasis c).repr t (updateBasisIdx i h φ ρ) := by
   subst ha
-  refine (tensorBasis_repr_intertwiningMapAt i _ h t φ).trans
+  refine (tensorBasis_repr_linearMapAt i _ h t φ).trans
     (Finset.sum_congr rfl fun ρ _ => congrArg (· * _) ?_)
   rw [LinearMap.toMatrix_apply]
   change (S.basis (c' i)).repr

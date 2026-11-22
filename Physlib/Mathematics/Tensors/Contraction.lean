@@ -216,7 +216,7 @@ lemma contr_noPairs (t : Tensor S c) : contr (ColorEquiv.noPairs c) t = t :=
     ext p
     simp only [Representation.IntertwiningMap.coe_toLinearMap]
     rw [contr_pure, Finset.univ_eq_empty, Finset.prod_empty, one_smul]
-    exact congrArg S.pure (funext fun x => by simp only [cast_apply]; rfl)) t
+    exact congrArg S.pure (funext fun x => by simp only [Representation.Equiv.cast_apply]; rfl)) t
 
 /-!
 
@@ -241,7 +241,8 @@ lemma reindex_contr [Fintype J] {c'' : κ' → Color K} {a : J → Color K}
     rw [Representation.IntertwiningMap.comp_apply, Representation.Equiv.coe_toIntertwiningMap,
       contr_pure, map_smul, reindex_pure, contr_pure]
     congr 1
-    exact congrArg S.pure (funext fun x => by simp only [cast_apply, cast_cast]; rfl)) t
+    exact congrArg S.pure (funext fun x => by
+      simp only [Representation.Equiv.cast_apply, cast_cast]; rfl)) t
 
 /-!
 
@@ -323,7 +324,7 @@ lemma contr_contr [Fintype J₁] [Fintype J₂] {c₁ : κ₁ → Color K} {a₁
     ext f
     simp only [Representation.IntertwiningMap.coe_toLinearMap,
       Representation.IntertwiningMap.comp_apply, contr_pure, map_smul, smul_smul,
-      Fintype.prod_sum_type, cast_apply, cast_cast]
+      Fintype.prod_sum_type, Representation.Equiv.cast_apply, cast_cast]
     rfl) t
 
 /-!

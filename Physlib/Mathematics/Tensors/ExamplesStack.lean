@@ -228,10 +228,10 @@ example (g : G) (f : Π i : Fin 1, S.V ((fun _ => ⟨κ, .up⟩) i)) :
 -- Lemmas on maps between spaces `S.V c`, whose coercion types are `no_index`, fire by `simp` at a
 -- written-out color and at a variable one.
 example (a : Color K) (p : a = ⟨κ, .up⟩) (x : S.V a) : S.cast p x = cast (congrArg S.V p) x := by
-  simp only [cast_apply]
+  simp only [Representation.Equiv.cast_apply]
 
 example (a b : Color K) (p : a = b) (x : S.V a) : S.cast p x = cast (congrArg S.V p) x := by
-  simp only [cast_apply]
+  simp only [Representation.Equiv.cast_apply]
 
 example (α : S.V ⟨κ, .down⟩) (u : S.V ⟨κ, .up⟩) :
     S.dualEquiv ⟨κ, .up⟩ α u = S.contr ⟨κ, .up⟩ (u ⊗ₜ α) := by

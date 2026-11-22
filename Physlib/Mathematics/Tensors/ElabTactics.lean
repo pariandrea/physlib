@@ -728,7 +728,7 @@ raising. A side with no lowering or raising is the index-wise identity
 (`Species.mapIndices_id_apply`). The indices must be `Fin n` with a literal `n`. -/
 elab "tensor_indices" : tactic => do
   evalTactic (← `(tactic| try simp only [Tensor.Species.toDualAt_eq_linearMapAt,
-    Tensor.Species.linearMapAt,
+    Tensor.Species.linearMapAt_eq_mapIndices,
     Tensor.Species.mapIndices_mapIndices]))
   let isMapIndices (e : Expr) := (bundledArg? ``Tensor.Species.mapIndices e).isSome
   let (_, l, r) ← goalEq "tensor_indices"
@@ -746,7 +746,7 @@ elab "tensor_indices" : tactic => do
         Tensor.Species.indexMapsAt_apply_ne, ne_eq, Fin.reduceEq, not_false_eq_true,
         Representation.IntertwiningMap.coe_toLinearMap,
         Representation.Equiv.coe_toIntertwiningMap, Representation.Equiv.trans_apply,
-        Tensor.Species.cast_apply, cast_cast, cast_eq,
+        Representation.Equiv.cast_apply, cast_cast, cast_eq,
         Tensor.Species.toDual_toDual]))
 
 /-!
