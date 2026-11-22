@@ -246,11 +246,6 @@ example (x : S.V ⟨κ, .up⟩) (y : S.V ⟨κ, .down⟩) :
       S.pure (c := ![⟨κ, .up⟩, ⟨κ, .down⟩]) (Fin.cons x (Fin.cons y finZeroElim)) := by
   simp only [twoIndexEquiv_tmul]
 
-example (x : S.V ⟨κ, .up⟩) (y : S.V ⟨κ, .down⟩) :
-    (S.basis ⟨κ, .up⟩).coordPairing (S.basis (⟨κ, .up⟩ : Color K).dual) (x ⊗ₜ y) =
-      S.contr ⟨κ, .up⟩ (x ⊗ₜ y) := by
-  simp only [coordPairing_basis]
-
 -- The contraction of a vector and a covector at a written-out color, by `simp`.
 example (x : S.V ⟨κ, .up⟩) (y : S.V ⟨κ, .down⟩) : S.contr ⟨κ, .up⟩ (x ⊗ₜ y) = y x := by
   simp
@@ -305,11 +300,12 @@ example [S.HasForm κ] (v : S.V ⟨κ, .up⟩) :
   simp
 
 -- A lemma stated at `c.dual` does not unify `?c.dual` with a written-out `⟨κ, down⟩`. `rw` finds
--- `coordPairing_basis`, which meets `c` first in `S.basis c` (`simp only` does not). For
--- `basis_repr_toDual` the color must be given.
+-- `contr_tmul_eq_sum_basis`, which meets `c` first in `S.contr c`. For `basis_repr_toDual` the
+-- color must be given.
 example (x : S.V ⟨κ, .up⟩) (y : S.V ⟨κ, .down⟩) :
-    (S.basis ⟨κ, .up⟩).coordPairing (S.basis ⟨κ, .down⟩) (x ⊗ₜ y) = S.contr ⟨κ, .up⟩ (x ⊗ₜ y) := by
-  rw [coordPairing_basis]
+    S.contr ⟨κ, .up⟩ (x ⊗ₜ y) =
+      ∑ μ, (S.basis ⟨κ, .up⟩).repr x μ * (S.basis ⟨κ, .down⟩).repr y μ := by
+  rw [contr_tmul_eq_sum_basis]
 
 example [S.HasForm κ] (v : S.V ⟨κ, .up⟩) (ν : basisIdx κ) :
     (S.basis ⟨κ, .down⟩).repr (S.toDual ⟨κ, .up⟩ v) ν =

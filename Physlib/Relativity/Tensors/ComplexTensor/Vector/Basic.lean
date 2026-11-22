@@ -5,7 +5,6 @@ Authors: Nikolai Kashcheev, Joseph Tooby-Smith
 -/
 module
 
-public import Physlib.Mathematics.ForMathlib.Contraction
 public import Physlib.Relativity.Tensors.ComplexTensor.Vector.Modules
 /-!
 
@@ -248,14 +247,6 @@ lemma inclCoRealLorentz_ρ (M : SL(2, ℂ)) (v : CoMod 3) :
     (ofRealHom ∘ ((LorentzGroup.transpose (SL2C.toLorentzGroup M)⁻¹).1 *ᵥ
       v.toFin1dℝ)) i
   rw [LorentzGroup.toComplex_mulVec_ofReal]
-
-/-- The coordinate pairing of `ComplexVector.basis` and `ComplexCoVector.basis` is
-`ψⁱ φᵢ = ψ ⬝ᵥ φ`. -/
-lemma coordPairing_complexVector_coVector (ψ : ComplexVector) (φ : ComplexCoVector) :
-    ComplexVector.basis.coordPairing ComplexCoVector.basis (ψ ⊗ₜ φ) =
-      ψ.toFin13ℂ ⬝ᵥ φ.toFin13ℂ := by
-  rw [Module.Basis.coordPairing_tmul]
-  simp [ComplexVector.basis, ComplexCoVector.basis, dotProduct]
 
 /-- The pairing `ψⁱ φᵢ` of a vector and a covector is invariant under `SL(2, ℂ)`. -/
 lemma dotProduct_SL2CRep (M : SL(2, ℂ)) (ψ : ComplexVector) (φ : ComplexCoVector) :

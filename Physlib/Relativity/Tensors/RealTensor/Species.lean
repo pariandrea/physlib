@@ -7,7 +7,6 @@ module
 
 public import Physlib.Mathematics.Tensors.ElabTactics
 public import Physlib.Relativity.LorentzGroup.Basic
-public import Physlib.Mathematics.ForMathlib.Contraction
 import Mathlib.LinearAlgebra.Matrix.IsDiag
 /-!
 
@@ -27,9 +26,9 @@ direction and `Sum.inr i` the space directions. A Lorentz transformation
 `(Λw)_μ = (Λ⁻¹)^ν_μ w_ν`. The two colors are named `realLorentz.up` and `realLorentz.down`, and
 `ℝT[d, up, down]` is the space of the tensors `T^μ_ν`, under `open scoped Tensor.realLorentz`.
 
-The contraction `u^μ w_μ` is the coordinate pairing `∑ μ, u^μ w_μ` of the two bases and the
-delta is `δ_μ^ν = ∑ μ, e^μ ⊗ e_μ`. The one physical input is that the pairing is Lorentz invariant
-(`realLorentz.coordPairing_rep`). The metric is the form `u^μ η_μν v^ν` on upper vectors
+The contraction `u^μ w_μ` is the covector applied to the vector, `∑ μ, u^μ w_μ` in the two bases
+(`Species.contr_tmul_eq_sum_basis`), and the delta is `δ_μ^ν = ∑ μ, e^μ ⊗ e_μ`
+(`Species.delta_eq_sum_basis`). The metric is the form `u^μ η_μν v^ν` on upper vectors
 (`realLorentz.minkowskiBilin`), with the matrix `diag(1, -1, …, -1)` at both colors.
 
 So the general results apply. For example `η^μν η_νρ = δ^μ_ρ` is
@@ -45,7 +44,6 @@ covector by `(Λ⁻¹)ᵀ *ᵥ ω`, and both enter index notation directly, as i
 
 ## ii. Key results
 
-- `realLorentz.coordPairing_rep` : the pairing `v^μ ω_μ` is Lorentz invariant.
 - `realLorentz` : the species of real Lorentz tensors, with the colors `realLorentz.up` and
   `realLorentz.down` and the spaces of tensors `ℝT[d, up, down]` (scoped).
 - `realLorentz.minkowskiBilin` and the instances `(realLorentz d).HasForm κ` and

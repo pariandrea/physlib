@@ -7,6 +7,7 @@ module
 
 public import Physlib.Mathematics.ForMathlib.Schouten
 public import Physlib.Mathematics.ForMathlib.SesquilinearForm
+public import Physlib.Mathematics.ForMathlib.TensorProductMatrix
 public import Physlib.Mathematics.Tensors.LinearMap
 /-!
 
@@ -210,9 +211,7 @@ lemma formMatrix_eq_toMatrix (c : Color K) [S.HasForm c.kind] :
   rw [LinearMap.BilinForm.toMatrix_apply, formBilin_apply, contr_tmul_eq_sum_basis]
   simp only [Module.Basis.repr_self, Finsupp.single_apply, ite_mul, one_mul, zero_mul,
     Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-  rw [toLin_eq_coordTensorHomEquiv]
-  refine ((Module.Basis.repr_coordTensorHomEquiv (S.basis c) (S.basis c.dual) (S.basis c) (form c)
-    _ ν).trans ?_).symm
+  refine ((S.repr_toLin (S.basis c) (form c) _ ν).trans ?_).symm
   simp [Finsupp.single_apply, formMatrix]
 
 /-- The form on two basis vectors is a component of the form, `g(e^μ, e^ν) = g^μν`. -/

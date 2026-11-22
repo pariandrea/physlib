@@ -5,7 +5,7 @@ Authors: Andrea Pari
 -/
 module
 
-public import Physlib.Mathematics.ForMathlib.CoordTensorHom
+public import Mathlib.RepresentationTheory.Invariants
 public import Physlib.Mathematics.Tensors.Contraction
 public import Physlib.Mathematics.Tensors.IndexMaps
 /-!
@@ -20,15 +20,14 @@ contracting an index with a tensor of two factors applies its linear map.
 A tensor `z` in `V a ⊗ U`, for a color `a` of a species `S` and any module `U`, is read as the
 linear map `S.toLin z : V a.dual → U` that contracts its input with the first factor of `z`. On a
 pure tensor `z = x ⊗ y` it is `v ↦ (v^μ x_μ) y`. Every linear map `V a.dual → U` is `toLin z` for
-exactly one `z`. `toLin` is `Module.Basis.coordTensorHomEquiv` for the bases of `a` and `a.dual`,
-which is Mathlib's `dualTensorHomEquivOfBasis` once the contraction identifies `V a` with the dual
-of `V a.dual`. The results that need only the bases and the invariance of the contraction, such as
-the matrix of `toLin z` and its equivariance, are stated there.
+exactly one `z`. `toLin` is Mathlib's `dualTensorHomEquiv` once the contraction identifies `V a`
+with the dual of `V a.dual`. In a basis `toLin z` has the components
+`(z v)^ν = ∑ μ, v_μ z^μν` (`Species.repr_toLin`).
 
 This is how two-index tensors act as maps. A metric `g_μν` is the map `v^μ ↦ v^μ g_μν`, and the
 inverse metric `g^μν` is the tensor of the inverse map. The map of `Λz` is `Λ ∘ z ∘ Λ⁻¹`, so `z` is
 invariant exactly when its linear map commutes with the group action
-(`Module.Basis.coordTensorHomEquiv_map_rep`). This is Mathlib's
+(`Species.toLin_map_rep`). This is Mathlib's
 `Representation.mem_linHom_invariants_iff_isIntertwining`, read through `toLin`.
 
 The delta `S.delta c = ∑ μ, e^μ ⊗ e_μ` is the tensor of the identity map, `u^μ δ_μ^ν = u^ν`. The
@@ -247,34 +246,29 @@ variable {basisIdx : K → Type} [B : S.HasBasis basisIdx] [∀ κ, Fintype (bas
   [∀ κ, DecidableEq (basisIdx κ)]
 
 variable (S) in
-/-- In a basis, `toLin` is `Module.Basis.coordTensorHomEquiv` for the bases of `a` and `a.dual`. -/
-lemma toLin_eq_coordTensorHomEquiv {a : Color K} {U : Type} [AddCommGroup U] [Module k U] :
-    S.toLin (a := a) (U := U) = (S.basis a).coordTensorHomEquiv (S.basis a.dual) :=
-  LinearEquiv.toLinearMap_injective <| TensorProduct.ext' fun x y => LinearMap.ext fun v => by
-    simp only [LinearEquiv.coe_coe, toLin_tmul, Module.Basis.coordTensorHomEquiv_tmul]
-    exact congrArg (· • y) (LinearMap.congr_fun (S.contr_eq_coordPairing a.dual) _)
-
-/-- The coordinate pairing of the bases of `c` and `c.dual` is the contraction. -/
-@[simp]
-lemma coordPairing_basis (c : Color K) {x : S.V c} {y : S.V c.dual} :
-    @DFunLike.coe (no_index _) (no_index _) (no_index _) _
-      ((S.basis c).coordPairing (M := no_index _) (N := no_index _) (S.basis c.dual))
-      (no_index (x ⊗ₜ y)) = S.contr c (x ⊗ₜ y) :=
-  (LinearMap.congr_fun (S.contr_eq_coordPairing c) _).symm
-
-/-- The coordinate pairing of the bases of `c.dual` and `c` is the contraction at `c.dual`. -/
-@[simp]
-lemma coordPairing_basis_dual (c : Color K) {x : S.V c.dual} {y : S.V c} :
-    @DFunLike.coe (no_index _) (no_index _) (no_index _) _
-      ((S.basis c.dual).coordPairing (M := no_index _) (N := no_index _) (S.basis c))
-      (no_index (x ⊗ₜ y)) = S.contr c.dual (x ⊗ₜ y) :=
-  (LinearMap.congr_fun (S.contr_eq_coordPairing c.dual) _).symm
+/-- The linear map of `z` in components, `(z v)^ν = ∑ μ, v_μ z^μν`, with `d` a basis of `U`. -/
+lemma repr_toLin {a : Color K} {U ι : Type} [AddCommGroup U] [Module k U]
+    (d : Module.Basis ι k U) (z : S.V a ⊗[k] U) (v : S.V a.dual) (ν : ι) :
+    d.repr (S.toLin z v) ν =
+      ∑ μ, (S.basis a.dual).repr v μ * ((S.basis a).tensorProduct d).repr z (μ, ν) := by
+  induction z using TensorProduct.inductionOn with
+  | add z z' hz hz' => simp [hz, hz', mul_add, Finset.sum_add_distrib]
+  | tmul x y =>
+    rw [toLin_tmul, ← S.contr_tmul_symm a x v, contr_tmul_eq_sum_basis, map_smul,
+      Finsupp.smul_apply, smul_eq_mul, Finset.sum_mul]
+    simp only [Module.Basis.tensorProduct_repr_tmul_apply, smul_eq_mul]
+    exact Finset.sum_congr rfl fun μ _ => by ring
 
 /-- In a basis the delta is `∑ μ, e^μ ⊗ e_μ`. -/
-lemma delta_eq_coordDelta (c : Color K) :
-    S.delta c = (S.basis c.dual).coordDelta (S.basis c) :=
+lemma delta_eq_sum_basis (c : Color K) :
+    S.delta c = ∑ μ, S.basis c.dual μ ⊗ₜ S.basis c μ :=
   S.toLin.injective <| by
-    rw [toLin_delta, toLin_eq_coordTensorHomEquiv, Module.Basis.coordTensorHomEquiv_coordDelta]
+    rw [toLin_delta]
+    refine (S.basis c).ext fun ν => ?_
+    have h (μ) : S.contr c.dual.dual (S.basis c ν ⊗ₜ S.basis c.dual μ) = if ν = μ then 1 else 0 :=
+      S.contr_basis c ν μ
+    simp only [map_sum, LinearMap.sum_apply, toLin_tmul, LinearMap.id_apply, h,
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 /-- The components of the delta tensor are the coordinates of `S.delta c` in Mathlib's product
 basis, at the pair of labels `(μ 0, μ 1)`. -/
@@ -290,8 +284,11 @@ lemma tensorBasis_repr_deltaTensor_eq_one (c : Color K)
     (μ : Π j, basisIdx (![c.dual, c] j).kind) :
     (S.tensorBasis ![c.dual, c]).repr (S.deltaTensor c) μ =
       (1 : Matrix (basisIdx c.kind) (basisIdx c.kind) k) (μ 0) (μ 1) := by
-  rw [tensorBasis_repr_deltaTensor, delta_eq_coordDelta]
-  exact (Module.Basis.tensorProduct_repr_coordDelta _ _ _ _).trans Matrix.one_apply.symm
+  rw [tensorBasis_repr_deltaTensor, delta_eq_sum_basis]
+  have h (ν ρ : basisIdx c.kind) : ((S.basis c.dual).tensorProduct (S.basis c)).repr
+      (∑ μ, S.basis c.dual μ ⊗ₜ S.basis c μ) (ν, ρ) = (1 : Matrix _ _ k) ν ρ := by
+    simp [Finsupp.single_apply, Matrix.one_apply]
+  exact h (μ 0) (μ 1)
 
 end Species
 
