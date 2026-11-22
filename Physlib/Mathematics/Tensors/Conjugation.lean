@@ -505,10 +505,10 @@ variable {κ J : Type} [Fintype J] {b : κ → Color (K × Conjugacy)} {a : J �
 lemma conj_contr (σ : ColorEquiv c (contrColors b a)) (t : Tensor S.withConj c) :
     conj (contr σ t) (fun _ => rfl) = contr σ.barContr (conj t fun _ => rfl) := by
   change conjLinearEquiv _ (contr σ t) = contr σ.barContr (conjLinearEquiv _ t)
-  induction t using induction_on_pure with
-  | hsmul r t ht => rw [map_smul, LinearEquiv.map_smulₛₗ, ht, LinearEquiv.map_smulₛₗ, map_smul]
-  | hadd x y hx hy => rw [map_add, map_add, hx, hy, map_add, map_add]
-  | h f =>
+  induction t with
+  | smul r t ht => rw [map_smul, LinearEquiv.map_smulₛₗ, ht, LinearEquiv.map_smulₛₗ, map_smul]
+  | add x y hx hy => rw [map_add, map_add, hx, hy, map_add, map_add]
+  | pure f =>
     simp only [contr_pure, conjLinearEquiv_apply, conj_pure, LinearEquiv.map_smulₛₗ,
       starRingEnd_apply, star_prod, star_contr_bar rfl, bar_cast, cast_bar]
     rfl

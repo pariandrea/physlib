@@ -227,10 +227,10 @@ lemma tensorBasis_repr_reindex [Fintype ι₁] [Fintype ι₂] {c₁ : ι₁ →
     (S.tensorBasis c₂).repr (S.reindex σ t) y =
       (S.tensorBasis c₁).repr t fun i =>
         cast (congrArg (basisIdx ∘ Color.kind) (σ.symm.color_eq i)) (y (σ.toEquiv i)) := by
-  induction t using induction_on_pure with
-  | hsmul r t ht => simp only [map_smul, Finsupp.smul_apply, ht]
-  | hadd t t' ht ht' => simp only [map_add, Finsupp.add_apply, ht, ht']
-  | h f =>
+  induction t with
+  | smul r t ht => simp only [map_smul, Finsupp.smul_apply, ht]
+  | add t t' ht ht' => simp only [map_add, Finsupp.add_apply, ht, ht']
+  | pure f =>
     rw [reindex_pure, tensorBasis_repr_pure, tensorBasis_repr_pure]
     refine Fintype.prod_equiv σ.toEquiv.symm _ _ fun j => ?_
     -- The label `y j` is read at the new index `σ.toEquiv (σ.toEquiv.symm j)`, which is `j` only

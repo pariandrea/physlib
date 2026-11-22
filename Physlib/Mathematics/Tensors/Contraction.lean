@@ -381,10 +381,10 @@ lemma tensorBasis_repr_contrStd [Fintype κ] [Fintype J] [DecidableEq J] (c' : �
     (a : J → Color K) (t : Tensor S (contrColors c' a)) (φ : Π x, basisIdx (c' x).kind) :
     (S.tensorBasis c').repr (contrStd c' a t) φ = ∑ μ : Π j, basisIdx (a j).kind,
       (S.tensorBasis (contrColors c' a)).repr t (Sum.rec φ (Sum.rec μ μ)) := by
-  induction t using induction_on_pure with
-  | hsmul r t ht => simp only [map_smul, Finsupp.smul_apply, ht, smul_eq_mul, Finset.mul_sum]
-  | hadd t t' ht ht' => simp only [map_add, Finsupp.add_apply, ht, ht', Finset.sum_add_distrib]
-  | h f =>
+  induction t with
+  | smul r t ht => simp only [map_smul, Finsupp.smul_apply, ht, smul_eq_mul, Finset.mul_sum]
+  | add t t' ht ht' => simp only [map_add, Finsupp.add_apply, ht, ht', Finset.sum_add_distrib]
+  | pure f =>
     -- Each contraction of a pair is a sum over one label, and the product of sums over the
     -- pairs becomes a sum over the families of labels `μ`.
     rw [contrStd_pure, map_smul, Finsupp.smul_apply, tensorBasis_repr_pure, smul_eq_mul,
